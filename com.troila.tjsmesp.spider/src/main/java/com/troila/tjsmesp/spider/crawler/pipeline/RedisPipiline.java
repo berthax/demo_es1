@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.model.PolicySpider;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;

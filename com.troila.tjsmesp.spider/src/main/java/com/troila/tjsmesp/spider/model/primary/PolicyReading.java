@@ -1,4 +1,4 @@
-package com.troila.tjsmesp.spider.model;
+package com.troila.tjsmesp.spider.model.primary;
 
 import java.util.Date;
 import java.util.UUID;

@@ -54,7 +54,7 @@ public class SecondaryConfig {
         return builder
                 .dataSource(secondaryDataSource)
                 .properties(getVendorProperties(secondaryDataSource))
-                .packages("com.troila.tjsmesp.spider.model") //设置实体类所在位置
+                .packages("com.troila.tjsmesp.spider.model.secondary") //设置实体类所在位置
                 .persistenceUnit("secondaryPersistenceUnit")
                 .build();
     }

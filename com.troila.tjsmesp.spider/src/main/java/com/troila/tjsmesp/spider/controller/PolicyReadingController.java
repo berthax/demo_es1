@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.troila.tjsmesp.spider.config.SpiderDriverConfig;
-import com.troila.tjsmesp.spider.model.PolicyReading;
-import com.troila.tjsmesp.spider.model.PolicySpider;
+import com.troila.tjsmesp.spider.model.primary.PolicyReading;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 //import com.troila.tjsmesp.spider.repository.PolicyReadingRepository;
 import com.troila.tjsmesp.spider.service.PolicyService;
 

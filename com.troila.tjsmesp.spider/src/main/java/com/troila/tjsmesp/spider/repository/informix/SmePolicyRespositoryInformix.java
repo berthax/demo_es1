@@ -2,7 +2,7 @@ package com.troila.tjsmesp.spider.repository.informix;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.troila.tjsmesp.spider.model.SmePolicy;
+import com.troila.tjsmesp.spider.model.secondary.SmePolicy;
 
 public interface SmePolicyRespositoryInformix extends JpaRepository<SmePolicy, Integer>{
 	/**

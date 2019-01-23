@@ -9,7 +9,7 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.model.PolicySpider;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 

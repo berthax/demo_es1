@@ -18,7 +18,7 @@ import com.troila.tjsmesp.spider.crawler.pipeline.MysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
-import com.troila.tjsmesp.spider.model.PolicySpider;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.PolicyService;
 
@@ -43,19 +43,25 @@ public class SpiderStarter implements CommandLineRunner{
 	private SpiderConfig spiderConfig;
 	@Autowired
 	private PolicyService policyService;
+	@Autowired
+	private ProcessorService processorService;
+	@Autowired
+	private PolicyNewestPageProcessor policyNewestPageProcessor;
+	@Autowired
+	private PolicyReadingPageProcessor policyReadingPageProcessor;
 	
 	@Override
 	public void run(String... args) throws Exception {
 		
 		//初始化政策解读的爬虫实例
-		Spider	spiderReading = Spider.create(new PolicyReadingPageProcessor())
-						.addPipeline(redisPipeline)
-						.setDownloader(seleniumDownloader)
-						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-						.thread(spiderConfig.getSpiderThreadNumber());	
-		spiderReading.runAsync();
-		logger.info("本次爬取政策解读任务已完成，共爬取记录数："+spiderReading.getPageCount());
-		policyService.dataSync(SpiderModuleEnum.POLICY_READING);
+//		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
+//						.addPipeline(redisPipeline)
+//						.setDownloader(seleniumDownloader)
+//						.addUrl(spiderConfig.getPolicyReadingStartUrl())
+//						.thread(spiderConfig.getSpiderThreadNumber());	
+//		spiderReading.runAsync();
+
+
 		// TODO Auto-generated method stub
 //		Spider spider = Spider.create(new PolicyReadingPageProcessor()).addPipeline(mysqlPipeline).thread(2)
 //				.setDownloader(seleniumDownloader)
@@ -92,6 +98,17 @@ public class SpiderStarter implements CommandLineRunner{
 ////			spiderNewest.addUrl(str);
 ////		}
 //		spiderNewest.runAsync();  //异步启动
+//		http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20188.shtml    //财政部国家税务总局
+//		Spider spiderNewest = Spider.create(policyNewestPageProcessor)
+//				.addPipeline(mysqlPipeline)
+//				.setDownloader(seleniumDownloader)
+////				.addUrl(spiderConfig.getPolicyNewestStartUrl())
+//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20332.shtml")
+//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_19989.shtml")
+//				.thread(spiderConfig.getSpiderThreadNumber());
+//		spiderNewest.runAsync();
+//		logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
+//		policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
 		
 		//抓取中小企信息网焦点新闻的政策内容
 //		Spider spiderNewestFocus = Spider.create(new PolicyNewsFocusPageProcessor()).addPipeline(informixPipeline).thread(1)

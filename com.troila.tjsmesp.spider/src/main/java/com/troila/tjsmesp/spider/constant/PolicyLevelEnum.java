@@ -12,7 +12,7 @@ public enum PolicyLevelEnum {
 	ZONGYANGWANGXINBAN("中央网信办",0,"中央网信办"),
 	MINZHENGBU("民政部",0),
 	GONGXINBU("工信部",0),
-	FAGAIWEI("发改委",0,"国家发展改革委"),  //国家发改委
+	FAGAIWEI("发改委",0,"国家发展改革委","国家发改委"),  //国家发改委
 	KEJIBU("科技部",0),
 	CAIZHENGBU("财政部",0),
 	RENLISHEBAOBU("人力社保部",0),
@@ -38,7 +38,7 @@ public enum PolicyLevelEnum {
 	SHUILIBU("水利部",0),
 	GUOJIALIANGSHIJU("国家粮食局",0),
 	NONGYEBU("农业部",0),
-	ZHUFANGCHENGXIANGJIANSHEBUBANGONGTING("住房城乡建设部办公厅",0),
+	ZHUFANGCHENGXIANGJIANSHEBUBANGONGTING("住房城乡建设部办公厅",0,"住房城乡建设部"),
 	WENGUANGJU("文广局",0),
 	GONGANBU("公安部",0),
 	WENHUABU("文化部",0),
@@ -140,6 +140,10 @@ public enum PolicyLevelEnum {
               * 别名
      */
     private String alias;
+    /**
+           *  别名2
+     */
+    private String alias2;
     // 构造方法  
     private PolicyLevelEnum(String name, int level) {  
         this.name = name;  
@@ -150,6 +154,10 @@ public enum PolicyLevelEnum {
         this.name = name;  
         this.level = level; 
         this.alias = alias;
+    }
+    private PolicyLevelEnum(String name, int level,String alias,String alias2) {  
+        this(name,level,alias);
+        this.alias2 = alias2;
     }
     public String getName() {  
         return name;  
@@ -181,7 +189,7 @@ public enum PolicyLevelEnum {
     	} 
         //先查看是否有真正对应的发文部门名称
     	for (PolicyLevelEnum p : PolicyLevelEnum.values()) {  
-            if (p.name.equals(name) || (p.alias!=null && p.alias.equals(name))) {  
+            if (p.name.equals(name) || (p.alias!=null && p.alias.equals(name) || (p.alias2!=null && p.alias2.equals(name)))) {  
                 return p.level;  
             }  
         } 
@@ -234,7 +242,7 @@ public enum PolicyLevelEnum {
 //            if((name.contains(p.name) || p.name.contains(name)) && p.level == 0) {
 //            	return p.name;
 //            }
-            if(p.name.equals(name) || (p.alias!=null && p.alias.equals(name))) {
+            if(p.name.equals(name) || (p.alias!=null && p.alias.equals(name)) || (p.alias2!=null && p.alias2.equals(name))) {
             	return p.name;
             }
         }  
@@ -253,11 +261,12 @@ public enum PolicyLevelEnum {
     	for (PolicyLevelEnum p : PolicyLevelEnum.values()) { 
             if((name.contains(p.name) || p.name.contains(name) 
             		|| (p.alias!=null && p.alias.contains(name))
-            		|| (p.alias!=null && name.contains(p.alias))) 
-            		&& p.level == 0) {
+            		|| (p.alias!=null && name.contains(p.alias))
+            		|| (p.alias2!=null && p.alias2.contains(name))
+            		|| (p.alias2!=null && name.contains(p.alias2))
+            		) && p.level == 0) {
             	return p.name;
             }
-
         }  
         return null;    //说明该枚举类中不存在
     }
@@ -274,10 +283,24 @@ public enum PolicyLevelEnum {
     	for (PolicyLevelEnum p : PolicyLevelEnum.values()) {  
             if(p.name.contains(name) || name.contains(p.name)
             		|| (p.alias!=null && p.alias.contains(name)) 
-            		|| (p.alias!=null && name.contains(p.alias))) {
+            		|| (p.alias!=null && name.contains(p.alias))
+            		|| (p.alias2!=null && p.alias2.contains(name))
+            		|| (p.alias2!=null && name.contains(p.alias2))) {
             	return true;
             }
         }  
         return false;    //说明该枚举类中不存在类似的发文部门
     }
+//	var units = new Object();
+//	units['国家']=new Array('外交部', '国防部', '发展改革委', '教育部', '科学技术部', '工业和信息化部', '民委', '公安部', '民政部', '司法部', '财政部',
+//			'人力资源社会保障部','自然资源部','生态环境部','住房城乡建设部','交通运输部','水利部','农业农村部','商务部','文化和旅游部','卫生健康委','退役军人事务部',
+//			'应急管理部','人民银行','审计署','国资委','海关总署','税务总局','市场监督管理总局','国家广播电视总局','体育总局','统计局','国际发展合作署','林业局',
+//			'知识产权局','宗教局','参事室','国管局','版权局','侨办','港澳办','国研室','台办','新闻办','新华社','中科院','社科院','工程院','发展研究中心',
+//			'行政学院','地震局','气象局','银保监会','证监会','社保基金会','自然科学基金会','信访局','粮食局','能源局','国防科工局','烟草局','外专局','公务员局',
+//			'海洋局','测绘地信局','铁路局','民航局','邮政局','文物局','中医药局','外汇局','档案局','密码局','扶贫办','南水北调办');
+//	units['市级']=new Array('发展改革委', '教委', '科技局', '工业和信息化局', '民族宗教委', '公安局', '民政局', '司法局', '财政局', '人社局', '规划和自然资源局',
+//			'生态环境局','住房城乡建设委','城市管理委','交通运输委','水务局','农业农村委','商务局','市文化和旅游局','卫生健康委','市退役军人局','应急局','审计局','外办',
+//			'市场监管委','国资委','体育局','统计局','金融局','信访办','人防办','合作交流办','政务服务办','粮食和物资局','知识产权局');
+//	units['区级']=new Array('滨海新区', '和平区', '河北区', '河西区', '河东区', '南开区', '红桥区', '东丽区', '西青区', '津南区', '北辰区','武清区','宝坻区',
+//			'静海区','宁河区','蓟州区');
 }

@@ -1,4 +1,4 @@
-package com.troila.tjsmesp.spider.model;
+package com.troila.tjsmesp.spider.model.secondary;
 
 import java.util.Date;
 

@@ -1,5 +1,6 @@
 package com.troila.tjsmesp.spider.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,29 +11,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.model.PolicySpider;
-import com.troila.tjsmesp.spider.repository.informix.PolicySpiderRepositoryInformix;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
+import com.troila.tjsmesp.spider.service.PolicyService;
 
 @RestController
 public class PolicyController {
 
 	@Autowired
-	private PolicySpiderRepositoryInformix policySpiderRepositoryInformix;
-	@Autowired
 	private PolicySpiderRepositoryMysql policySpiderRepositoryMysql;
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+	@Autowired
+	private PolicyService policyService;
 	
-	@GetMapping("/informix/getOne")
-	public PolicySpider getOnePolicyById(@RequestParam String id) {		
-		return policySpiderRepositoryInformix.findById(id).get();
-	}
-	@GetMapping("/informix/getList")
-	public List<PolicySpider> getListStripContentLike(@RequestParam String queryStr){
-		return policySpiderRepositoryInformix.findByStripContentContains(queryStr);
-	}
-
 	@GetMapping("/mysql/getList")
 	public List<PolicySpider> getListStripContentLikeFromPrimaryDs(@RequestParam String queryStr){
 //		return policySpiderRepositoryMysql.findByStripContentContains(queryStr);
@@ -49,6 +41,16 @@ public class PolicyController {
 		List<Object> list = redisTemplate.opsForList().range(SpiderModuleEnum.POLICY_NEWEST.getKey(), 0L, size-1);
 		List<PolicySpider> result = list.stream().map(e->{return (PolicySpider)e;}).collect(Collectors.toList());
 		return result;
+	}
+	
+	@GetMapping("/redis/save")
+	public List<PolicySpider> saveListFromRedis(){
+//		long size = redisTemplate.opsForList().size(SpiderModuleEnum.POLICY_NEWEST.getKey());
+//		List<Object> list = redisTemplate.opsForList().range(SpiderModuleEnum.POLICY_NEWEST.getKey(), 0L, size-1);
+//		List<PolicySpider> result = list.stream().map(e->{return (PolicySpider)e;}).collect(Collectors.toList());
+//		policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
+		policyService.dataSync(SpiderModuleEnum.POLICY_READING); 
+		return new ArrayList<PolicySpider>();
 	}
 	
 	

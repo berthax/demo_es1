@@ -16,6 +16,7 @@
         <include>README*</include>
         <include>LICENSE*</include>
         <include>NOTICE*</include>
+        <include>chromedriver_v2.4.3/*</include>
       </includes>
       <excludes>
       	<exclude>bin/ngork.sh</exclude>

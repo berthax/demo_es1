@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.troila.tjsmesp.spider.constant.PolicyStatus;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.model.PolicySpider;
-import com.troila.tjsmesp.spider.model.SmePolicy;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
+import com.troila.tjsmesp.spider.model.secondary.SmePolicy;
 import com.troila.tjsmesp.spider.repository.informix.SmePolicyRespositoryInformix;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.util.MD5Util;
@@ -171,8 +171,9 @@ public class PolicyService {
 					.collect(Collectors.toList());		
 //			List<SmePolicy> resultListSave = smePolicyRespositoryInformix.saveAll(resultList);
 //			logger.info("Informix库本次同步数据完成，本次同步模块：{},增加条目数为：{} 条",spiderMoudleEnum.getName(),resultListSave.size());
-			logger.info("Informix库本次同步数据完成，本次同步模块：{},增加条目数为：{} 条",spiderMoudleEnum.getName(),resultList.size());
+//			logger.info("Informix库本次同步数据完成，本次同步模块：{},增加条目数为：{} 条",spiderMoudleEnum.getName(),resultList.size());
 			return resultList;	
+//			return updateList;
 		}catch (Exception e) {
 			logger.error("本次更新模块：{} 出现异常,信息如下：",spiderMoudleEnum.getName(),e);
 			return null;
@@ -193,12 +194,13 @@ public class PolicyService {
 	 * @return
 	 */
 	public int getParentIdForReadingActicle(String publishUrl) {
-		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
+		List<PolicySpider>  list = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
 //		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByPublishUrl(publishUrl);
-		if(parentPolicy == null) {
+		if(list == null || list.size()==0) {
 			logger.error("查找文章链接为：{} 的父类文章出错,Mysql库中查询结果为空",publishUrl);
 			return -1;			
 		}
+		PolicySpider parentPolicy = list.get(0);
 		SmePolicy parentPolicyInformix = smePolicyRespositoryInformix.findByFromLink(parentPolicy.getPublishUrl());
 		if(parentPolicyInformix == null) {
 			logger.error("查找文章链接为：{} 的父类文章id出错,Informix库中查询结果为空",parentPolicy.getPublishUrl());
@@ -213,18 +215,24 @@ public class PolicyService {
 	 * @param publicshUrl
 	 * @return
 	 */
+	//http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/sjrj_237/201703/t20170321_19918.shtml
 	public PolicySpider getParentPolicyForReadingActicleMysql(String publishUrl) {
-		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
-		if(parentPolicy == null) {
-			logger.error("查找文章链接为：{} 的父类文章,Mysql库中查询结果为空",publishUrl);			
+		List<PolicySpider>  list = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
+		if(list == null || list.size() <= 0) {
+			logger.error("查找文章链接为：{} 的父类文章,Mysql库中查询结果为空",publishUrl);	
+			return null;
 		}
-		logger.error("查找文章链接为：{} 的父类文章完成，父类文章的id为{},文章链接为：{}",publishUrl,parentPolicy.getId(),parentPolicy.getPublishUrl());	
+		if(list.size() > 1) {
+			logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为{},信息分别为",publishUrl,list.size());	
+		}
+		PolicySpider parentPolicy = list.get(0);
+		logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为父类文章的id为{},文章链接为：{}",list.size(),publishUrl,parentPolicy.getId(),parentPolicy.getPublishUrl());	
 		return parentPolicy;
 	}
 	
 	public PolicySpider getParentIdForReadingActicle2(String publishUrl) {
-		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
+		List<PolicySpider>  list = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
 //		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByPublishUrl(publishUrl);		
-		return parentPolicy;
+		return list.get(0);
 	}
 }

@@ -36,7 +36,11 @@ public class CrawlPolicyDataSchedule {
 	@Autowired
 	private SpiderConfig spiderConfig;
 	@Autowired
-	private PolicyService policyService;
+	private PolicyService policyService;	
+	@Autowired
+	private PolicyNewestPageProcessor policyNewestPageProcessor;
+	@Autowired
+	private PolicyReadingPageProcessor policyReadingPageProcessor;
 	
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
@@ -52,7 +56,7 @@ public class CrawlPolicyDataSchedule {
 		
 	private void init() {
 		//初始化最新政策的爬虫实例
-		spiderNewest = Spider.create(new PolicyNewestPageProcessor())
+		spiderNewest = Spider.create(policyNewestPageProcessor)
 				.addPipeline(redisPipeline)
 				.setDownloader(seleniumDownloader)
 				.addUrl(spiderConfig.getPolicyNewestStartUrl())
@@ -62,7 +66,7 @@ public class CrawlPolicyDataSchedule {
 //		map.put(SpiderModuleEnum.POLICY_NEWEST.getKey(), spiderNewest);
 		
 		//初始化政策解读的爬虫实例
-		spiderReading = Spider.create(new PolicyReadingPageProcessor())
+		spiderReading = Spider.create(policyReadingPageProcessor)
 				.addPipeline(redisPipeline)
 				.setDownloader(seleniumDownloader)
 				.addUrl(spiderConfig.getPolicyReadingStartUrl())
@@ -86,7 +90,9 @@ public class CrawlPolicyDataSchedule {
 				//问题，第二次进来的时候，已经记录了上一次的爬取记录，不会再去重新爬取
 				//Spider spiderNewest = map.get(SpiderModuleEnum.POLICY_NEWEST.getKey());				
 				//启动最新政策的爬虫，爬取数据				
-				//spiderNewest.runAsync();
+				spiderNewest.run();
+				logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
+				policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
 				
 //				Spider spiderReading = map.get(SpiderModuleEnum.POLICY_READING.getKey());
 				spiderReading.run();

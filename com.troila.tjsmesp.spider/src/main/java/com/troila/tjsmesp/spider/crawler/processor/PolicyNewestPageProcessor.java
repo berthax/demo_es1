@@ -10,13 +10,12 @@ import org.seimicrawler.xpath.JXNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.ProcessorService;
-import com.troila.tjsmesp.spider.model.PolicySpider;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.ProcessorUtils;
 import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
@@ -105,7 +104,10 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				String publishUnit = Selectors.xpath("//table/tbody/tr[1]/td[2]/text()").select(selectedDiv);
 				//如果该项未填任何内容，则为国家政策,需要仔细拆分，获取发文部分信息
 				String dealPublishUnit = dealPublishUnit(page,publishUnit);
-				spider.setPublishUnit(dealPublishUnit.contains("国家政策")?dealPublishUnitLike(title, publishNo):dealPublishUnit);
+				if(dealPublishUnit == null || dealPublishUnit.contains("国家政策")) {
+					dealPublishUnit = dealPublishUnitLike(title, publishNo);					
+				}
+				spider.setPublishUnit(dealPublishUnit == null ? "国家政策": dealPublishUnit);
 				if(publishUnit.equals("")) {
 					spider.setPolicyLevel(0);
 				}else {

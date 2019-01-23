@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.troila.tjsmesp.spider.model.PolicySpider;
+import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 
 public interface PolicySpiderRepositoryMysql extends JpaRepository<PolicySpider, Integer>{
 	
@@ -16,7 +16,7 @@ public interface PolicySpiderRepositoryMysql extends JpaRepository<PolicySpider,
 	
 	public PolicySpider findByPublishUrl(String publishUrl);
 	
-	public PolicySpider findByArticleReadingContaining(String articleReading);
+	public List<PolicySpider> findByArticleReadingContaining(String articleReading);
 	
 	public List<PolicySpider> findByPublishUnitContaining(String publishUntLike);
 }
