@@ -1,0 +1,12 @@
+@charset "utf-8";
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{background: #f60}
+.mCSB_inside > .mCSB_container{margin-right: 0;}
+.mCSB_scrollTools .mCSB_draggerRail{background: none;}
+.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{background: #F60}
+.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
+.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{
+    background-color: #fff; background-color: #f60;
+}
+.mCSB_scrollTools .mCSB_draggerContainer{left: 12px;}
+/*
+.mCSB_scrollTools .mCSB_dragger{max-height: 50px!important;}*/

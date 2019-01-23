@@ -1,0 +1,21 @@
+@charset "utf-8";
+/* pagination */
+.pagination{font-size:80%;padding-right: 3px; padding-left: 3px; padding-bottom: 3px; margin: 12px; padding-top: 13px; text-align: center;margin:0 auto;display: inline-block;}    
+.pagination a{text-decoration:none;color:#15B;}
+.pagination a,.pagination span{display:inline-block;padding:0.3em 0.5em;margin-right:5px;margin-bottom:5px;font-size: 12px;color: #333;}
+.pagination .current{color:#2e82d0;}
+.pagination .current.prev, .pagination .current.next{color:#999;background-image: url(../images/prev_1_normal.png);background-repeat: no-repeat;background-position: center center;}
+.pagination .current.prev:hover{background:url(../images/prev_1_normal.png) no-repeat center center;}
+.pagination .prev:hover{background: url(../images/prev_1_hover&click.png) no-repeat center center;}
+.pagination .current.prev.disabled{background: url(../images/prev_2_normal.png) no-repeat center center;}
+.pagination .prev.disabled{background: url(../images/prev_2_hover&click.png) no-repeat center center;}
+.pagination a:hover,.pagination span:hover{background-color: #c5e3ff;}/*4.24修改hover颜色 zy*/
+.pagination a.next{background-color: transparent;}
+.next,.prev{text-indent: -9999px; } 
+.pagination .prev{background:url(../images/prev_1_hover&click.png) no-repeat center center;}
+.pagination .current.next{background:url(../images/next_1_normal.png) no-repeat center center;}
+.pagination .next{background: url(../images/next_1_hover&click.png) no-repeat center center;}
+.next + span{background:url(../images/next_2_normal.png) no-repeat center center;}
+.pagination .next + .prev.disabled{background:url(../images/next_2_hover&click.png) no-repeat center center;}
+.pagination .next + .current.prev.disabled{background:url(../images/next_2_normal.png) no-repeat center center;}
+

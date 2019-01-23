@@ -1,0 +1,114 @@
+@charset "UTF-8";
+body{background-color:#f0f0f0;font-size: 14px;color: #333;line-height: 30px}
+/*主体main*/
+.admMmain{width: 1200px;margin: 30px auto 60px auto;}
+/*侧栏*/
+.sidebar{width:130px;float:left}
+.sidebar>li{margin-bottom:15px;border-bottom: 1px dashed #d6d6d6;padding-bottom: 11px;width:125px;}
+.sidebar>li>ul>li{height:24px;line-height:24px;font-size:14px;cursor:pointer}
+.sidebar>li>ul>li>i{width: 4px;height: 4px;background-color: #999;display: inline-block;vertical-align: middle;margin-right: 5px;}
+.sidebar>li>h3{font-size:15px;font-weight:700;margin-bottom:8px}
+.sidebar .subnav li{height:32px;line-height:32px;padding-left:25px;background:url(../images/sidebarBg.png) no-repeat 0 -22px}
+.subnav li.subnav_1st{background-position:0 10px}
+.subnav li.subnav_end{background-position:0 -54px}
+.subnav li.subPass{background-position:-130px -22px}
+.subnav li.subnav_1st.subPass{background-position:-130px 10px}
+.subnav li.subnav_end.subPass{background-position:-130px -54px}
+.subnav li.subnavCur{background-position:-273px -22px}
+.subnav li.subnav_1st.subnavCur{background-position:-273px 10px}
+.subnav li.subnav_end.subnavCur{background-position:-273px -54px}
+.sidebarCur{font-weight:700;color:#f60}
+.sidebar>li>ul>li.sidebarCur>i{background-color: #ff6600;}
+.sidebar>li.nobod{border: none}
+.sidebar .menuBtn{cursor: pointer;}
+.sidebar .menuBtn.cur{color:#ff6600;}
+/*审核进度三种状态*/
+.reviewPrs{opacity:0;background:url(../images/admicon01.png) no-repeat 0 0;padding-left:25px;font-size:12px;color:#ff8f17;height:14px;line-height:14px;margin-top:2px}
+.progress1{opacity:1}
+.sidebarBtn1{height:27px;line-height:27px;width:95px;border:1px solid #f60;color:#f60;font-size:12px;text-align:center;display:inline-block;margin-top:13px}
+.sidebarBtn1:hover{background-color:#ffe8dd}
+/*右侧*/
+.admMmainR{background-color:#fff;padding:18px 20px 20px 20px;}
+.adminTit{color: #333;font-size:14px;font-weight:700;height:12px;width:auto;display:inline-block;background:url(../images/adminTit.jpg) no-repeat 0 1px;padding-left:10px;height:20px;vertical-align:top;margin-bottom:10px;margin-top:2px}
+.bgf6{background-color:#f6f6f6}
+/*footer*/
+.adm_footer {width: 100%;background-color: #fff;}
+.adm_footer p{text-align: center;font-size: 12px;color: #666;width: 1200px;margin: 0 auto;padding: 19px 0;}
+
+/*政府侧导航开始*/
+.gov_sidebar_box{float: left;}
+.gov_sidebar_box>div{width:129px;}
+.nav_title{float: left;cursor: pointer;font-size: 15px;font-weight: bold;color:#333 ;padding-left: 14px; background: url(../images/govtit0.png) no-repeat left center;margin-left:-14px; }
+.nav_title.current{ background: url(../images/govtit.png) no-repeat left center;color: #56bfd0}
+.gov_sidebar_box li{cursor: pointer;}
+.gov_sidebar >li{font-size: 13px;color: #333;margin-bottom: 14px;height: 18px;line-height: 17px;}
+.gov_sidebar{background: url(../images/zicongray.png) no-repeat left top;position: relative;height: 82px;}
+.steppass{position: absolute;left: 0;top: 0;background: url(../images/ziconblue.png) no-repeat left top;height:17px; }
+.gov_sidebar li{padding-left:25px; }
+.gov_sidebar .current,.organization .current{color: #56bfd0;font-weight: bold;}
+.organization li{height: 17px;background: url(../images/ziconblue.png) no-repeat left bottom;font-size: 13px;padding-left: 24px;}
+.audit_status li{padding-left: 25px;} 
+.status_pass{background: url(../images/zicon1.png) no-repeat 3px center;color: #86c441}
+.status_mend{background: url(../images/admicon01.png) no-repeat left center;color: #ff8f17}
+.mt14{margin-top: 14px;}
+.govTit{background:url(../images/zicon3.png) no-repeat 0 1px;}
+.gov_sidebar_box >div{border-top: 1px dashed #999;padding:14px 0 ; }
+.gov_sidebar_box >div:first-child{border-top:none;}
+.pdtb14{padding: 14px 0;}
+.mt16{margin-top: 16px;}
+
+.nav_title.currentS1_w {
+    background:url("../images/govtit.png") no-repeat  left center;
+}
+.currentS2_w {
+    color: #56bfd0;
+}
+.mr14{margin-right: 14px;}
+.pdh10{padding: 0 10px;}
+/*政府侧导航结束*/
+/*政府侧导航修改*/
+.gov_sidebar_box> div{display: table;}
+.hsubnav dt,.hsubnav dd{font-size: 12px;cursor: pointer}
+.hsubnav>dl{clear:both;font-size: 13px;display: none}
+.hsubnav>i+dl{position: relative;top: 8px;}
+.hsubnav>dl>dd{padding-left:14px;line-height: 28px;clear:both;display: none;}
+.hsubnav>dl>dd>dl>dd{padding-left:24px;line-height: 28px;clear: both;display: none}
+.hsubnav>dl dt{height:28px;line-height:28px;float: left }
+.gov_sidebar_box i{margin-left:5px; font-style: normal;float: left;margin-top: 2px}
+.gov_sidebar_box dl dt i{margin-top:8px;}
+.gov_sidebar_box dl dt a{float: left}
+.hsubnav .close{background:url("../images/govFirst.png") no-repeat center center;width:13px;height: 13px;cursor: pointer }
+.hsubnav .open{background: url("../images/govSecond.png") no-repeat center center;}
+.gov_sidebar_box > div.hsubnav{padding-bottom:8px;}
+.hsubnav>dl>dd>dl>dd .on{color:#56bfd0;}
+.nav_slide {clear:both;position: relative;top:8px;}
+.showm{display: block!important;}
+dd.on{color:#56bfd0;}
+.nav_title.on{ background:url("../images/govtit.png") no-repeat  left center;}
+.nav_titlebox{margin-bottom: 8px;display: table}
+/*二期-专精新特-企业后台专精特新页面*/
+.zjtsearch span{width:79px;text-align: right;line-height: 36px;display: inline-block}
+.zjtsearch  .w106{width: 106px;}
+.col_green{color:#00b971}
+.color_orange{color:#f60}
+.zjt td{text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+/*专精特新-区属后台*/
+.w230{width: 230px;}
+.w230 .sod_select,.w230 .sod_select.open{background-position:208px center; }
+.ml17{margin-left: 17px;}
+.zjttit{text-align: center;width: 100%;margin-bottom: 20px;}
+.zjt .tb_display2+.tb_display2{margin-top: 0;}
+.tb_display2 caption{text-align: left;color:#f60;padding-bottom:30px; }
+.zjt table{;width: 100%}
+.zjt .tb_display2  td{width: 25%}
+.zjt .showalltxt{padding:0 40px;white-space:initial;line-height: 1.5;padding-bottom: 40px;}
+
+.unpasspop span{font-size:12px;}
+.unpasspop  textarea{width: 300px;height: 80px;}
+.layui-layer.unpassbox{min-width: 400px;}
+.unpassbox .layui-layer-title{font-size: 14px;}
+.unpassbox.layui-layer{box-shadow: #aaa;}
+.zjt .tb_border{width: 800px;margin: 0 auto;}
+.tb_border th,.tb_border td{border:1px solid #ddd;color:#666;text-align: center;height: 33px;}
+.tb_border .col_3{color:#333;}
+.tablelist .w100,.zjt .w100{width: 100px;}

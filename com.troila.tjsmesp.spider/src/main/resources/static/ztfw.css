@@ -1,0 +1,22 @@
+@charset "utf-8";
+.ztfw {width:1130px; min-height:550px; overflow:hidden; margin:0 auto; padding-top:20px;}
+.ztfw_title {background:url(bg_fuwu.gif) left center no-repeat; border-bottom:#2d5a99 solid 1px; height:36px; line-height:36px; padding-left:40px;}
+.ztfw_title1 {font-size:24px; color:#2d5a99; padding-left:38px; line-height:35px; padding-right:30px;}
+.ztfw_title2 a {font-size:20px; line-height:28px; font-weight:normal; color:#2d5a99; }
+.ztfw_title2 a:hover {color:#000;}
+.ztfw_title2 .bold {color:#000;}
+.ztfw_line02 {font-size:12px; padding-left:15px; padding-right:15px; color:#2d5a99; line-height:35px;}
+
+.ztfw_list li {float:left; padding-left:20px; text-align:center;}
+.ztfw_list li a {text-align:center; font-size:16px; color:#333; line-height:26px;}
+
+
+
+#Tab_1 {float:left;}
+#Tab_2 {float:left;}
+#Tab_3 {float:left;}
+
+.on a {font-size:20px; color:#000; line-height:35px;}
+.off a {font-size:20px; color:#2d5a99; line-height:35px;}
+
+.ztfw_content {width:1120px; margin:0 auto; overflow:hidden; padding-top:40px;}

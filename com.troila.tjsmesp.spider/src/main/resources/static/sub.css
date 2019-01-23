@@ -1,0 +1,52 @@
+@charset "utf-8";
+@import url(ztfw.css);
+/*网页基础数据*/
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0 auto; padding:0;}
+body { padding:0; margin:0; background-color:#ddd; font-family:"微软雅黑"; color:#666;}
+a {text-decoration:none; color:#666;}
+ul {list-style:none; padding:0; margin:0;}
+img {border:0;}
+.clear {clear:both;}
+/*指定上下间距*/
+.hr_30,.hr_20,.hr_10,.hr_5,.hr_8,.hr_3,.hr_2.hr_1,.clear,.hr_com,.hr_index{clear:both;font-size:1px;line-height:1px;overflow:hidden;}
+.hr_30{height:30px;}
+.hr_20{height:20px;}
+.hr_10{height:10px;}
+.hr_8{height:8px;}
+.hr_5{height:5px;}
+.hr_3{height:3px;}
+.hr_1{height:1px;}
+.hr_2 {height:2px;}
+
+
+/*title*/
+.sub_title_wrap {height:132px; background-color:#FFF;}
+.sub_title {width:1200px; margin:0 auto; overflow:hidden; height:132px;}
+.sub_title .left {float:left;}
+.sub_title .right {float:right; padding-top:75px;}
+
+.new_search li {float:left;}
+
+.new_search_area {width:176px; height:34px; padding-left:10px; background:url(bg_newindex_search.png) no-repeat; overflow:hidden; border:none; line-height:34px; font-size:12px; color:#999; font-family:"微软雅黑";}
+.new_search_btn {background:url(btn_newindex_search.png) no-repeat; height:34px; width:46px; border:none; cursor:pointer;}
+
+.new_subnav_wrap {height:60px; background-color:#77aeed;}
+.new_subnav {width:1160px; padding-left:40px; height:60px; margin:0 auto; overflow:hidden; background-color:#77aeed;}
+
+.new_subnav li {float:left;}
+.new_subnav .line_newindex {color:#c9e0fa; font-size:12px; line-height:60px; padding-left:34px; padding-right:34px;} 
+.new_subnav li a {font-size:16px; line-height:60px; color:#fff;}
+
+.main {width:1200px; margin:0 auto; background-color:#FFF; padding-top:20px; padding-bottom:35px; overflow:hidden;}
+
+/*页码*/
+.page {width:100%; text-align:center; font-size:14px; margin-top:20px;}
+.page a { display:inline-block; padding:5px 10px 5px 10px; font-size:14px; border:#ccc solid 1px; margin-left:5px; margin-right:5px; border-radius:3px;}
+.page .focus {background-color:#76c9eb; color:#FFF;}
+
+
+.footer {background-color:#999; color:#eee; text-align:center; height:100px; font-size:14px; clear:both; padding-top:50px;}
+
+
+.function {margin-right:40px; float:right;line-height:25px; color:#333; font-size:14px;}
+.function a{line-height:25px; color:#333; font-size:14px;  margin-left:10px; float:left;}

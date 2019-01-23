@@ -1,0 +1,28 @@
+@charset "utf-8";
+/* CSS Document */
+.JD_detail{ width:1140px; margin-top:5px;  padding:10px 8px 10px 8px;min-height:780px;  padding-bottom:20px;}
+/*内容页无右侧解读*/
+.JD_key01{ width: 1000px; height: 80px; border:1px solid #999999; background-color:#ffffff; margin:40px auto; padding:30px;}
+.JD_table_key01 td { font-size:14px; line-height:26px; }
+.JD_article_content01 { line-height: 26px; font-size: 14px; padding:30px; width: 1000px; margin-top:20px; min-height:640px; color:#333;  background-color:#ffffff; }
+/*内容页有右侧解读*/
+.JD_key02{ width: 1000px; height: 80px; border:1px solid #999999; background-color:#ffffff; margin:40px auto; padding:30px;}
+.JD_table_key02 td { font-size:14px; line-height:26px; }
+.JD_article{ width:1060px; min-height:640px; background-color:#ffffff;}
+.JD_article_content02 { line-height: 26px; font-size: 14px; width: 700px; padding-right:40px; float:left; margin-top:40px; border-right:1px solid #999999; min-height:600px;  }
+.JD_article_jiedu{ float:left; width:280px; margin-top:20px; margin-left:30px;　}
+.JD_article_jiedu_title{font-size: 16px; line-height: 35px; margin-top:16px;color:#559ae8;}
+.JD_article_jiedu_newslist ul li {  }
+.JD_article_jiedu_newslist ul li a {font-size:14px; line-height:26px;}
+
+/*政策解读列表*/
+.list_jd {width:1060px; min-height:650px; float:left; overflow:hidden; padding-left:70px; padding-top:5px; padding-bottom:15px;}
+.list_jd_title {color:#333; font-size:24px; line-height:30px; padding-left:10px; width:1050px; height:36px; margin-bottom:6px; border-bottom:1px solid #2d5a99;}
+.list_jd_title a {color:#333;}
+.list_jd_content ul {margin-top:10px;}
+.list_jd_content ul li {float:left; width:1025px; background:url(dot.jpg) no-repeat 0 16px ; padding-left:15px; }
+.list_jd_content ul li a {font-size:14px; line-height:32px;}
+.list_jd_content ul li span.date {float:right; font-size:12px; line-height:32px; margin-right:5px;}
+.list_jd_content ul li span.jd_danwei{float:right; margin-right:30px; width:180px; text-align:left;font-size:14px; line-height:32px;}
+/*页码*/
+.page{ height:28px; margin-top:10px; text-align:center;}

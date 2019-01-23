@@ -1,0 +1,226 @@
+@charset "UTF-8";
+ /*二期-咨询管理-咨询管理-07服务机构申请扶持页*/
+td{color:#333333;}
+.total_page{padding:0;}
+.tablelist th{padding:0}
+.tableTdpad_zy th,.tableTdpad_zy td{padding-left:10px}
+
+.cblack{color:black;}
+.c333{color:#333333;}
+.cgreen{color:#00b971}
+.corange{color:#ff7426;}
+.pl10{padding-left:10px;}
+.pl17{padding-left:17px;}
+.pl45_zy{padding-left:45px;}
+.p10Block_zy{padding:10px;}
+.p0_zy{padding-top:0;padding-bottom:0;}
+.p10_zy{padding:10px 0;}
+.p20_zy{padding:20px 0;}
+.pt5_zy{padding-top:5px;}
+.pt10_zy{padding-top:10px;}
+.pt12_zy{padding-top:12px;}
+.pt14_zy{padding-top:14px;}
+.pt16_zy{padding-top:16px;}
+.pt20_zy{padding-top:20px;}
+.pl55_zy{padding-left:55px;}
+.pl80_zy{padding-left:80px;}
+.pll0_zy{padding-left:10px;}
+
+.ml2{margin-left:2px;}
+.mr2{margin-right:2px;}
+.mr15_zy{margin-right:15px;}
+
+.w50{width:50px;}
+.w67_zy{width:67px;}
+.w280_zy{width:280px;}
+.w310_zy{width:310px;}
+.w380_zy{width:380px;}
+.w126_zy{width:126px;}
+.w310_zy{width:300px;}
+.w740_zy{width:740px;}
+
+.posiR_zy{position:relative;}
+.undL_zy{text-decoration: underline;}
+.undL2_zy{text-decoration: underline;height:17px;line-height:17px;display:block;overflow:visible}
+.lh1p1_zy{line-height:1.1;}
+
+.w200.adminSelect .sod_select {background-position:178px center }
+.tableWrapper_zy table tr td .icheckbox_square-orange{margin-left:40px;float:left;}
+.tb_body td{padding:0 10px;}
+.tableWrapper_zy table tr .inpW70{height:26px;line-height:26px;width:70px;text-align:right;padding:0 3px;}
+.icheckbox_square-orange{margin-top:3px;}
+.totleMoney1_zy{margin-left:36px;float:left;font-weight:bold;color:#000000;}
+.totleMoney2_zy{margin-right:90px;float:right;font-weight:bold;color:#000000;}
+
+/*二期-咨询管理-咨询管理-07服务机构申请扶持页新增“添加”按钮弹出层*/
+.addBtnTip_zy{width:480px;height:250px;box-sizing:border-box;padding:20px;}
+.addBtnTip_zy>div span{width:120px;line-height:34px;text-align:right;}
+.addSave_zy{position:absolute;right:10px;bottom:20px;}
+/*重新定义皮肤*/
+.zyPrint.layui-layer{min-width:490px;}
+.zyPrint .layui-layer-title{margin-bottom:0px;}
+.zyPrint .layui-layer-content{margin:0;padding:0;}
+
+/*二期-咨询管理-咨询管理-08服务机构申请*/
+.table2_zy tr td{vertical-align: top;line-height:24px;}
+.submit1_zy{position:absolute;bottom:30px;right:20px;}
+
+/*二期-咨询管理-咨询管理-09-打印预览*/
+.printTit_zy{width:500px;line-height:34px;font-weight: bold;text-align:center;color:#000000}
+.printTable_zy{border:1px solid #000000;width:500px;}
+.printTable_zy tr td{border:1px solid #000000;color:#000000;line-height:20px;text-align:center;box-sizing: border-box;padding:5px;}
+.printBtn_zy{width:500px;margin-top:20px;}
+.printTable_zy tr td.lh18_zy{line-height:18px;}
+.printTable_zy tr td.lh20_zy{line-height:20px;}
+.printTable_zy tr td.pr45_zy{padding-right:45px;}
+.printTable_zy tr td.p8_zy{padding-top:8px;padding-bottom:8px;}
+
+/*二期-咨询管理-咨询管理-09-打印预览2*/
+/*
+.tableBR_zy{margin-top:-4px;color:#000000}
+.tb_display2 td.printTips_zy{text-indent:72px;color:#999999;}
+.tb_display2 tr td.pb10_zy{padding-bottom:10px;}
+*/
+
+/*二期-法律法规-法律法规-04发布法律讲堂*/
+.table3_zy{width:810px;margin:auto;}
+.Tips_zy{color:#999999;font-size:12px;}
+.tb_display2_zy{margin-top: 31px;border-collapse: collapse;}
+.tb_display2_zy td{vertical-align: top;padding-bottom: 12px;color: #666;line-height: 1.5;word-break: break-all;}
+.tb_display2_zy .pd20{padding-bottom: 20px;}
+.tb_display2_zy .title{text-align: right;color: #333}
+
+/*打印弹窗*/
+.lyPrint.layui-layer{min-width:initial}
+.lyPrint .layui-layer-title{margin-bottom:0}
+.lyPrint .layui-layer-content{padding:0;overflow:auto;height:540px}
+.lyPrint .layui-layer-page>.layui-layer-content{padding:0!important}
+
+/*二期-人员培训-人员培训-01发布培训需求调查问卷*/
+.tableBoxsiz_zy tr th,.tableBoxsiz_zy tr td{box-sizing:border-box;}
+.tableOverE_zy td{white-space:nowrap;overflow:hidden;text-overflow: ellipsis}
+
+/*二期-人员培训-人员培训-02问卷问题列表*/
+.tb_body .link_blue{color:#3075fb}
+
+/*二期-人员培训-人员培训-03新增题目*/
+.addTM_zy{width:750px;/*height:500px;*/box-sizing:border-box;padding:20px;}
+.addTM_zy span{width:112px;text-align:right;line-height:34px;}
+.redTips_zy{font-size:12px;font-style: normal;color:red;}
+.file_box input[type="file"].w100{width:100px;}
+.addSave2_zy{position:absolute;bottom:20px;right:180px;}
+.addCans_zy{position:absolute;bottom:20px;right:40px;}
+/*浏览按钮处*/
+.bower3_zy{width:98px;height:34px;position:static;}
+
+/*二期-人员培训-人员培训-05答案问卷*/
+.wjTit_zy{font-weight:bold;font-size: 14px;color:#333333;padding-left:10px;}
+.wjWraper_zy{background-color: #f6f6f6;padding: 20px 10px;}
+.wjWraper_zy dl,.wjWraper_zy dt,.wjWraper_zy dd{color:#333333;line-height:30px;}
+.wjWraper_zy dt{padding-left:30px;}
+.wjWraper_zy dd{padding-left:50px;}
+.wjSubTit_zy{font-weight:normal;}
+.wjInpBox_zy{border-bottom:1px solid #dddddd;height:20px;display:inline-block;position:relative;bottom:1px;line-height:18px;}
+.wjInpBox_zy input{width:200px;height:20px;line-height:18px;margin:0;padding:2px;border:0 none;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;background:transparent;}
+.wjInpBox_zy input:focus{border:0 none;}
+.wjWraper_zy>dl{margin-top:16px;width:785px;}
+.wjWraper_zy>dl:first-child{margin-top:0;}
+.wjWraper_zy dl dt span{color:#999999;float:right;}
+
+/*二期-创业创新-12服务机构后台（季度报表）*/
+.block_bgff_zy{padding: 20px 10px;}
+.blockTit_zy{font-weight: bold;color:#222222;}
+
+/*二期-创业创新-13季度报表*/
+.cycxTips_zy{width:560px;/*height:540px;*/box-sizing:border-box;padding:20px 30px 30px 30px;}
+.cycxTips_zy>div>div{padding-left:2px;}
+.cycxTips_zy>div>span{width:98px;line-height:34px;text-align:right;}
+.cycxCans_zy{position:absolute;right:31px;bottom:40px;}
+.cycxSave_zy{position:absolute;right:170px;bottom:40px;}
+.zyPrint .layui-layer-content{height:440px;}
+
+
+
+/*二期-创业创新-18月度报表查看*/
+.w120.adminSelect .sod_select{background-position: 98px center;}
+.blockTit2_zy{color:#333;}
+
+/*二期-创业创新-19季度报表查看*/
+/*二期-创业创新-20年度汇总情况*/
+
+/*二期-市场开拓服务-APEC会议发布页面*/
+.textarea01_zy{width:740px;height:70px;border:1px solid #ddd;padding:8px 10px;line-height:22px;color: #666}
+.APEC_table_zy tr,.APEC_table_zy td{vertical-align:top;padding-top:8px;padding-bottom:8px;}
+.APEC_table_zy tr>td>i,.APEC_table_zy tr>td>span{line-height:30px;}
+
+/*二期-市场开拓服务-APEC会议审核页面*/
+.APEC_table_zy tr>td>p{line-height:20px;padding:5px 0px 10px 10px;width:718px;}
+
+/*二期-示范平台认证-区属年度数据填报详情-1*/
+.blockTit3_zy{padding-left:10px;margin-top:20px;color:#333333;font-weight:700;}
+.blockTit3_zy span{color:#666666;font-weight: normal}
+.sfpt_table_zy table{width:900px;}
+.sfpt_table_zy table tr td{padding:10px 0px;line-height:18px;vertical-align: top;}
+.sfpt_span1_zy{width:200px;text-align:right;display:inline-block;vertical-align: top;}
+.sfpt_span2_zy{display:inline-block;width:240px;vertical-align: top;color:#666666;}
+.sfpt_span3_zy{display:inline-block;width:690px;vertical-align: top;color:#666666;}
+.sfpt_span3_zy i{font-style:normal;color:#3075fb;}
+
+/*二期-示范平台认证-区属年度数据填报详情-2(弹窗)*/
+.notPassTips_zy{width:460px;height:185px;box-sizing:border-box;padding:20px 30px;}
+/*重新定义皮肤-不通过小弹窗*/
+.zySmallTips.layui-layer{min-width:480px;}
+.zySmallTips .layui-layer-title{margin-bottom:0px;}
+.zySmallTips .layui-layer-content{margin:0;padding:0;}
+.zySmallTips .layui-layer-content{height:185px;}
+
+/*二期-示范平台认证-市级平台认证后台*/
+.link_blueA_zy{width:100%;color:#3075fb;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+.link_blueA_zy:hover{text-decoration: underline;}
+.changeTimeTips_zy{width:460px;height:160px;box-sizing:border-box;padding:20px;}
+/*重新定义皮肤-开放时间小弹窗*/
+.openTimeTips.layui-layer{min-width:460px;}
+.openTimeTips .layui-layer-title{margin-bottom:0px;}
+.openTimeTips .layui-layer-content{margin:0;padding:0;}
+.openTimeTips .layui-layer-content{/*height:185px;*/}
+
+/*二期-示范平台认证-示范平台认证*/
+.sfpt_list_zy{border:1px solid #d6d6d6;}
+.sfptArrow_zy{color:#999999;font-size:12px;line-height:45px;display:inline-block;background:url(../images/arrowright2_03.png) no-repeat right center;padding-right:8px;vertical-align:top}
+.searchBig_zy{width:630px;height:40px;margin:0 auto;}
+.li_topNew_zy>li{min-width:45px;margin-right:0px;}
+.btnsWrapper_zy{width:290px;}
+.orangeBtn{width:290px;height:48px;display:inline-block;text-align:center;color:#fff;line-height:48px;font-size:16px;font-weight:700;cursor:pointer;background-color:#f60;}
+.sfptInfo_zy{width:898px;height:162px;border:1px solid #d6d6d6;background-color:#fff;}
+.sfptInfo_zy span{font-size:18px;font-weight:700;margin-left:20px;height:50px;line-height:50px;}
+.sfptInfo_zy p{height:96px;line-height:24px;overflow: hidden;padding:0px 20px;}
+
+/*二期-市场开拓服务-中博会或APEC详细页面*/
+.mettingBox_zy{background:#fff;border:1px solid #d6d6d6;}
+.mettingBox_zy .mettingTit_zy h1{font-weight:700;text-align:center;font-size:16px;}
+.meetingBtn_zy{position:absolute;top:0px;right:20px;}
+.meetingCon_zy{height:140px;line-height:20px;overflow:hidden;padding:0px 20px;margin-top:25px;margin-bottom:20px;}
+.oldMeeting_zy{width:900px;box-sizing: border-box;border:1px solid #d6d6d6;background:#fff;}
+.meetingNews_zy{width:290px;border:1px solid #d6d6d6;background-color: #fff;}
+.maxH270_zy{max-height:270px;}
+.meetingCon_zy .mCSB_container{line-height:20px;}
+
+.oddMetiCon_zy{padding:29px 10px;position:relative;}
+#metting_marquee{width:880px;height:205px;overflow: hidden;}
+.oddMetiCon_zy>div>ul>li{width:184px;padding:0px 17px;float:left;}
+.oddMetiCon_zy>div>ul>li>h1{font-size:16px;font-weight:700;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;padding-top:10px;}
+.oddMetiCon_zy>div>ul>li>p{white-space: nowrap;overflow: hidden;text-overflow: ellipsis;padding-top:15px;}
+.oddMetiCon_zy>div>ul>li>p>a{color:#666666;}
+#goLeft_zy,#goRight_zy{display:inline-block;width:17px;height:47px;}
+#goLeft_zy{position:absolute;left:8px;top:110px;background:url("../images/Left-arrow_arow.png") no-repeat center center; cursor: pointer;}
+#goLeft_zy:hover{background:url("../images/Left-arrow_hover.png") no-repeat center center}
+#goRight_zy{position:absolute;right:14px;top:110px;background:url("../images/Right-arrow_arow.png") no-repeat center center;cursor: pointer}
+#goRight_zy:hover{background:url("../images/Right-arrow_hover.png") no-repeat center center}
+
+/*二期-市场开拓服务-重大会议发布*/
+.w180.adminSelect .sod_select {background-position:158px center }
+.counts_zy i{font-style:normal;color:#2e82d0;font-weight: bold;padding-right: 5px;}
+.sort_col a{display:inline-block;margin-left:5px;width:100px;height:12px;color:#333}
+.sort_icon{display:inline-block;margin-left:5px;width:10px;height:12px;}
+.sort_icon.asc{background:url(../images/table_icon1.png) no-repeat;}
+.sort_icon.desc{background:url(../images/table_icon2.png) no-repeat;}

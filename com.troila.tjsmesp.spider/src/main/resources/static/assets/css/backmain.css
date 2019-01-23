@@ -1,0 +1,58 @@
+@charset "UTF-8";
+.bgf{background: #fff;}
+.wi100{width: 100%;}
+/*common*/
+.checkblock{background: #f6f6f6;padding:13px 20px 0 14px;width: 100%;box-sizing: border-box;min-height: 63px;margin-bottom: 24px;}
+.checkblock ul li{float: left;margin-left: 30px;}
+.checkblock ul li label{font-size:13px;color:#333; float: left; line-height: 36px;}
+.checkblock ul li .select_box{ float: left;}
+.checkblock ul li:first-child{margin-left: 0;}
+/*table*/
+.tablelist th{height: 32px;color: #333;padding-left: 10px;}
+.tb_body table{table-layout: fixed;width: 100%;}
+.tb_body td{height:40px;text-align: center;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;padding:0 10px;color: #333;}
+.bgf6{background: #f6f6f6}
+.tb_body table{margin-top: 2px;border-bottom:2px solid #f60;width: 100%; }
+.tb_body tr:hover{background: #c5e3ff}
+.tb_body table a{color: #3075fb;margin-left:20px;}
+.tb_body table a:first-child{margin-left:0; }
+.tb_body table a:hover{text-decoration: underline;  cursor: pointer;}
+/*政府用户管理start*/
+.back_add{color: #3075fb;font-size:12px;cursor: pointer;float: right;font-weight: normal;line-height: 1.5;background: url("../images/back_add.png") no-repeat left center;padding-left: 16px;margin: 10px 18px 0 0 ;}
+.w383{width: 383px;}
+.ml33{margin-left: 33px;}
+.back_add:hover{text-decoration: underline}
+/*修改密码弹窗*/
+
+input[type="text"]{box-sizing: border-box}
+.change_password{margin-left: 18px; margin-top:20px;}
+.change_password th{text-align: right;}
+.change_password td,.change_password th{padding-bottom: 31px;
+    position: relative;}
+.change_password input[type="text"]{line-height: 36px;}
+/*分配权限弹窗*/
+.permission_pop{margin: 30px  0 0 18px;height:330px;}
+.permission_pop li label{margin-bottom: 20px;display: inline-block}
+.permission_pop >li>ul>li>label{margin-left: 40px;}
+.layui-layer-page.titorange.btnr .layui-layer-btn{padding-right: 6px;}
+.btnr .layui-layer-btn a{margin:0}
+/*3业绩考核start*/
+.w90{width: 90px;}
+.feedbackradio span,.feedbackradio .iradio_square-orange{float: left;}
+.feedbackradio .iradio_square-orange{top: 11px;margin-right: 10px;}
+.yearspace{width: 30px;text-align: center;}
+.mr5{margin-right: 5px;}
+.chartline{height: 361px;width: 100%; }
+/*3业绩考核over*/
+/*error*/
+span.error{
+    color: red;
+    float: right;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: -14px;
+    width: 100%;
+    font-size:12px;
+}
+.mr40{margin-right: 40px;}

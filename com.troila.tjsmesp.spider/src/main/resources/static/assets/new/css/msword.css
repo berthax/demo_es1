@@ -1,0 +1,6 @@
+/**
+* rules below is to override rules from MsWord, since just copying content
+* from MsWord document directly can mess up page rendering due to the style
+* inconsistency between browser and MsWord
+*/
+p.a0 {text-indent: 2em}
