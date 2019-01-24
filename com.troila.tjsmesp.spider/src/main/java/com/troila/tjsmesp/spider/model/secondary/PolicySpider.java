@@ -9,7 +9,11 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
+/**
+ * 对应informix数据库中的表
+ * @author xuanguojing
+ *
+ */
 @Entity
 @Table(name="sme_policy_spider")
 public class PolicySpider {

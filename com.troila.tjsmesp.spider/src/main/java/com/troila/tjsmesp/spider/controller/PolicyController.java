@@ -14,6 +14,7 @@ import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.PolicyService;
+import com.troila.tjsmesp.spider.util.TimeUtils;
 
 @RestController
 public class PolicyController {
@@ -51,6 +52,10 @@ public class PolicyController {
 //		policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
 		policyService.dataSync(SpiderModuleEnum.POLICY_READING); 
 		return new ArrayList<PolicySpider>();
+	}
+	@GetMapping("/mysql/lastweekdata")
+	public List<PolicySpider> getLastWeekData(){
+		return policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastWeek(), 0);
 	}
 	
 	

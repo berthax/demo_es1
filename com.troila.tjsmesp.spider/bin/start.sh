@@ -13,7 +13,7 @@ for i in $APP_HOME/lib/*.jar; do
         CLASSPATH="${CLASSPATH}:${i}"     
 done
 
-"${JAVA_HOME:-/usr}/bin/java" -cp ${CLASSPATH} -server -Dlogging.config=${APP_HOME}/conf/logback.xml -Dspring.config.location=${APP_HOME}/conf/application.properties -Dname=com.troila.cloud.mail.web ${JAVA_OPTS} -DAPP_HOME=${APP_HOME} com.troila.tjsmesp.spider.SpiderApplication 2>&1   &
+"${JAVA_HOME:-/usr}/bin/java" -cp ${CLASSPATH} -server -Dlogging.config=${APP_HOME}/conf/logback.xml -Dspring.config.location=${APP_HOME}/conf/application.properties -Dname=com.troila.tjsmesp.spider ${JAVA_OPTS} -DAPP_HOME=${APP_HOME} com.troila.tjsmesp.spider.SpiderApplication 2>&1   &
 echo $! > "${APP_HOME}/pid"
       
 

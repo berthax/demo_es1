@@ -14,6 +14,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.GeckoDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,18 +65,26 @@ public class WebDriverPool {
 		 */
 		//enable all possible "ssl-protocols" and
 		// "ignore-ssl-errors" for PhantomJSDriver
+		logger.info("当前执行初始化WebDrive实例操作，当前系统是否为linux:{},驱动路径为：{}",OSUtil.isOslinux(),spiderDriverConfig.getLinuxDriver());
 		if(OSUtil.isOswindows()) {
-			System.getProperties().setProperty("webdriver.chrome.driver", spiderDriverConfig.getChromeWindowsDriver());			
+//			System.getProperties().setProperty("webdriver.chrome.driver", spiderDriverConfig.getChromeWindowsDriver());		
+			System.getProperties().setProperty("webdriver.gecko.driver", spiderDriverConfig.getWindowsDriver());				
 		}else if(OSUtil.isOslinux()) {
-			System.getProperties().setProperty("webdriver.chrome.driver", spiderDriverConfig.getChromeLinuxDriver());	
+			logger.info("linux下设置系统变量开始，设置内容为:{}",spiderDriverConfig.getLinuxDriver());
+			System.getProperties().setProperty("webdriver.gecko.driver", spiderDriverConfig.getLinuxDriver());	
+			logger.info("linux下设置系统变量结束，设置内容为:{}",spiderDriverConfig.getLinuxDriver());
 		}else if(OSUtil.isOsmac()) {
-			System.getProperties().setProperty("webdriver.chrome.driver", spiderDriverConfig.getChromeMacDriver());	
+			System.getProperties().setProperty("webdriver.gecko.driver", spiderDriverConfig.getMacDriver());	
 		}else {
 			logger.error("当前工程不支持的操作系统类型");
 			throw new RuntimeException("当前工程不支持的操作系统类型");
 		}
-		ChromeOptions options = new ChromeOptions().addArguments("--headless","--web-security=false","--ssl-protocol=any");
-		mDriver = new ChromeDriver(ChromeDriverService.createDefaultService(), options);	
+//		ChromeOptions options = new ChromeOptions().addArguments("--headless","--web-security=false","--ssl-protocol=any");		
+//		mDriver = new ChromeDriver(ChromeDriverService.createDefaultService(), options);	
+		logger.info("开始创建WebDrive实例……");
+		FirefoxOptions options = new FirefoxOptions().addArguments("--headless","--web-security=false","--ssl-protocol=any");
+		mDriver = new FirefoxDriver(GeckoDriverService.createDefaultService(), options);
+		logger.info("创建WebDrive实例成功，实例为{},参数为：{}",mDriver,options);
 //		System.out.println("mDrive创建成功……");
 	}
 

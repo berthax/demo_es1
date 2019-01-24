@@ -40,8 +40,6 @@ public class SeleniumDownloader implements Downloader, Closeable{
 		WebDriver webDriver = null;
 		try {
 			webDriver = webDriverPool.get();
-//			ChromeOptions options = new ChromeOptions().addArguments("--headless");
-//			webDriver = new ChromeDriver(ChromeDriverService.createDefaultService(), options);
 		} catch (Exception e) {
 			logger.warn("interrupted", e);
 			return null;
@@ -52,7 +50,7 @@ public class SeleniumDownloader implements Downloader, Closeable{
 		try {
 			webDriver.get(request.getUrl());
 			Thread.sleep(sleepTime);
-            logger.info("downloading page success {}", request.getUrl());
+//            logger.info("downloading page success {}", request.getUrl());
             WebDriver.Options manage = webDriver.manage();
     		Site site = task.getSite();
     		if (site.getCookies() != null) {

@@ -1,5 +1,6 @@
 package com.troila.tjsmesp.spider.repository.mysql;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +20,6 @@ public interface PolicySpiderRepositoryMysql extends JpaRepository<PolicySpider,
 	public List<PolicySpider> findByArticleReadingContaining(String articleReading);
 	
 	public List<PolicySpider> findByPublishUnitContaining(String publishUntLike);
+	
+	public List<PolicySpider> findByPublishDateGreaterThanEqualAndSpiderModule(Date lastweek,int spiderModule);
 }

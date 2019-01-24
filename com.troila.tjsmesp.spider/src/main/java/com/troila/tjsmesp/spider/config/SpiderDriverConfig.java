@@ -12,40 +12,33 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix="spider.driver")
 public class SpiderDriverConfig {
 	/**
-	 * windows下的chrome浏览器driver
+	 * windows下的firefox浏览器driver
 	 */
-	private String chromeWindowsDriver;
+	private String windowsDriver;
 	/**
-	 * linux下的chrome浏览器driver
+	 * linux下的firefox浏览器driver
 	 */
-	private String chromeLinuxDriver;
+	private String linuxDriver;
 	/**
-	 * max下的chrome历览器driver
+	 * max下的firefox浏览器driver
 	 */
-	private String chromeMacDriver;
-
-	public String getChromeWindowsDriver() {
-		return chromeWindowsDriver;
+	private String macDriver;
+	public String getWindowsDriver() {
+		return windowsDriver;
 	}
-
-	public void setChromeWindowsDriver(String chromeWindowsDriver) {
-		this.chromeWindowsDriver = chromeWindowsDriver;
+	public void setWindowsDriver(String windowsDriver) {
+		this.windowsDriver = windowsDriver;
 	}
-
-	public String getChromeLinuxDriver() {
-		return chromeLinuxDriver;
+	public String getLinuxDriver() {
+		return linuxDriver;
 	}
-
-	public void setChromeLinuxDriver(String chromeLinuxDriver) {
-		this.chromeLinuxDriver = chromeLinuxDriver;
+	public void setLinuxDriver(String linuxDriver) {
+		this.linuxDriver = linuxDriver;
 	}
-
-	public String getChromeMacDriver() {
-		return chromeMacDriver;
+	public String getMacDriver() {
+		return macDriver;
 	}
-
-	public void setChromeMacDriver(String chromeMacDriver) {
-		this.chromeMacDriver = chromeMacDriver;
+	public void setMacDriver(String macDriver) {
+		this.macDriver = macDriver;
 	}
-
 }

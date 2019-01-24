@@ -21,6 +21,7 @@ import com.troila.tjsmesp.spider.model.secondary.SmePolicy;
 import com.troila.tjsmesp.spider.repository.informix.SmePolicyRespositoryInformix;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.util.MD5Util;
+import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 @Service
 public class PolicyService {
@@ -82,7 +83,7 @@ public class PolicyService {
 		}
 		smePolicy.setTitle(policySpider.getTitle());
 		smePolicy.setType(policySpider.getSpiderModule());
-		smePolicy.setStripedContent(policySpider.getStripContent());
+		smePolicy.setStripedContent(ReduceHtml2Text.removeHtmlTag(policySpider.getContent()));
 //		smePolicy.setPolicyAbstract("同步过来的数据，这是摘要内容");
 //		String content_temp = ReduceHtml2Text.removeHtmlTag(policySpider.getContent());
 		String content = "<div class='articleList'><h3 class='articleTit'>摘要</h3><div class='articleTxt'>"+""
@@ -113,7 +114,7 @@ public class PolicyService {
 		smePolicy.setPriority(0);
 		smePolicy.setCategory("综合政策");
 		smePolicy.setPublishType("platform");
-		
+		smePolicy.setPublisher(defaultPublisher);
 		//如果有附件下载链接，设置附件
 		smePolicy.setAttachments(policySpider.getAttachment());
 		return smePolicy;
@@ -150,6 +151,7 @@ public class PolicyService {
 										.map(e->{
 											PolicySpider parentPolicy = getParentPolicyForReadingActicleMysql(e.getPublishUrl());
 											if(parentPolicy != null) {
+												e.setParentId(parentPolicy.getId());
 												e.setPublishNo(parentPolicy.getPublishNo());
 												e.setPolicyLevel(parentPolicy.getPolicyLevel());
 												if(e.getPublishUnit().equals("国家政策解读")) {
@@ -182,10 +184,18 @@ public class PolicyService {
 		}
 	}
 	
+	/**
+	 * 同步最近一周的数据
+	 * @param spiderMoudleEnum
+	 * @return
+	 */
 	public List<SmePolicy> dataSync_test(SpiderModuleEnum spiderMoudleEnum){
-		List<PolicySpider> mysqlList = policySpiderRepositoryMysql.findBySpiderModule(spiderMoudleEnum.getIndex());
+//		List<PolicySpider> mysqlList = policySpiderRepositoryMysql.findBySpiderModule(spiderMoudleEnum.getIndex());
+//		List<SmePolicy> resultList = mysqlList.stream().map(e->{return convertTo(e);}).collect(Collectors.toList());
+//		return smePolicyRespositoryInformix.saveAll(resultList);
+		List<PolicySpider> mysqlList = policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastWeek(), 0);
 		List<SmePolicy> resultList = mysqlList.stream().map(e->{return convertTo(e);}).collect(Collectors.toList());
-		return smePolicyRespositoryInformix.saveAll(resultList);
+		return smePolicyRespositoryInformix.saveAll(resultList);	
 	}
 	
 	/**
@@ -226,7 +236,7 @@ public class PolicyService {
 			logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为{},信息分别为",publishUrl,list.size());	
 		}
 		PolicySpider parentPolicy = list.get(0);
-		logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为父类文章的id为{},文章链接为：{}",list.size(),publishUrl,parentPolicy.getId(),parentPolicy.getPublishUrl());	
+		logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为{},文章链接为：{}",publishUrl,list.size(),parentPolicy.getPublishUrl());	
 		return parentPolicy;
 	}
 	

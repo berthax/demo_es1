@@ -62,7 +62,7 @@ public class CrawlPolicyDataSchedule {
 				.addUrl(spiderConfig.getPolicyNewestStartUrl())
 				.thread(spiderConfig.getSpiderThreadNumber());
 		//删除原缓存中的内容
-//		redisTemplate.delete(SpiderModuleEnum.POLICY_NEWEST.getKey());
+		redisTemplate.delete(SpiderModuleEnum.POLICY_NEWEST.getKey());
 //		map.put(SpiderModuleEnum.POLICY_NEWEST.getKey(), spiderNewest);
 		
 		//初始化政策解读的爬虫实例
@@ -72,7 +72,7 @@ public class CrawlPolicyDataSchedule {
 				.addUrl(spiderConfig.getPolicyReadingStartUrl())
 				.thread(spiderConfig.getSpiderThreadNumber());	
 		//删除原缓存中的内容
-//		redisTemplate.delete(SpiderModuleEnum.POLICY_READING.getKey());
+		redisTemplate.delete(SpiderModuleEnum.POLICY_READING.getKey());
 //		map.put(SpiderModuleEnum.POLICY_READING.getKey(), spiderReading);
 		lastIsCompleted = false;
 	}
@@ -80,7 +80,7 @@ public class CrawlPolicyDataSchedule {
 	 * 定期执行某项定时任务
 	 * 从0分钟开始，每隔3分钟查看一次
 	 */
-	@Scheduled(cron="0 0/5 * * * ? ")
+	@Scheduled(cron="0 0/60 * * * ? ")
 	public void crawlPolicyDataAll() {
 		if(lastIsCompleted) {
 			logger.info("{}开始执行定时爬取任务，……",new Date());
@@ -129,7 +129,7 @@ public class CrawlPolicyDataSchedule {
 				lastIsCompleted = true;
 			}
 		}else {
-			logger.info("上次任务还未完成，本次任务略过……");
+			logger.info("{}上次任务还未完成，本次任务略过……",new Date());
 		}
 	}
 }

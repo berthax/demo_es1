@@ -30,7 +30,7 @@ public class PolicyReadingController {
 	}
 	@GetMapping("/getConf")
 	public String getConfig() {
-		return spiderDriverConfig.getChromeWindowsDriver();
+		return spiderDriverConfig.getWindowsDriver();
 	}
 	
 	@GetMapping("/getParent")
