@@ -10,19 +10,19 @@ public final class PolicyStatus {
 	 */
 	public static final int Pending = 0;
 	/**
-	 * 审核通过
+	 * 审核通过，已发布
 	 */
 	public static final int Approved = 1;
 	/**
-	 * 拒绝
+	 * 已拒绝
 	 */
 	public static final int Rejected = 2;
 	/**
-	 * 撤销
+	 * 已撤销
 	 */
 	public static final int Canceled = 3;
 	/**
-	 * 草稿
+	 * 草稿，即待提交状态
 	 */
 	public static final int Draft = 99;
 

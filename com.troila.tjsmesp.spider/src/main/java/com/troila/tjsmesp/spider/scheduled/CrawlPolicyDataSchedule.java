@@ -78,7 +78,7 @@ public class CrawlPolicyDataSchedule {
 	}
 	/**
 	 * 定期执行某项定时任务
-	 * 从0分钟开始，每隔3分钟查看一次
+	 * 从0分钟开始，每隔一小时查看一次
 	 */
 	@Scheduled(cron="0 0/60 * * * ? ")
 	public void crawlPolicyDataAll() {
@@ -132,4 +132,14 @@ public class CrawlPolicyDataSchedule {
 			logger.info("{}上次任务还未完成，本次任务略过……",new Date());
 		}
 	}
+	
+	/**
+	 * 定期执行数据同步操作
+	 * 从0分钟开始，每隔一小时查看一次
+	 * 每周五的早七点、七点半，八点，八点半执行一次，下午四点，四点半
+	 */
+/*	@Scheduled(cron="0 0,30 7,8,16 0 0 5 * ")
+	public void syncPolicyDataLastWeek() {
+		
+	}*/
 }

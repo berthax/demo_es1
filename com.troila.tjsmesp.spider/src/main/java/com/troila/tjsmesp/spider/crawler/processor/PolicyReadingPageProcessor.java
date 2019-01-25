@@ -1,6 +1,5 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,10 +14,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.ProcessorService;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
-import com.troila.tjsmesp.spider.service.PolicyService;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.ProcessorUtils;
 import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
@@ -109,6 +108,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
         			//发文单位(经常是获取到的是国家政策解读，此时需要再同步的时候，获取原文的发文单位)
         			String publishUnit = map.get(page.getUrl().toString());
         			spider.setPublishUnit(publishUnit);
+        			spider.setPolicyLevel(PolicyLevelEnum.getLevelByMultiNames(publishUnit));   //需要整理出来，发文部门需要进一步处理
 //	    		map.remove(title);   //将map中的该项内容去掉
         			spider.setPublishUrl(page.getUrl().toString());
         			spider.setFromLink("http://zcydt.fzgg.tj.gov.cn");

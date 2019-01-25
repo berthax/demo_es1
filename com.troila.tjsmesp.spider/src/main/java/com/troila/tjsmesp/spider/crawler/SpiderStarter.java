@@ -54,12 +54,13 @@ public class SpiderStarter implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 		//初始化政策解读的爬虫实例
-//		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
-//						.addPipeline(redisPipeline)
-//						.setDownloader(seleniumDownloader)
+		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
+						.addPipeline(redisPipeline)
+						.setDownloader(seleniumDownloader)
 //						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-//						.thread(spiderConfig.getSpiderThreadNumber());	
-//		spiderReading.runAsync();
+						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/slsj_242/201704/t20170414_20537.shtml")
+						.thread(spiderConfig.getSpiderThreadNumber());	
+		spiderReading.runAsync();
 
 
 		// TODO Auto-generated method stub
@@ -99,15 +100,15 @@ public class SpiderStarter implements CommandLineRunner{
 ////		}
 //		spiderNewest.runAsync();  //异步启动
 //		http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20188.shtml    //财政部国家税务总局
-		Spider spiderNewest = Spider.create(policyNewestPageProcessor)
-				.addPipeline(mysqlPipeline)
-				.setDownloader(seleniumDownloader)
-//				.addUrl(spiderConfig.getPolicyNewestStartUrl())
-				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20332.shtml")
-				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_19989.shtml")
-				.thread(spiderConfig.getSpiderThreadNumber());
-		spiderNewest.runAsync();
-		logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
+//		Spider spiderNewest = Spider.create(policyNewestPageProcessor)
+//				.addPipeline(mysqlPipeline)
+//				.setDownloader(seleniumDownloader)
+////				.addUrl(spiderConfig.getPolicyNewestStartUrl())
+//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20332.shtml")
+//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_19989.shtml")
+//				.thread(spiderConfig.getSpiderThreadNumber());
+//		spiderNewest.runAsync();
+//		logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
 //		policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
 		
 		//抓取中小企信息网焦点新闻的政策内容

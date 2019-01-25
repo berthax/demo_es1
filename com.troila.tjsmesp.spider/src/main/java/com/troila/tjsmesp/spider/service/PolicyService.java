@@ -153,9 +153,9 @@ public class PolicyService {
 											if(parentPolicy != null) {
 												e.setParentId(parentPolicy.getId());
 												e.setPublishNo(parentPolicy.getPublishNo());
-												e.setPolicyLevel(parentPolicy.getPolicyLevel());
 												if(e.getPublishUnit().equals("国家政策解读")) {
 													e.setPublishUnit(parentPolicy.getPublishUnit());
+													e.setPolicyLevel(parentPolicy.getPolicyLevel());
 												}
 											}
 											return e;})
