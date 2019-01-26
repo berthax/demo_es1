@@ -14,8 +14,7 @@
 				<include>bin/*.sh</include>
 				<include>conf/*</include>
 				<include>upload/*</include>
-				<include>chromedriver_v2.4.3/**</include>
-				<include>geckodriver/**</include>
+				<include>driver/**</include>
 				<include>README*</include>
 				<include>LICENSE*</include>
 				<include>NOTICE*</include>

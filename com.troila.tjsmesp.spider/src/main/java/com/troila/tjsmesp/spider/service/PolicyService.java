@@ -65,27 +65,25 @@ public class PolicyService {
 			smePolicy.setSource(policySpider.getPublishUnit());
 			smePolicy.setReferenceNumber(policySpider.getPublishNo());
 		}else {
-			//如果是政策解读，需要找到该解读的文章的父类id
-//			int parentId = getParentIdForReadingActicle(policySpider.getPublishUrl());
-//			if(parentId == -1) {
-//				logger.error("类型转换时出现错误，政策解读记录{}:{}找不到对应的原文记录",policySpider.getTitle(),policySpider.getPublishUrl());
-//				return null;			
-//			}
-			smePolicy.setParentId(-1);
-			PolicySpider parentPolicy = getParentPolicyForReadingActicleMysql(policySpider.getPublishUrl());
-			if(parentPolicy == null) {
+			//如果是政策解读，需要找到该解读的文章的父类，即政策原文
+			SmePolicy parentPolicy = getParentPolicyForReadingActicleInformix(policySpider.getPublishUrl());			
+			if(parentPolicy != null) {
+				//设置解读父类id
+				smePolicy.setParentId(parentPolicy.getId());  
+				//设置解读的政策级别
+				smePolicy.setPolicyLevel(policySpider.getPolicyLevel()==null?parentPolicy.getPolicyLevel():policySpider.getPolicyLevel());
+				smePolicy.setSource((policySpider.getPolicyLevel()!=null && policySpider.getPolicyLevel()==0)?parentPolicy.getSource():policySpider.getPublishUnit());  //设置发文部门
+				smePolicy.setReferenceNumber(parentPolicy.getReferenceNumber());				
+			}else {
 				logger.error("类型转换时出现错误，政策解读记录{}:{}找不到对应的原文记录",policySpider.getTitle(),policySpider.getPublishUrl());
-				return null;
+				smePolicy.setParentId(-1);  //此种情况为没有对应原文的解读文章
+				smePolicy.setSource(policySpider.getPublishUnit());
+				smePolicy.setPolicyLevel(policySpider.getPolicyLevel());
 			}
-			smePolicy.setPolicyLevel(parentPolicy.getPolicyLevel());   //有待区分对待
-			smePolicy.setSource(policySpider.getPublishUnit().contains("国家政策解读")?parentPolicy.getPublishUnit():policySpider.getPublishUnit());
-			smePolicy.setReferenceNumber(parentPolicy.getPublishNo());
 		}
 		smePolicy.setTitle(policySpider.getTitle());
 		smePolicy.setType(policySpider.getSpiderModule());
 		smePolicy.setStripedContent(ReduceHtml2Text.removeHtmlTag(policySpider.getContent()));
-//		smePolicy.setPolicyAbstract("同步过来的数据，这是摘要内容");
-//		String content_temp = ReduceHtml2Text.removeHtmlTag(policySpider.getContent());
 		String content = "<div class='articleList'><h3 class='articleTit'>摘要</h3><div class='articleTxt'>"+""
 					+    "</div><h3 class='articleTit'>正文</h3><div class='articleTxt'>"+policySpider.getContent()
 					+ 	 "</div><h3 class='articleTit'>联系人及联系方式</h3><div class='articleTxt'></div></div>";
@@ -106,9 +104,7 @@ public class PolicyService {
 		//修改内容，转载链接改为原文链接了
 		smePolicy.setFromLink(policySpider.getPublishUrl());
 		smePolicy.setGmtForward(new Date());
-		
-		
-		
+				
 		smePolicy.setIndustry("ALL");
 		smePolicy.setArea("全国");
 		smePolicy.setPriority(0);
@@ -116,15 +112,15 @@ public class PolicyService {
 		smePolicy.setPublishType("platform");
 		smePolicy.setPublisher(defaultPublisher);
 		//如果有附件下载链接，设置附件
-		smePolicy.setAttachments(policySpider.getAttachment());
+		smePolicy.setAttachments(policySpider.getAttachment());   //文章链接问题已经搞定，同步过去之后可以直接下载附件
 		return smePolicy;
 	}
 	
 	/**
-	 * 最新政策进行数据同步
+	 * 本地数据更新
 	 * @return
 	 */
-	public List<SmePolicy> dataSync(SpiderModuleEnum spiderMoudleEnum){
+	public List<PolicySpider> dataUpdate(SpiderModuleEnum spiderMoudleEnum){
 		try {	
 			logger.info("{}开始执行数据更新以及同步过程，更新模块为{},请稍候……",TimeUtils.getLongFormatDate(new Date()),spiderMoudleEnum.getName());
 			//先获取mysql数据库中的所有该类型的数据
@@ -132,7 +128,7 @@ public class PolicyService {
 			//获取redis中爬取记录的总数
 			long size = redisTemplate.opsForList().size(spiderMoudleEnum.getKey());
 			if(size == 0) {
-				logger.info("当前Reids中未查询到任何爬取的数据，可能上次爬取过程中出错了……");
+				logger.info("当前Reids中未查询到任何爬取的数据，本次爬取没有更新的内容");
 				return null;
 			}
 			//从redis中获取本次爬取的所有记录
@@ -146,7 +142,8 @@ public class PolicyService {
 			updateList = redisList.stream()
 								.filter(p->!map.containsKey(MD5Util.getMD5(p.getPublishUrl())))
 								.collect(Collectors.toList());
-			if(spiderMoudleEnum == SpiderModuleEnum.POLICY_READING) {  //如果是政策解读，需要对发文部门，发文字号，政策级别进行设置
+			//如果是政策解读，需要对发文部门，发文字号，政策级别进行设置（此处为政策解读在本地库的存储情况，与中小企业项目无关）
+			if(spiderMoudleEnum == SpiderModuleEnum.POLICY_READING) {  
 				updateList = updateList.stream()
 										.map(e->{
 											PolicySpider parentPolicy = getParentPolicyForReadingActicleMysql(e.getPublishUrl());
@@ -162,20 +159,11 @@ public class PolicyService {
 										.collect(Collectors.toList());
 			}
 			//将本次新增的内容保存进本地数据库
-			if(updateList.size()>0) {
+			if(updateList.size()>0) {				
 				policySpiderRepositoryMysql.saveAll(updateList);	
 				logger.info("Mysql本地库本次更新模块：{}完成,增加条目数为：{} 条",spiderMoudleEnum.getName(),updateList.size());
 			}
-			//将本次新增的内容同步到中小企数据库中
-			List<SmePolicy> resultList = updateList.stream()
-					.filter(p->convertTo(p)!=null)       //过滤掉转换完后为null的记录
-					.map(e->{return convertTo(e);})    
-					.collect(Collectors.toList());		
-//			List<SmePolicy> resultListSave = smePolicyRespositoryInformix.saveAll(resultList);
-//			logger.info("Informix库本次同步数据完成，本次同步模块：{},增加条目数为：{} 条",spiderMoudleEnum.getName(),resultListSave.size());
-//			logger.info("Informix库本次同步数据完成，本次同步模块：{},增加条目数为：{} 条",spiderMoudleEnum.getName(),resultList.size());
-			return resultList;	
-//			return updateList;
+			return updateList;
 		}catch (Exception e) {
 			logger.error("本次更新模块：{} 出现异常,信息如下：",spiderMoudleEnum.getName(),e);
 			return null;
@@ -183,6 +171,27 @@ public class PolicyService {
 			map.clear();
 		}
 	}
+	
+	/**
+	 * 数据同步，同步一周之内的数据
+	 * @return
+	 */
+	public List<SmePolicy> syncPolicyDataLatestWeek(SpiderModuleEnum spiderMoudleEnum){
+		//获取一周之内的最新政策数据
+		List<PolicySpider> list = policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastWeek(), spiderMoudleEnum.getIndex());
+		
+		//将本次新增的内容同步到中小企数据库中
+		List<SmePolicy> resultList = list.stream()
+				.filter(p->convertTo(p)!=null)       //过滤掉转换完后为null的记录，此种情况基本不存在
+				.map(e->{return convertTo(e);})    
+				.collect(Collectors.toList());		
+		List<SmePolicy> resultListSave = smePolicyRespositoryInformix.saveAll(resultList);
+		logger.info("Informix库本次同步数据完成，本次同步模块：{},增加条目数为：{} 条",spiderMoudleEnum.getName(),resultListSave.size());
+		return resultListSave;	
+	}
+	
+
+	
 	
 	/**
 	 * 同步最近一周的数据
@@ -199,24 +208,30 @@ public class PolicyService {
 	}
 	
 	/**
-	 * 为爬取的解读文章找到政策原文文章
+	 * 为爬取的解读文章找到政策原文文章，用于同步政策解读的数据时候使用
 	 * @param publicshUrl
 	 * @return
 	 */
-	public int getParentIdForReadingActicle(String publishUrl) {
+	public SmePolicy getParentPolicyForReadingActicleInformix(String publishUrl) {
+		//其对应的父类文章
 		List<PolicySpider>  list = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
 //		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByPublishUrl(publishUrl);
 		if(list == null || list.size()==0) {
-			logger.error("查找文章链接为：{} 的父类文章出错,Mysql库中查询结果为空",publishUrl);
-			return -1;			
+			logger.info("查找文章链接为：{} 的政策原文出错,Mysql库中没有相关记录",publishUrl);
+			return null;			
 		}
-		PolicySpider parentPolicy = list.get(0);
-		SmePolicy parentPolicyInformix = smePolicyRespositoryInformix.findByFromLink(parentPolicy.getPublishUrl());
+		SmePolicy parentPolicyInformix = null;
+		//此处对于一点通网站，有一篇解读对应多个原文的情况
+		for(PolicySpider parentPolicy : list) {
+			parentPolicyInformix = smePolicyRespositoryInformix.findByFromLink(parentPolicy.getPublishUrl());
+			if(parentPolicyInformix != null)
+				break; 
+		}
 		if(parentPolicyInformix == null) {
-			logger.error("查找文章链接为：{} 的父类文章id出错,Informix库中查询结果为空",parentPolicy.getPublishUrl());
-			return -1;
+			logger.error("查找文章链接为：{} 的政策原文出错,Informix库中查询结果为空",publishUrl);
+			return null;
 		}
-		return parentPolicyInformix.getId();
+		return parentPolicyInformix;
 	}
 	
 	

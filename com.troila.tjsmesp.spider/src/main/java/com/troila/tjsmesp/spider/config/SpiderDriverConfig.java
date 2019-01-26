@@ -12,17 +12,28 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix="spider.driver")
 public class SpiderDriverConfig {
 	/**
-	 * windows下的firefox浏览器driver
+	 * 使用的浏览器类型chromedriver/geckodriver，其他类型暂不支持
+	 */
+	private String type;
+	/**
+	 * windows下的浏览器驱动
 	 */
 	private String windowsDriver;
 	/**
-	 * linux下的firefox浏览器driver
+	 * linux下的浏览器驱动
 	 */
 	private String linuxDriver;
 	/**
-	 * max下的firefox浏览器driver
+	 * max下的浏览器驱动
 	 */
 	private String macDriver;
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getWindowsDriver() {
 		return windowsDriver;
 	}
@@ -40,5 +51,10 @@ public class SpiderDriverConfig {
 	}
 	public void setMacDriver(String macDriver) {
 		this.macDriver = macDriver;
+	}
+	@Override
+	public String toString() {
+		return "SpiderDriverConfig [type=" + type + ", windowsDriver=" + windowsDriver + ", linuxDriver=" + linuxDriver
+				+ ", macDriver=" + macDriver + "]";
 	}
 }

@@ -1,8 +1,5 @@
 package com.troila.tjsmesp.spider.crawler;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +8,12 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.config.SpiderConfig;
-import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.InformixPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.MysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
-import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.PolicyService;
 
@@ -54,13 +49,13 @@ public class SpiderStarter implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 		//初始化政策解读的爬虫实例
-		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
-						.addPipeline(redisPipeline)
-						.setDownloader(seleniumDownloader)
-//						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/slsj_242/201704/t20170414_20537.shtml")
-						.thread(spiderConfig.getSpiderThreadNumber());	
-		spiderReading.runAsync();
+//		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
+//						.addPipeline(redisPipeline)
+//						.setDownloader(seleniumDownloader)
+////						.addUrl(spiderConfig.getPolicyReadingStartUrl())
+//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/slsj_242/201704/t20170414_20537.shtml")
+//						.thread(spiderConfig.getSpiderThreadNumber());	
+//		spiderReading.runAsync();
 
 
 		// TODO Auto-generated method stub

@@ -36,8 +36,6 @@ import us.codecraft.webmagic.selector.Selectors;
 @Component("policyReadingPageProcessor")
 public class PolicyReadingPageProcessor implements PageProcessor{
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-	private static final String READING_PREFIX = "reading_publishUnit";
 		
 	// 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setDomain("http://zcydt.fzgg.tj.gov.cn");
@@ -71,9 +69,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     
 	@Override
 	public void process(Page page) {
-		
-		String url = page.getRequest().getUrl();
-		
+				
         //如果是政策解读的详情页的话，解析页面，取到文章的各个详情信息
         if(page.getUrl().regex(ARTICLE_URL).match()){ 
 	        	//如果是文章详情页的url，则解析页面，取到文章的各个详情信息
@@ -118,7 +114,6 @@ public class PolicyReadingPageProcessor implements PageProcessor{
         			spider.setSpiderModule(SpiderModuleEnum.POLICY_READING.getIndex());
         			//查看文章附件情况
     				List<String> attachmentList =  page.getHtml().xpath("//div[@class='jiedu_nr_7']").links().all();
-    				//将所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
     				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(ATTACHMENT_URL_REX)).collect(Collectors.toList());
     				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
     					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));
@@ -177,7 +172,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
         		
         		
         		List<String> list =  page.getHtml().xpath("//div[@class='list_jd_content']").links().all();
-    			//将所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
+    			//将所有的政策解读文章详情页链接加入到后续的url地址，有待继续爬取
     			List<String> articleList = list.stream().filter(p->p.matches(ARTICLE_URL)).collect(Collectors.toList());
     			//获取到过去已经成功爬取的链接记录
     			List<String> pastCrawledUrls = processorService.getCrawledUrls(SpiderModuleEnum.POLICY_READING);		
@@ -185,7 +180,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     				articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
     			}
     			page.addTargetRequests(articleList);
-    			//将其他的最新政策列表页加入到后续的url地址，有待继续爬取
+    			//将其他的政策解读列表页加入到后续的url地址，有待继续爬取
     			List<String> urlList = list.stream().filter(p->p.matches(LIST_URL)).collect(Collectors.toList());
     			page.addTargetRequests(urlList);	
         	}      

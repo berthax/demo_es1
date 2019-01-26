@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import com.troila.tjsmesp.spider.config.SpiderConfig;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
-import com.troila.tjsmesp.spider.crawler.pipeline.MysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
@@ -27,8 +26,6 @@ public class CrawlPolicyDataSchedule {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 			
-	@Autowired
-	private MysqlPipeline mysqlPipeline;
 	@Autowired
 	private RedisPipiline redisPipeline;
 	@Autowired
@@ -80,7 +77,7 @@ public class CrawlPolicyDataSchedule {
 	 * 定期执行某项定时任务
 	 * 从0分钟开始，每隔一小时查看一次
 	 */
-	@Scheduled(cron="0 0/60 * * * ? ")
+	@Scheduled(cron="0 0/10 * * * ? ")
 	public void crawlPolicyDataAll() {
 		if(lastIsCompleted) {
 			logger.info("{}开始执行定时爬取任务，……",new Date());
@@ -92,12 +89,12 @@ public class CrawlPolicyDataSchedule {
 				//启动最新政策的爬虫，爬取数据				
 				spiderNewest.run();
 				logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
-				policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
+				policyService.dataUpdate(SpiderModuleEnum.POLICY_NEWEST);
 				
 //				Spider spiderReading = map.get(SpiderModuleEnum.POLICY_READING.getKey());
 				spiderReading.run();
 				logger.info("本次爬取政策解读任务已完成，共爬取记录数："+spiderReading.getPageCount());
-				policyService.dataSync(SpiderModuleEnum.POLICY_READING);
+				policyService.dataUpdate(SpiderModuleEnum.POLICY_READING);
 				
 //				Thread.sleep(1000);
 //				while(!spiderNewestFlag || !spiderReadingFlag) {	
@@ -135,11 +132,24 @@ public class CrawlPolicyDataSchedule {
 	
 	/**
 	 * 定期执行数据同步操作
-	 * 从0分钟开始，每隔一小时查看一次
-	 * 每周五的早七点、七点半，八点，八点半执行一次，下午四点，四点半
+	 * 
+	 * {秒}  {分}  {时}  {日}  {月}  {周}
+	 * 
+	 * 有关定时任务表达式以及使用范围说明https://blog.csdn.net/ukulelepku/article/details/54310035
 	 */
-/*	@Scheduled(cron="0 0,30 7,8,16 0 0 5 * ")
+	//指定周五、周六的晚九点五十分进行数据同步
+//	@Scheduled(cron="0 50 21 ? 1-12 5,6 ")
+	@Scheduled(cron="0 0/15 * ? 1-12 5,6 ")
 	public void syncPolicyDataLastWeek() {
-		
-	}*/
+		try {
+			logger.info("{}开始执行数据同步任务，……",new Date());  //数据查重问题
+			//同步政策原文
+			policyService.syncPolicyDataLatestWeek(SpiderModuleEnum.POLICY_NEWEST);
+			//同步政策解读
+			policyService.syncPolicyDataLatestWeek(SpiderModuleEnum.POLICY_READING);
+			logger.info("{}数据同步任务结束，……",new Date());    //数据查重问题
+		} catch (Exception e) {
+			logger.error("数据同步任务出现异常，异常信息如下：",e);
+		}		
+	}
 }
