@@ -25,6 +25,7 @@ import com.troila.tjsmesp.spider.util.TimeUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
+import us.codecraft.webmagic.selector.Selectable;
 import us.codecraft.webmagic.selector.Selectors;
 
 /**
@@ -118,8 +119,15 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 //			spider.setContent(page.getHtml().xpath("//div[@class='JD_article']/tidyText()").toString());
 				//有关原文是否有对应的政策解读，需要再仔细斟酌解析一下
 				String content = Selectors.xpath("//div[@class='JD_article']").select(page.getHtml().toString());
-//				spider.setContent(content);
-				String removeScriptTagContent = ReduceHtml2Text.removeScriptTag(content);
+				String removeScriptTagContent = ReduceHtml2Text.removeScriptTag(content);	
+				String jieduStr = Selectors.xpath("//div[@class='JD_article_jiedu']").select(page.getHtml().toString());
+				if(jieduStr != null && !jieduStr.equals("")) {
+					//将获取的content中的有关解读的div隐藏
+					String jieduDiv = "<div class=\"JD_article_jiedu\">";
+					String jieduDivReplace = "<div class=\"JD_article_jiedu\" style=\"display:none\">";
+					removeScriptTagContent = removeScriptTagContent.replaceAll(jieduDiv, jieduDivReplace);
+				}
+								
 				spider.setStripContent(page.getHtml().xpath("//div[@class='JD_article']/tidyText()").toString());
 				spider.setPublishUrl(page.getUrl().toString());
 				spider.setFromLink(SpiderModuleEnum.POLICY_NEWEST.getSiteUrl());
@@ -128,6 +136,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				spider.setId(MD5Util.getMD5(page.getUrl().toString()));   //根据特定的内容生成MD5，作为该条记录的id,对于每篇文章，下载链接是唯一的
 				spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWEST.getIndex());  
 				spider.setParentId("-1");
+							
 				//查看是否有对应的政策解读			
 				List<String> list = page.getHtml().xpath("//div[@class='JD_article_jiedu']/div[@class='JD_article_jiedu_newslist']").links().all();
 				if(list != null && list.size()>0) {
@@ -140,7 +149,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 //				JXDocument jxDocument = JXDocument.create(page.getHtml().toString());
 //				JXNode jxNode= jxDocument.selNOne("//p[contains(text(),'附件下载')]//following-sibling::a[1]//@href");
 				List<String> attachmentList =  page.getHtml().xpath("//div[@class='JD_article']").links().all();
-				//将所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
+				
 				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(ATTACHMENT_URL_REX)).collect(Collectors.toList());
 				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
 					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));

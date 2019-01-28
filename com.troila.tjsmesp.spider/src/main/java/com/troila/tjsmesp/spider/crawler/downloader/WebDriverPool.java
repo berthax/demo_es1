@@ -170,7 +170,7 @@ public class WebDriverPool {
 	public void returnToPool(WebDriver webDriver) {
 		checkRunning();
 		innerQueue.add(webDriver);
-		logger.info("Return webDriver" + webDriver);
+//		logger.info("Return webDriver" + webDriver);
 	}
 
 	protected void checkRunning() {

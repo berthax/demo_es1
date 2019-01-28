@@ -152,7 +152,7 @@ public class PolicyService {
 												e.setPublishNo(parentPolicy.getPublishNo());
 												if(e.getPublishUnit().equals("国家政策解读")) {
 													e.setPublishUnit(parentPolicy.getPublishUnit());
-													e.setPolicyLevel(parentPolicy.getPolicyLevel());
+													e.setPolicyLevel(0);  //因为是国家政策的解读，级别肯定是0
 												}
 											}
 											return e;})
@@ -179,6 +179,10 @@ public class PolicyService {
 	public List<SmePolicy> syncPolicyDataLatestWeek(SpiderModuleEnum spiderMoudleEnum){
 		//获取一周之内的最新政策数据
 		List<PolicySpider> list = policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastWeek(), spiderMoudleEnum.getIndex());
+		if(list == null) {
+			logger.error("数据库中没有相关记录，本次同步完成，本次同步模块：{},增加条目数为：0条",spiderMoudleEnum.getName());
+			return null;
+		}
 		
 		//将本次新增的内容同步到中小企数据库中
 		List<SmePolicy> resultList = list.stream()
@@ -224,8 +228,9 @@ public class PolicyService {
 		//此处对于一点通网站，有一篇解读对应多个原文的情况
 		for(PolicySpider parentPolicy : list) {
 			parentPolicyInformix = smePolicyRespositoryInformix.findByFromLink(parentPolicy.getPublishUrl());
-			if(parentPolicyInformix != null)
-				break; 
+			if(parentPolicyInformix != null) {
+				break; 				
+			}
 		}
 		if(parentPolicyInformix == null) {
 			logger.error("查找文章链接为：{} 的政策原文出错,Informix库中查询结果为空",publishUrl);

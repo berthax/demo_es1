@@ -36,7 +36,7 @@ public class ProcessorUtils {
 				}
 			}			
 		}catch(Exception e) {
-			logger.error("替换附件下载链接地址时出错：信心为:",e);
+			logger.error("替换附件下载链接地址时出错：信息为:",e);
 		}
 		return returnStr;
 	}
