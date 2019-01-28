@@ -186,9 +186,20 @@ public class PolicyService {
 		
 		//将本次新增的内容同步到中小企数据库中
 		List<SmePolicy> resultList = list.stream()
-				.filter(p->convertTo(p)!=null)       //过滤掉转换完后为null的记录，此种情况基本不存在
+				.filter(p->{
+					if(convertTo(p)==null) {
+						return false;						
+					}
+					List<SmePolicy> listInner = smePolicyRespositoryInformix.findByFromLink(p.getPublishUrl());
+					if(listInner == null || listInner.size()==0) {
+						logger.info("本次同步有重复数据{}，已经晒除掉",list.get(0).getPublishUrl());
+						return false;
+					}
+					return true;					
+				})//过滤掉转换完后为null的记录，此种情况基本不存在
 				.map(e->{return convertTo(e);})    
-				.collect(Collectors.toList());		
+				.collect(Collectors.toList());	
+		
 		List<SmePolicy> resultListSave = smePolicyRespositoryInformix.saveAll(resultList);
 		logger.info("Informix库本次同步数据完成，本次同步模块：{},增加条目数为：{} 条",spiderMoudleEnum.getName(),resultListSave.size());
 		return resultListSave;	
@@ -219,16 +230,17 @@ public class PolicyService {
 	public SmePolicy getParentPolicyForReadingActicleInformix(String publishUrl) {
 		//其对应的父类文章
 		List<PolicySpider>  list = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
-//		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByPublishUrl(publishUrl);
 		if(list == null || list.size()==0) {
 			logger.info("查找文章链接为：{} 的政策原文出错,Mysql库中没有相关记录",publishUrl);
 			return null;			
 		}
 		SmePolicy parentPolicyInformix = null;
+		List<SmePolicy> listParentInformix = null;
 		//此处对于一点通网站，有一篇解读对应多个原文的情况
 		for(PolicySpider parentPolicy : list) {
-			parentPolicyInformix = smePolicyRespositoryInformix.findByFromLink(parentPolicy.getPublishUrl());
-			if(parentPolicyInformix != null) {
+			listParentInformix = smePolicyRespositoryInformix.findByFromLink(parentPolicy.getPublishUrl());
+			if(listParentInformix != null && listParentInformix.size()>0) {
+				parentPolicyInformix = listParentInformix.get(0);
 				break; 				
 			}
 		}
@@ -241,7 +253,7 @@ public class PolicyService {
 	
 	
 	/**
-	 * 为爬取的解读文章找到政策原文文章
+	 * 为爬取的解读文章找到政策原文文章Mysql
 	 * @param publicshUrl
 	 * @return
 	 */
@@ -259,10 +271,5 @@ public class PolicyService {
 		logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为{},文章链接为：{}",publishUrl,list.size(),parentPolicy.getPublishUrl());	
 		return parentPolicy;
 	}
-	
-	public PolicySpider getParentIdForReadingActicle2(String publishUrl) {
-		List<PolicySpider>  list = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
-//		PolicySpider parentPolicy = policySpiderRepositoryMysql.findByPublishUrl(publishUrl);		
-		return list.get(0);
-	}
+
 }

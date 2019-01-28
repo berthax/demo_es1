@@ -33,9 +33,9 @@ public class PolicyReadingController {
 		return spiderDriverConfig.getWindowsDriver();
 	}
 	
-	@GetMapping("/getParent")
-	public PolicySpider getParentPolicy() {
-		String articleReading = "http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/srlsbj_209/201705/t20170505_20709.shtml";
-		return policyService.getParentIdForReadingActicle2(articleReading);
-	}
+//	@GetMapping("/getParent")
+//	public PolicySpider getParentPolicy() {
+//		String articleReading = "http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/srlsbj_209/201705/t20170505_20709.shtml";
+//		return policyService.getParentIdForReadingActicle2(articleReading);
+//	}
 }

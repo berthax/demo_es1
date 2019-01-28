@@ -1,5 +1,7 @@
 package com.troila.tjsmesp.spider.repository.informix;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.troila.tjsmesp.spider.model.secondary.SmePolicy;
@@ -10,5 +12,5 @@ public interface SmePolicyRespositoryInformix extends JpaRepository<SmePolicy, I
 	 * @param fromLink
 	 * @return
 	 */
-	public SmePolicy findByFromLink(String fromLink);
+	public List<SmePolicy> findByFromLink(String fromLink);
 }
