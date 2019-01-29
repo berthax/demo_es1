@@ -192,10 +192,11 @@ public class PolicyService {
 					}
 					List<SmePolicy> listInner = smePolicyRespositoryInformix.findByFromLink(p.getPublishUrl());
 					if(listInner == null || listInner.size()==0) {
-						logger.info("本次同步有重复数据{}，已经晒除掉",list.get(0).getPublishUrl());
-						return false;
+						return true;
+					}else {
+						logger.info("本次同步有重复数据标题为：{}，链接为：{}已经筛除掉",p.getTitle(),p.getPublishUrl());
+						return false;											
 					}
-					return true;					
 				})//过滤掉转换完后为null的记录，此种情况基本不存在
 				.map(e->{return convertTo(e);})    
 				.collect(Collectors.toList());	

@@ -30,7 +30,7 @@ public class WebDriverPool {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private final static int DEFAULT_CAPACITY = 5;
+	private final static int DEFAULT_CAPACITY = 2;
 
 	@Value("${spider.web.pool.max-num}")
 	private final int capacity;
