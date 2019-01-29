@@ -29,11 +29,22 @@ public class TimeUtils {
 		c.setTime(new Date());
 	    c.add(Calendar.DATE, - 7); 
 	    Date lastWeek = c.getTime();
-	    String day = longDateFormat.format(lastWeek);
 //	    System.out.println("过去七天："+day);
 	    return lastWeek;
 	}
 	
+	/**
+	 * 获取过去n天的时间
+	 * @param n
+	 * @return
+	 */
+	public static Date getLastNDay(int n) {
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(new Date());
+	    c.add(Calendar.DATE, - n); 
+	    Date lastNDay = c.getTime();
+	    return lastNDay;
+	}
 	
 	/**
 	 * 获取前一个月的时间
@@ -195,7 +206,7 @@ public class TimeUtils {
 		getLastYear();
 		
 		Date date = getFormatDate(longDateFormat, new Date());
-		System.out.println(date);
-		
+		System.out.println(date);		
 	}
+
 }

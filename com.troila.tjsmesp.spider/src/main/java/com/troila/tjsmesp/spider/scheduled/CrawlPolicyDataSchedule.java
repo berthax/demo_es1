@@ -77,7 +77,7 @@ public class CrawlPolicyDataSchedule {
 	 * 定期执行某项定时任务
 	 * 从0分钟开始，每隔一小时查看一次
 	 */
-	@Scheduled(cron="0 0/10 * * * ? ")
+	@Scheduled(cron="0 0/30 * * * ? ")
 	public void crawlPolicyDataAll() {
 		if(lastIsCompleted) {
 			logger.info("{}开始执行定时爬取任务，……",new Date());
@@ -139,14 +139,14 @@ public class CrawlPolicyDataSchedule {
 	 */
 	//指定周五、周六的晚九点五十分进行数据同步
 //	@Scheduled(cron="0 50 21 ? 1-12 5,6 ")
-	@Scheduled(cron="0 0/15 * ? 1-12 5,6 ")
+	@Scheduled(cron="0 0/30 * ? 1-12 2,5,6 ")
 	public void syncPolicyDataLastWeek() {
 		try {
 			logger.info("{}开始执行数据同步任务，……",new Date());  //数据查重问题
 			//同步政策原文
-			policyService.syncPolicyDataLatestWeek(SpiderModuleEnum.POLICY_NEWEST);
+			policyService.syncLatestPolicyData(SpiderModuleEnum.POLICY_NEWEST,10);
 			//同步政策解读
-			policyService.syncPolicyDataLatestWeek(SpiderModuleEnum.POLICY_READING);
+			policyService.syncLatestPolicyData(SpiderModuleEnum.POLICY_READING,10);
 			logger.info("{}数据同步任务结束，……",new Date());    //数据查重问题
 		} catch (Exception e) {
 			logger.error("数据同步任务出现异常，异常信息如下：",e);

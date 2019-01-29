@@ -37,7 +37,7 @@ public enum PolicyLevelEnum {
 	SHUILIBU("水利部",0),
 	GUOJIALIANGSHIJU("国家粮食局",0),
 	NONGYEBU("农业部",0),
-	ZHUFANGCHENGXIANGJIANSHEBUBANGONGTING("住房城乡建设部办公厅",0,"住房城乡建设部"),
+//	ZHUFANGCHENGXIANGJIANSHEBUBANGONGTING("住房城乡建设部办公厅",0,"住房城乡建设部"),
 	WENGUANGJU("文广局",0),
 	GONGANBU("公安部",0),
 	WENHUABU("文化部",0),

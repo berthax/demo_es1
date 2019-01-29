@@ -176,9 +176,9 @@ public class PolicyService {
 	 * 数据同步，同步一周之内的数据
 	 * @return
 	 */
-	public List<SmePolicy> syncPolicyDataLatestWeek(SpiderModuleEnum spiderMoudleEnum){
+	public List<SmePolicy> syncLatestPolicyData(SpiderModuleEnum spiderMoudleEnum,int n){
 		//获取一周之内的最新政策数据
-		List<PolicySpider> list = policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastWeek(), spiderMoudleEnum.getIndex());
+		List<PolicySpider> list = policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastNDay(n), spiderMoudleEnum.getIndex());
 		if(list == null) {
 			logger.error("数据库中没有相关记录，本次同步完成，本次同步模块：{},增加条目数为：0条",spiderMoudleEnum.getName());
 			return null;

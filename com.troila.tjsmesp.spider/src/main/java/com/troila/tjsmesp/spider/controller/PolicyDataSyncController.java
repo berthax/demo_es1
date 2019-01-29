@@ -31,5 +31,7 @@ public class PolicyDataSyncController {
 	}
 	
 	
-	
+	public List<SmePolicy> dataLastTenDaySync(){
+		return policyService.syncLatestPolicyData(SpiderModuleEnum.POLICY_NEWEST,10);
+	}
 }
