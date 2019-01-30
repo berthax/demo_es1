@@ -84,9 +84,10 @@ public class PolicyService {
 		smePolicy.setTitle(policySpider.getTitle());
 		smePolicy.setType(policySpider.getSpiderModule());
 		smePolicy.setStripedContent(ReduceHtml2Text.removeHtmlTag(policySpider.getContent()));
-		String content = "<div class='articleList'><h3 class='articleTit'>摘要</h3><div class='articleTxt'>"+""
-					+    "</div><h3 class='articleTit'>正文</h3><div class='articleTxt'>"+policySpider.getContent()
-					+ 	 "</div><h3 class='articleTit'>联系人及联系方式</h3><div class='articleTxt'></div></div>";
+		String content = "<div class='articleList'>"+
+							"<h3 class='articleTit'>正文</h3><div class='articleTxt'>"+policySpider.getContent()+"</div>"+
+					 	    "<h3 class='articleTit'>联系人及联系方式</h3><div class='articleTxt'></div>"+
+					 	  "</div>";
 		smePolicy.setContent(content);
 		smePolicy.setPublishDate(policySpider.getPublishDate().getTime());
 		
@@ -108,7 +109,7 @@ public class PolicyService {
 		smePolicy.setIndustry("ALL");
 		smePolicy.setArea("全国");
 		smePolicy.setPriority(0);
-		smePolicy.setCategory("综合政策");
+		smePolicy.setCategory("不限");
 		smePolicy.setPublishType("platform");
 		smePolicy.setPublisher(defaultPublisher);
 		//如果有附件下载链接，设置附件
