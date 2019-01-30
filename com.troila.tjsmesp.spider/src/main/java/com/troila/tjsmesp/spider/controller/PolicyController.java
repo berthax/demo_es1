@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.troila.tjsmesp.spider.config.SpiderDriverConfig;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
+import com.troila.tjsmesp.spider.model.secondary.SmePolicy;
+import com.troila.tjsmesp.spider.repository.informix.SmePolicyRespositoryInformix;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.PolicyService;
 import com.troila.tjsmesp.spider.util.TimeUtils;
@@ -28,6 +30,8 @@ public class PolicyController {
 	private PolicyService policyService;
 	@Autowired
 	private SpiderDriverConfig spiderDriverConfig;
+	@Autowired
+	private SmePolicyRespositoryInformix smePolicyRespositoryInformix;
 	@GetMapping("/mysql/getList")
 	public List<PolicySpider> getListStripContentLikeFromPrimaryDs(@RequestParam String queryStr){
 //		return policySpiderRepositoryMysql.findByStripContentContains(queryStr);
@@ -64,4 +68,8 @@ public class PolicyController {
 		return spiderDriverConfig.toString();
 	}
 	
+	@GetMapping("/informix/getOne")
+	public SmePolicy getOneInformixData(@RequestParam int id){
+		return smePolicyRespositoryInformix.findById(id).get();
+	}
 }

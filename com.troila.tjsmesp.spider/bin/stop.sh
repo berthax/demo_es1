@@ -7,3 +7,5 @@ if [ -f ${APP_HOME}/pid ]; then
 	PID=`cat ${APP_HOME}/pid | tr -d '\n'`
 	kill $PID
 fi
+pkill -9 firefox
+pkill -9 geckodriver
