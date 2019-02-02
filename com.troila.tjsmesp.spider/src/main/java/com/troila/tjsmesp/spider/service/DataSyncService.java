@@ -19,8 +19,10 @@ public class DataSyncService implements Runnable{
 	
 	@Override
 	public void run() {
-		logger.info("改版后执行数据同步任务……");
+		long start = System.currentTimeMillis();
+		logger.info("数据同步任务现在开始，请稍候……");
 		syncPolicyDataLastNDay();
+		logger.info("本次数据同步任务结束,用时{}ms",(System.currentTimeMillis()-start));
 	}
 	
 	public void syncPolicyDataLastNDay() {

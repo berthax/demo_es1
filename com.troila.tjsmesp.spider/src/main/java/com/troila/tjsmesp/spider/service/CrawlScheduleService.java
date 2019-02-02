@@ -47,8 +47,10 @@ public class CrawlScheduleService implements Runnable{
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		logger.info("改版后执行任务1，数据爬取……");
+		long start = System.currentTimeMillis();
+		logger.info("数据爬取任务现在开始，请稍候……");
 		crawlPolicyDataAll();
+		logger.info("本次数据爬取任务结束,用时{}ms",(System.currentTimeMillis()-start));
 	}
 			
 	private void init() {
@@ -75,16 +77,14 @@ public class CrawlScheduleService implements Runnable{
 	}
 	/**
 	 * 定期执行某项定时任务
-	 * 从0分钟开始，每隔一小时查看一次
+	 * 从0分钟开始，每隔一小时查看一次，定时任务的执行频率由数据库Cron表
 	 */
 	public void crawlPolicyDataAll() {
 		if(lastIsCompleted) {
 			logger.info("{}开始执行定时爬取任务，……",new Date());
 			try {
 				//初始化爬虫实例
-				init();
-				//问题，第二次进来的时候，已经记录了上一次的爬取记录，不会再去重新爬取
-				//Spider spiderNewest = map.get(SpiderModuleEnum.POLICY_NEWEST.getKey());				
+				init();		
 				//启动最新政策的爬虫，爬取数据				
 				spiderNewest.run();
 				logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());

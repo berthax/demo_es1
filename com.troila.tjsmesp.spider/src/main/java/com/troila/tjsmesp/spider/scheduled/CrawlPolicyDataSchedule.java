@@ -118,7 +118,8 @@
 //	
 //	
 ////	@Scheduled(cron="0 0/5 * ? 1-12 3,4,5,6 ")
-////	@Scheduled(cron="0 0 8-12/1 ? 1-12 3,4,5,6 ")
+//	@Scheduled(cron="0 0 8-20/1 ? 1-12 1,2,3,4,5,6,7 ")
+//	@Scheduled(cron="0 0 8-20/1 ? 1-12 ? ")
 ////	@Scheduled(cron="0 0/10 * ? 1-12 3,4,5,6 ")
 //	public void syncPolicyDataLastWeek() {
 //		try {

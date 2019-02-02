@@ -123,7 +123,7 @@ public class PolicyService {
 	 */
 	public List<PolicySpider> dataUpdate(SpiderModuleEnum spiderMoudleEnum){
 		try {	
-			logger.info("{}开始执行数据更新以及同步过程，更新模块为{},请稍候……",TimeUtils.getLongFormatDate(new Date()),spiderMoudleEnum.getName());
+			logger.info("{}开始执行数据更新过程，更新模块为{},请稍候……",TimeUtils.getLongFormatDate(new Date()),spiderMoudleEnum.getName());
 			//先获取mysql数据库中的所有该类型的数据
 			List<PolicySpider> mysqlList = policySpiderRepositoryMysql.findBySpiderModule(spiderMoudleEnum.getIndex());
 			//获取redis中爬取记录的总数

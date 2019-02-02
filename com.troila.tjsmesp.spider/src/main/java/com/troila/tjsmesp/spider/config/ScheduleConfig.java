@@ -46,8 +46,10 @@ public class ScheduleConfig implements SchedulingConfigurer{
 	
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-		taskRegistrar.addTriggerTask(crawlScheduleService,getTrigger(1));
-		taskRegistrar.addTriggerTask(dataSyncService,getTrigger(3));
+		//注册爬取定时任务
+		taskRegistrar.addTriggerTask(crawlScheduleService,getTrigger(1));  
+		//注册数据同步定时任务
+		taskRegistrar.addTriggerTask(dataSyncService,getTrigger(2));
 	}
 	
 	/**
