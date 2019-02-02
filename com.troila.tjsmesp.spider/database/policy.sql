@@ -11,7 +11,7 @@
  Target Server Version : 80013
  File Encoding         : 65001
 
- Date: 31/01/2019 16:27:03
+ Date: 02/02/2019 11:14:35
 */
 
 SET NAMES utf8mb4;
@@ -27,7 +27,15 @@ CREATE TABLE `cron`  (
   `cron` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'cron表达式',
   `status` tinyint(4) NULL DEFAULT NULL COMMENT '状态1 有效 0无效',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of cron
+-- ----------------------------
+INSERT INTO `cron` VALUES (1, '1', '0 0/30 * * * ? ', 1);
+INSERT INTO `cron` VALUES (2, '2', '0 0 8-20/1 ? 1-12 1,2,3,4,5,6,7 ', 1);
+INSERT INTO `cron` VALUES (3, '3', '0 0/4 * ? 1-12 3,4,5,6 ', 1);
+INSERT INTO `cron` VALUES (4, '4', '0 0 8-20/1 ? 1-12 ? ', 1);
 
 -- ----------------------------
 -- Table structure for hibernate_sequence
@@ -36,6 +44,11 @@ DROP TABLE IF EXISTS `hibernate_sequence`;
 CREATE TABLE `hibernate_sequence`  (
   `next_val` bigint(20) NULL DEFAULT NULL
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+
+-- ----------------------------
+-- Records of hibernate_sequence
+-- ----------------------------
+INSERT INTO `hibernate_sequence` VALUES (1);
 
 -- ----------------------------
 -- Table structure for sme_policy_spider
