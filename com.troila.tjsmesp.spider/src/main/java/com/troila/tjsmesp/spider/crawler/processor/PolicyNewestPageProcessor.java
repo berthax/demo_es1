@@ -1,5 +1,6 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -211,8 +212,16 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 			return "国家政策";
 		}
 		
+		String[] tempArrayInner = null;
+		List<String> listTemp = new ArrayList<String>();
+		for(String str : strListFilter) {
+			tempArrayInner = str.split(" ");
+			listTemp.addAll(Arrays.asList(tempArrayInner));
+		}
+		
 		String[] tempArray = null;
-		tempArray = strListFilter.get(0).split(" ");	
+		tempArray = listTemp.toArray(new String[listTemp.size()]);
+//		tempArray = strListFilter.get(0).split(" ");	
 		
 		if(tempArray == null || tempArray.length == 0) {
 			return "国家政策";			

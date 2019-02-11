@@ -15,7 +15,7 @@ public enum PolicyLevelEnum {
 	FAGAIWEI("发改委",0,"国家发展改革委","国家发改委"),  //国家发改委
 	KEJIBU("科技部",0),
 	CAIZHENGBU("财政部",0),
-	RENLISHEBAOBU("人力社保部",0),
+	RENLISHEBAOBU("人力社保部",0,"人力资源社会保障部"),
 	ZHUJIANBU("住建部",0,"住房和城乡建设部","住房城乡建设部办公厅"),
 	SHANGWUBU("商务部",0),
 	ZHONGGUORENMINYINHANG("中国人民银行",0),
@@ -45,6 +45,8 @@ public enum PolicyLevelEnum {
 	GONGYEHEXINXIHUABU("工业和信息化部",0),
 	SHENJISHU("审计署",0),
 	SIFABU("司法部",0),
+	GUOWUYUANFUPINBAN("国务院扶贫办",0),
+	TUIYIJUNRENBU("退役军人部",0),
 		
 	//--------天津市--------	
 	SHIFAZHANGAIGEWEI("市发展改革委",1),

@@ -267,7 +267,7 @@ public class PolicyService {
 			return null;
 		}
 		if(list.size() > 1) {
-			logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为{},信息分别为",publishUrl,list.size());	
+			logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为{}",publishUrl,list.size());	
 		}
 		PolicySpider parentPolicy = list.get(0);
 		logger.info("查找文章链接为：{} 的父类文章完成，父类文章个数为{},文章链接为：{}",publishUrl,list.size(),parentPolicy.getPublishUrl());	

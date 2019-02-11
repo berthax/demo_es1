@@ -12,7 +12,7 @@ public enum Category {
 	NIANJIANNIANSHEN("年检年审", 77),  
 	SHUISHOUCAIWU("税收财务",78),	
 	RENLIZIYUAN("人力资源",79),
-	SHEHUIBAOZHANG(" 社会保障",80),	
+	SHEHUIBAOZHANG("社会保障",80),	
 	
 	TOUZISHENPI("投资审批",81),	
 	RONGZIXINDAI("融资信贷",82),

@@ -38,7 +38,7 @@ public class DfaKVDictionary implements WordDictionary{
 		if(ignoreFields.contains(key)) {//忽略屏蔽词
 			return null;
 		}
-		value = PatternUtil.fullWidth2halfWidth(value);
+		value = PatternUtil.fullWidth2halfWidth(value);   //全角字符转变成半角字符
 		char[] chs = value.toCharArray();
 		int length = chs.length;
 		int cur;
