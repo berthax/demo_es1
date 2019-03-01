@@ -4,7 +4,7 @@ package com.troila.tjsmesp.spider.constant;
  * @author xuanguojing
  *
  */
-public enum Category {
+public enum CategoryEnum {
 	
 	SHELIBIANGEGN("设立变更", 74), 
 	ZHUNYINGZHUNBAN("准营准办", 75), 
@@ -48,7 +48,7 @@ public enum Category {
     private String name;  
     private int index;  
     // 构造方法  
-    private Category(String name, int index) {  
+    private CategoryEnum(String name, int index) {  
         this.name = name;  
         this.index = index;  
     }
@@ -66,7 +66,7 @@ public enum Category {
     }
     // 普通方法  
     public static String getName(int index) {  
-        for (Category c : Category.values()) {  
+        for (CategoryEnum c : CategoryEnum.values()) {  
             if (c.getIndex() == index) {  
                 return c.name;  
             }  

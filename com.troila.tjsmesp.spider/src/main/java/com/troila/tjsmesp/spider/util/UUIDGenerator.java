@@ -3,6 +3,8 @@ package com.troila.tjsmesp.spider.util;
 import java.net.InetAddress;
 import java.util.UUID;
 
+import javax.annotation.Generated;
+
 /**
  * UUID生成工具
  * @author xuanguojing
@@ -113,4 +115,7 @@ public class UUIDGenerator {
 		return temp;
 	}
 	
+	public static void main(String[] args) {
+		System.out.println(UUIDGenerator.getMe().generate());
+	}
 }

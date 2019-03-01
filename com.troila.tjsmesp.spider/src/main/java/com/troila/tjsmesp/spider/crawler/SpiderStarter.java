@@ -16,6 +16,7 @@ import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.PolicyService;
+import com.troila.tjsmesp.spider.service.ProcessorService;
 
 import us.codecraft.webmagic.Spider;
 
@@ -49,13 +50,13 @@ public class SpiderStarter implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 		//初始化政策解读的爬虫实例
-//		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
-//						.addPipeline(redisPipeline)
-//						.setDownloader(seleniumDownloader)
-////						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/slsj_242/201704/t20170414_20537.shtml")
-//						.thread(spiderConfig.getSpiderThreadNumber());	
-//		spiderReading.runAsync();
+/*		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
+						.addPipeline(redisPipeline)
+						.setDownloader(seleniumDownloader)
+//						.addUrl(spiderConfig.getPolicyReadingStartUrl())
+						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/sfzggw_197/201902/t20190227_54482.shtml")
+						.thread(spiderConfig.getSpiderThreadNumber());	
+		spiderReading.runAsync();*/
 
 
 		// TODO Auto-generated method stub
@@ -99,8 +100,7 @@ public class SpiderStarter implements CommandLineRunner{
 //				.addPipeline(mysqlPipeline)
 //				.setDownloader(seleniumDownloader)
 ////				.addUrl(spiderConfig.getPolicyNewestStartUrl())
-//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20332.shtml")
-//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_19989.shtml")
+//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201902/t20190211_52738.shtml")
 //				.thread(spiderConfig.getSpiderThreadNumber());
 //		spiderNewest.runAsync();
 //		logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());

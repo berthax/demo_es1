@@ -4,7 +4,7 @@ package com.troila.tjsmesp.spider.constant;
  * @author xuanguojing
  *
  */
-public final class PolicyStatus {
+public final class PolicyStatusConst {
 	/**
 	 * 待审核
 	 */
@@ -26,6 +26,6 @@ public final class PolicyStatus {
 	 */
 	public static final int Draft = 99;
 
-	private PolicyStatus() {
+	private PolicyStatusConst() {
 	}
 }

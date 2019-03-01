@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.troila.tjsmesp.spider.constant.PolicyStatus;
+import com.troila.tjsmesp.spider.constant.PolicyStatusConst;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.model.secondary.SmePolicy;
@@ -91,7 +91,7 @@ public class PolicyService {
 		smePolicy.setContent(content);
 		smePolicy.setPublishDate(policySpider.getPublishDate().getTime());
 		
-		smePolicy.setStatus(PolicyStatus.Pending);
+		smePolicy.setStatus(PolicyStatusConst.Pending);
 		
 		smePolicy.setUrl(policySpider.getPublishUrl());
 		

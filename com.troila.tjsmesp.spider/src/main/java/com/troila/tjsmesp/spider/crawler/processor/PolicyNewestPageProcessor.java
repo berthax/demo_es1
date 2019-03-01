@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.crawler.ProcessorService;
+import com.troila.tjsmesp.spider.constant.UrlRegexConst;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
+import com.troila.tjsmesp.spider.service.ProcessorService;
 import com.troila.tjsmesp.spider.util.MD5Util;
-import com.troila.tjsmesp.spider.util.ProcessorUtils;
 import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
 import com.troila.tjsmesp.spider.util.StringUtils;
 import com.troila.tjsmesp.spider.util.TimeUtils;
@@ -26,7 +26,6 @@ import com.troila.tjsmesp.spider.util.TimeUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectable;
 import us.codecraft.webmagic.selector.Selectors;
 
 /**
@@ -48,13 +47,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
      * 最新政策文章列表页的正则表达式
      */
     private static final String LIST_URL_REX = "http://zcydt\\.fzgg\\.tj\\.gov\\.cn/gllm/zxzc/index(_\\d+)*\\.shtml"; 
-    /**
-     * 附件链接正则表达式
-     */
-    private static final String ATTACHMENT_URL_REX = "(http://hd.chinatax.gov.cn/guoshui/action/ShowAppend.do\\?id=\\d+)|"
-    		+ "(http://zcydt.fzgg.tj.gov.cn/zcb/(\\w+)/((\\w+)/)*(\\d+)/(\\w+)\\.(doc|docx|xlsx|xls|pdf|txt|wmv))";	
-    private static final String ATTACHMENT_URL_REX1 = "http://zcydt.fzgg.tj.gov.cn/zcb/(\\w+)/((\\w+)/)*(\\d+)/(\\w+)\\.(doc|docx|xlsx|xls|pdf|txt|wmv)";
-    
+   
     @Autowired
     private ProcessorService processorService;
     
@@ -143,7 +136,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				if(list != null && list.size()>0) {
 					spider.setArticleReading(list.toString().substring(1,list.toString().length()-1));
 					//将政策解读也替换成完整路径地址，以便可以查看
-					removeScriptTagContent = ProcessorUtils.replaceArticelReadingUrlForContent(removeScriptTagContent, list);				
+					removeScriptTagContent = processorService.replaceArticelReadingUrlForContent(removeScriptTagContent, list);				
 				}
 				//查看是否有附件
 //				String str1 =  Selectors.xpath("//div[text()='附件下载:']//following::*[1]").select(content);
@@ -151,10 +144,10 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 //				JXNode jxNode= jxDocument.selNOne("//p[contains(text(),'附件下载')]//following-sibling::a[1]//@href");
 				List<String> attachmentList =  page.getHtml().xpath("//div[@class='JD_article']").links().all();
 				
-				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(ATTACHMENT_URL_REX)).collect(Collectors.toList());
+				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(UrlRegexConst.ATTACHMENT_URL_REX)).collect(Collectors.toList());
 				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
 					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));
-					removeScriptTagContent = ProcessorUtils.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
+					removeScriptTagContent = processorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
 				}				
 				spider.setContent(removeScriptTagContent);
 				page.putField("policy", spider);				
@@ -191,6 +184,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 			}else {
 				return "国家政策";
 			}
+			
 		}
 		
 		//如果该项未填任何内容，则为国家政策,需要仔细拆分，获取发文部分信息
@@ -228,8 +222,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 		}
 		if(tempArray.length == 1) {
 			return PolicyLevelEnum.getInfoByName(tempArray[0].trim());
-		}
-		
+		}		
 		String publishUnit = "";
 		for(int i=0; i<tempArray.length;i++) {
 			if(tempArray[i].replaceAll("\\s*", "").equals("") || !PolicyLevelEnum.isNameExists(tempArray[i].replaceAll("\\s*", "")))
@@ -267,11 +260,11 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 		String str4 = "http://hd.chinatax.gov.cn/guoshui/action/ShowAppend.do?id=16340";
 		String str5 = "http://zcydt.fzgg.tj.gov.cn/zcb/sjbm/sscjgw_154/201806/P020180629526320286027.docx";
 		
-		System.out.println(str1.matches(ATTACHMENT_URL_REX1));
-		System.out.println(str2.matches(ATTACHMENT_URL_REX1));
-		System.out.println(str3.matches(ATTACHMENT_URL_REX1));
-		System.out.println(str4.matches(ATTACHMENT_URL_REX1));
-		System.out.println(str5.matches(ATTACHMENT_URL_REX1));
+		System.out.println(str1.matches(UrlRegexConst.ATTACHMENT_URL_ADJUST_REX));
+		System.out.println(str2.matches(UrlRegexConst.ATTACHMENT_URL_ADJUST_REX));
+		System.out.println(str3.matches(UrlRegexConst.ATTACHMENT_URL_ADJUST_REX));
+		System.out.println(str4.matches(UrlRegexConst.ATTACHMENT_URL_REX));
+		System.out.println(str5.matches(UrlRegexConst.ATTACHMENT_URL_ADJUST_REX));
 		
 		String str = "<a href="+"../../../../zcbjd/sjbmjd/ssww_199/201807/t20180726_49716.shtml>"+"市商务委 市财政局关于印发天津市2018年度市外经贸发展资金鼓励企业开展技术研发和创新项目申报指南政策解读</a>";
 		String replaceStr = "http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/ssww_199/201807/t20180726_49716.shtml";

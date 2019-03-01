@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.crawler.ProcessorService;
+import com.troila.tjsmesp.spider.constant.UrlRegexConst;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
+import com.troila.tjsmesp.spider.service.ProcessorService;
 import com.troila.tjsmesp.spider.util.MD5Util;
-import com.troila.tjsmesp.spider.util.ProcessorUtils;
 import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 
@@ -49,12 +49,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
      * 政策解读列表页的正则表达式
      */
     private static final String LIST_URL = "http://zcydt\\.fzgg\\.tj\\.gov\\.cn/zcbjd/index(_\\d+)*\\.shtml";
-    /**
-     * 附件链接正则表达式
-     */
-    private static final String ATTACHMENT_URL_REX = "(http://hd.chinatax.gov.cn/guoshui/action/ShowAppend.do\\?id=\\d+)|"
-    		+ "(http://zcydt.fzgg.tj.gov.cn/zcb/(\\w+)/((\\w+)/)*(\\d+)/(\\w+)\\.(doc|docx|xlsx|xls|pdf|txt|wmv))";	
-    private static final String ATTACHMENT_URL_REX1 = "http://zcydt.fzgg.tj.gov.cn/zcb/(\\w+)/((\\w+)/)*(\\d+)/(\\w+)\\.(doc|docx|xlsx|xls|pdf|txt|wmv)";
+  
     //用于存储从列表页中获取的发布单位字段
     private Map<String,String> map = new ConcurrentHashMap<>();
     
@@ -114,10 +109,10 @@ public class PolicyReadingPageProcessor implements PageProcessor{
         			spider.setSpiderModule(SpiderModuleEnum.POLICY_READING.getIndex());
         			//查看文章附件情况
     				List<String> attachmentList =  page.getHtml().xpath("//div[@class='jiedu_nr_7']").links().all();
-    				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(ATTACHMENT_URL_REX)).collect(Collectors.toList());
+    				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(UrlRegexConst.ATTACHMENT_URL_REX)).collect(Collectors.toList());
     				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
     					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));
-    					removeScriptTagContent = ProcessorUtils.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
+    					removeScriptTagContent = processorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
     				}			
     				spider.setContent(removeScriptTagContent);        			
         			page.putField("policy", spider);       			
@@ -190,5 +185,4 @@ public class PolicyReadingPageProcessor implements PageProcessor{
 	public Site getSite() {		
 		return site;
 	}
-
 }
