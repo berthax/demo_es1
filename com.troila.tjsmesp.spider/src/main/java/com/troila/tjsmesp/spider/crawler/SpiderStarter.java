@@ -7,7 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.troila.tjsmesp.spider.config.SpiderConfig;
+import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.InformixPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.MysqlPipeline;
@@ -36,7 +36,7 @@ public class SpiderStarter implements CommandLineRunner{
 	@Autowired
 	private RedisPipiline redisPipeline;
 	@Autowired
-	private SpiderConfig spiderConfig;
+	private SpiderSettings spiderSettings;
 	@Autowired
 	private PolicyService policyService;
 	@Autowired
@@ -50,13 +50,13 @@ public class SpiderStarter implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 		//初始化政策解读的爬虫实例
-/*		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
-						.addPipeline(redisPipeline)
-						.setDownloader(seleniumDownloader)
-//						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/sfzggw_197/201902/t20190227_54482.shtml")
-						.thread(spiderConfig.getSpiderThreadNumber());	
-		spiderReading.runAsync();*/
+//		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
+//						.addPipeline(mysqlPipeline)
+//						.setDownloader(seleniumDownloader)
+////						.addUrl(spiderConfig.getPolicyReadingStartUrl())
+//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/sfzggw_197/201902/t20190227_54482.shtml")
+//						.thread(spiderSettings.getThreadNumber());	
+//		spiderReading.runAsync();
 
 
 		// TODO Auto-generated method stub

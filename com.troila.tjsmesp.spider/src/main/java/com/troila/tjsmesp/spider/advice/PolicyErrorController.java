@@ -18,7 +18,7 @@ import com.troila.tjsmesp.spider.exception.PError;
 
 @ControllerAdvice
 public class PolicyErrorController {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(PolicyErrorController.class);
 	
 	/**
 	 * 处理抛出的特定处理异常的情况 

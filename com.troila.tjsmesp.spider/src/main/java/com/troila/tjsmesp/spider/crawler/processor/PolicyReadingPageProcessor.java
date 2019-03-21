@@ -35,7 +35,7 @@ import us.codecraft.webmagic.selector.Selectors;
  */
 @Component("policyReadingPageProcessor")
 public class PolicyReadingPageProcessor implements PageProcessor{
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(PolicyReadingPageProcessor.class);
 		
 	// 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setDomain("http://zcydt.fzgg.tj.gov.cn");
@@ -103,7 +103,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
 //	    		map.remove(title);   //将map中的该项内容去掉
         			spider.setPublishUrl(page.getUrl().toString());
         			spider.setFromLink("http://zcydt.fzgg.tj.gov.cn");
-        			spider.setFromSite("天津政策一点通");
+        			spider.setFromSite("政策一点通");
         			spider.setForwardTime(new Date());	
         			spider.setId(MD5Util.getMD5(page.getUrl().toString()));   //根据文章链接生成MD5，作为该条记录的id，因为文章链接是唯一的
         			spider.setSpiderModule(SpiderModuleEnum.POLICY_READING.getIndex());

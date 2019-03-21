@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.troila.tjsmesp.spider.config.SpiderConfig;
+import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
@@ -20,14 +20,16 @@ import us.codecraft.webmagic.Spider;
 @Service
 public class CrawlScheduleService implements Runnable{
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(CrawlScheduleService.class);
 	
 	@Autowired
 	private RedisPipiline redisPipeline;
 	@Autowired
 	private SeleniumDownloader seleniumDownloader;
+//	@Autowired
+//	private SpiderConfig spiderConfig;
 	@Autowired
-	private SpiderConfig spiderConfig;
+	private SpiderSettings spiderSettings;
 	@Autowired
 	private PolicyService policyService;	
 	@Autowired
@@ -58,8 +60,8 @@ public class CrawlScheduleService implements Runnable{
 		spiderNewest = Spider.create(policyNewestPageProcessor)
 				.addPipeline(redisPipeline)
 				.setDownloader(seleniumDownloader)
-				.addUrl(spiderConfig.getPolicyNewestStartUrl())
-				.thread(spiderConfig.getSpiderThreadNumber());
+				.addUrl(spiderSettings.getNewestStartUrl())
+				.thread(spiderSettings.getThreadNumber());
 		//删除原缓存中的内容
 		redisTemplate.delete(SpiderModuleEnum.POLICY_NEWEST.getKey());
 //		map.put(SpiderModuleEnum.POLICY_NEWEST.getKey(), spiderNewest);
@@ -68,8 +70,8 @@ public class CrawlScheduleService implements Runnable{
 		spiderReading = Spider.create(policyReadingPageProcessor)
 				.addPipeline(redisPipeline)
 				.setDownloader(seleniumDownloader)
-				.addUrl(spiderConfig.getPolicyReadingStartUrl())
-				.thread(spiderConfig.getSpiderThreadNumber());	
+				.addUrl(spiderSettings.getReadingStartUrl())
+				.thread(spiderSettings.getThreadNumber());	
 		//删除原缓存中的内容
 		redisTemplate.delete(SpiderModuleEnum.POLICY_READING.getKey());
 //		map.put(SpiderModuleEnum.POLICY_READING.getKey(), spiderReading);
@@ -87,11 +89,11 @@ public class CrawlScheduleService implements Runnable{
 				init();		
 				//启动最新政策的爬虫，爬取数据				
 				spiderNewest.run();
-				logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
+				logger.info("本次爬取最新政策任务已完成，共爬取记录数：{}",spiderNewest.getPageCount());
 				policyService.dataUpdate(SpiderModuleEnum.POLICY_NEWEST);
 				
 				spiderReading.run();
-				logger.info("本次爬取政策解读任务已完成，共爬取记录数："+spiderReading.getPageCount());
+				logger.info("本次爬取政策解读任务已完成，共爬取记录数：{}",spiderReading.getPageCount());
 				policyService.dataUpdate(SpiderModuleEnum.POLICY_READING);				
 				lastIsCompleted = true;
 			} catch (Exception e) {

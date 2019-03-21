@@ -199,14 +199,29 @@ public class TimeUtils {
     }
     
     public static void main(String[] args) {
-		getLastWeek();
+/*		getLastWeek();
 		
 		getLastMonth();
 		
 		getLastYear();
 		
 		Date date = getFormatDate(longDateFormat, new Date());
-		System.out.println(date);		
+		System.out.println(date);	
+		
+		String msg = "全国人大常委会,国务院,国家能源局,自然资源部,中央网信办,民政部,国务院办公厅,工信部";
+		System.out.println(msg.length());*/
+		
+//		System.out.println("金融税收".hashCode());  //1146410436
+//		System.out.println("财税金融".hashCode());  //1107568136
+//		System.out.println("不限".hashCode());     //657891
+//		System.out.println("综合政策".hashCode());  //989953923
+//		System.out.println("创业创新".hashCode());  //646068884  已有
+//		System.out.println("人才引进".hashCode());  //625382777
+//		System.out.println("知识产权".hashCode());  //949412285
+//		System.out.println("招商引资".hashCode());  //775690202
+//		System.out.println("资金扶持".hashCode());  //1114041624 已有
+//		System.out.println("产业指导".hashCode());  //619865448    已有
+		
 	}
-
+    
 }

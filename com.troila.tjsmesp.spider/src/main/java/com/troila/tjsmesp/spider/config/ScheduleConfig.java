@@ -15,6 +15,7 @@ import com.troila.tjsmesp.spider.repository.mysql.CronRepository;
 import com.troila.tjsmesp.spider.service.CrawlScheduleService;
 import com.troila.tjsmesp.spider.service.DataSyncService;
 
+
 /**
  * 定时器配置类
  * @author xuanguojing

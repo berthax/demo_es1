@@ -34,7 +34,6 @@ public class PolicyController {
 	private SmePolicyRespositoryInformix smePolicyRespositoryInformix;
 	@GetMapping("/mysql/getList")
 	public List<PolicySpider> getListStripContentLikeFromPrimaryDs(@RequestParam String queryStr){
-//		return policySpiderRepositoryMysql.findByStripContentContains(queryStr);
 		return policySpiderRepositoryMysql.findAll();
 	}
 	
@@ -42,6 +41,7 @@ public class PolicyController {
 	public PolicySpider getOnePolicyByIdFromMysql(@RequestParam String id) {		
 		return policySpiderRepositoryMysql.findById(id);
 	}
+	
 	@GetMapping("/redis/getList")
 	public List<PolicySpider> getListFromRedis(){
 		long size = redisTemplate.opsForList().size(SpiderModuleEnum.POLICY_NEWEST.getKey());
@@ -52,10 +52,6 @@ public class PolicyController {
 	
 	@GetMapping("/redis/save")
 	public List<PolicySpider> saveListFromRedis(){
-//		long size = redisTemplate.opsForList().size(SpiderModuleEnum.POLICY_NEWEST.getKey());
-//		List<Object> list = redisTemplate.opsForList().range(SpiderModuleEnum.POLICY_NEWEST.getKey(), 0L, size-1);
-//		List<PolicySpider> result = list.stream().map(e->{return (PolicySpider)e;}).collect(Collectors.toList());
-//		policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
 		policyService.dataUpdate(SpiderModuleEnum.POLICY_READING); 
 		return new ArrayList<PolicySpider>();
 	}
@@ -71,5 +67,11 @@ public class PolicyController {
 	@GetMapping("/informix/getOne")
 	public SmePolicy getOneInformixData(@RequestParam int id){
 		return smePolicyRespositoryInformix.findById(id).get();
+	}
+	
+	@GetMapping("/informix/getList")
+	public List<SmePolicy> getListInformixData(@RequestParam int lastDays){
+		List<SmePolicy> list = smePolicyRespositoryInformix.findByPublishDateGreaterThanEqualAndType(TimeUtils.getLastNDay(lastDays), 0);
+		return list;
 	}
 }

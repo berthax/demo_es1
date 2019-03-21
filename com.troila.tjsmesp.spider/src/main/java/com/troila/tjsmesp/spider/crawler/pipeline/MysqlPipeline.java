@@ -19,7 +19,7 @@ import us.codecraft.webmagic.pipeline.Pipeline;
  */
 @Component
 public class MysqlPipeline implements Pipeline{
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(MysqlPipeline.class);
 	@Autowired
 	private PolicySpiderRepositoryMysql PolicySpiderRepositoryMysql;
 	

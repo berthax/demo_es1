@@ -23,7 +23,7 @@ import us.codecraft.webmagic.selector.PlainText;
 @Component
 public class SeleniumDownloader implements Downloader, Closeable{
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(SeleniumDownloader.class);
 	
 	private int sleepTime = 0;
 	

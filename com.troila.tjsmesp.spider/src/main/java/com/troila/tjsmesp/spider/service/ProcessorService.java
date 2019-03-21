@@ -19,7 +19,7 @@ import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
  */
 @Component("processorService")
 public class ProcessorService {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(ProcessorService.class);
 	
 	@Autowired 
 	private PolicySpiderRepositoryMysql policySpiderRepositoryMysql;

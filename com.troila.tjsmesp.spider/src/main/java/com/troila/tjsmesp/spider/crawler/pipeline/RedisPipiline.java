@@ -16,9 +16,7 @@ public class RedisPipiline implements Pipeline{
 
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
-	
-	private volatile int count = 0;
-	
+		
 	@Override
 	public void process(ResultItems resultItems, Task task) {
 		

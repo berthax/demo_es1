@@ -36,7 +36,7 @@ import us.codecraft.webmagic.selector.Selectors;
  */
 @Component("policyNewestPageProcessor")
 public class PolicyNewestPageProcessor implements PageProcessor {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(PolicyNewestPageProcessor.class);
 	
     /**
      * 最新政策详情页的正则表达式
@@ -125,7 +125,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				spider.setStripContent(page.getHtml().xpath("//div[@class='JD_article']/tidyText()").toString());
 				spider.setPublishUrl(page.getUrl().toString());
 				spider.setFromLink(SpiderModuleEnum.POLICY_NEWEST.getSiteUrl());
-				spider.setFromSite("天津政策一点通");
+				spider.setFromSite("政策一点通");
 				spider.setForwardTime(new Date());	
 				spider.setId(MD5Util.getMD5(page.getUrl().toString()));   //根据特定的内容生成MD5，作为该条记录的id,对于每篇文章，下载链接是唯一的
 				spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWEST.getIndex());  
@@ -246,6 +246,8 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 		return returnStr == null ? PolicyLevelEnum.getInfoByNameLike(publishNo) : returnStr;
 	}
 		
+	
+	
 	//方法测试
 	public static void main(String[] args) {
 //		Spider spider = Spider.create(new PolicyNewestPageProcessor())

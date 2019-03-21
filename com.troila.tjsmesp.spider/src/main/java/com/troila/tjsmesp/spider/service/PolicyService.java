@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.troila.tjsmesp.spider.config.DataSyncSettings;
 import com.troila.tjsmesp.spider.constant.PolicyStatusConst;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
@@ -25,16 +25,11 @@ import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 @Service
 public class PolicyService {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(PolicyService.class);
 	
-	//当同步到informix数据库时，默认的政策发布者
-	@Value("${data.sync.default.publisher}")
-	private String defaultPublisher;
-	
-	//初次同步数据时，同步数据的最大条目数
-	@Value("${data.sync.first.max.number}")
-	private int syncFirstMaxNumber;
-	
+	@Autowired
+	private DataSyncSettings dataSyncSettings;
+		
 	@Autowired
 	private SmePolicyRespositoryInformix smePolicyRespositoryInformix;
 	
@@ -75,7 +70,7 @@ public class PolicyService {
 				smePolicy.setSource((policySpider.getPolicyLevel()!=null && policySpider.getPolicyLevel()==0)?parentPolicy.getSource():policySpider.getPublishUnit());  //设置发文部门
 				smePolicy.setReferenceNumber(parentPolicy.getReferenceNumber());				
 			}else {
-				logger.error("类型转换时出现错误，政策解读记录{}:{}找不到对应的原文记录",policySpider.getTitle(),policySpider.getPublishUrl());
+				logger.warn("类型转换时出现错误，政策解读记录{}:{}找不到对应的原文记录",policySpider.getTitle(),policySpider.getPublishUrl());
 				smePolicy.setParentId(-1);  //此种情况为没有对应原文的解读文章
 				smePolicy.setSource(policySpider.getPublishUnit());
 				smePolicy.setPolicyLevel(policySpider.getPolicyLevel());
@@ -111,7 +106,7 @@ public class PolicyService {
 		smePolicy.setPriority(0);
 		smePolicy.setCategory("不限");
 		smePolicy.setPublishType("platform");
-		smePolicy.setPublisher(defaultPublisher);
+		smePolicy.setPublisher(dataSyncSettings.getDefaultPublisher());
 		//如果有附件下载链接，设置附件
 		smePolicy.setAttachments(policySpider.getAttachment());   //文章链接问题已经搞定，同步过去之后可以直接下载附件
 		return smePolicy;
@@ -178,7 +173,7 @@ public class PolicyService {
 	 * @return
 	 */
 	public List<SmePolicy> syncLatestPolicyData(SpiderModuleEnum spiderMoudleEnum,int n){
-		//获取一周之内的最新政策数据
+		//获取最近N天的数据
 		List<PolicySpider> list = policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastNDay(n), spiderMoudleEnum.getIndex());
 		if(list == null) {
 			logger.error("数据库中没有相关记录，本次同步完成，本次同步模块：{},增加条目数为：0条",spiderMoudleEnum.getName());
@@ -195,7 +190,7 @@ public class PolicyService {
 					if(listInner == null || listInner.size()==0) {
 						return true;
 					}else {
-						logger.info("本次同步有重复数据标题为：{}，链接为：{}已经筛除掉",p.getTitle(),p.getPublishUrl());
+						logger.info("本次同步有重复数据，标题为：{}，链接为：{}的政策已经筛除掉",p.getTitle(),p.getPublishUrl());
 						return false;											
 					}
 				})//过滤掉转换完后为null的记录，此种情况基本不存在

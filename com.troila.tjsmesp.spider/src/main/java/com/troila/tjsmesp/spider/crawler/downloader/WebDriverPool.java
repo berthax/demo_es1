@@ -19,20 +19,23 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.config.SpiderDriverConfig;
+import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.util.OSUtil;
 
 @Component
 public class WebDriverPool {
 	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(WebDriverPool.class);
 
 	private final static int DEFAULT_CAPACITY = 2;
 
-	@Value("${spider.web.pool.max-num}")
+//	@Autowired
+//	private SpiderSettings spiderSettings;
+	
+//	@Value("${spider.web.pool.max-num}")
 	private final int capacity;
 
 	private final static int STAT_RUNNING = 1;
