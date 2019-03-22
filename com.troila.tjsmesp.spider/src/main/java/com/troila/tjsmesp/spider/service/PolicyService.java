@@ -169,7 +169,7 @@ public class PolicyService {
 	}
 	
 	/**
-	 * 数据同步，同步一周之内的数据
+	 * 数据同步，同步最近n天的政策数据
 	 * @return
 	 */
 	public List<SmePolicy> syncLatestPolicyData(SpiderModuleEnum spiderMoudleEnum,int n){
@@ -211,9 +211,6 @@ public class PolicyService {
 	 * @return
 	 */
 	public List<SmePolicy> dataSync_test(SpiderModuleEnum spiderMoudleEnum){
-//		List<PolicySpider> mysqlList = policySpiderRepositoryMysql.findBySpiderModule(spiderMoudleEnum.getIndex());
-//		List<SmePolicy> resultList = mysqlList.stream().map(e->{return convertTo(e);}).collect(Collectors.toList());
-//		return smePolicyRespositoryInformix.saveAll(resultList);
 		List<PolicySpider> mysqlList = policySpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastWeek(), 0);
 		List<SmePolicy> resultList = mysqlList.stream().map(e->{return convertTo(e);}).collect(Collectors.toList());
 		return smePolicyRespositoryInformix.saveAll(resultList);	
@@ -269,4 +266,40 @@ public class PolicyService {
 		return parentPolicy;
 	}
 
+	/**
+	 *   为爬取的解读文章没有对应原文的，进行一些矫正工作
+	 * @return
+	 */
+	public List<PolicySpider> adjustForReadingRelated(int lastDays){
+		Date lastNDay = TimeUtils.getLastNDay(lastDays);
+		List<PolicySpider> mysqlList = policySpiderRepositoryMysql.findByParentIdIsNullAndPublishDateGreaterThanEqualAndSpiderModule(lastNDay, SpiderModuleEnum.POLICY_READING.getIndex());
+		return mysqlList;
+	}
+	
+	/**
+	 *       具体对某一条解读记录进行原文查找
+	 * @param policySpider
+	 * @return
+	 */
+	public static final String TITLE_REGEX = "(\\w+)(关于)(\\w+)(解读)(\\w+)";
+	
+	public PolicySpider adjustForReadingRelatedDetail(PolicySpider policySpider) {
+		if(null == policySpider) {
+			return null;
+		}
+		String title = policySpider.getTitle();
+//		if(title.contains("关于") || title.contains("解读") || title.contains("《"))
+		return null;
+	}
+	
+	public static void main(String[] args) {
+		String str1 = "关于《国家税务总局关于深化增值税改革有关事项 的公告》的解读";
+		System.out.println(str1.matches(TITLE_REGEX));
+		
+		String a="关于";
+		System.out.println(a.codePointAt(0));
+		System.out.println((char)20851);
+		
+		
+	}
 }

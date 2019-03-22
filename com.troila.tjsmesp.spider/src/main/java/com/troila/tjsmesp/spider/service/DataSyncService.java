@@ -33,7 +33,7 @@ public class DataSyncService implements Runnable{
 			logger.info("{}开始执行数据同步任务，……",new Date());  //数据查重问题
 			//同步政策原文
 			policyService.syncLatestPolicyData(SpiderModuleEnum.POLICY_NEWEST,dataSyncSettings.getLastDays());
-			Thread.sleep(1000);
+			Thread.sleep(2000);
 			//同步政策解读
 			policyService.syncLatestPolicyData(SpiderModuleEnum.POLICY_READING,dataSyncSettings.getLastDays());
 			logger.info("{}数据同步任务结束，……",new Date());    //数据查重问题

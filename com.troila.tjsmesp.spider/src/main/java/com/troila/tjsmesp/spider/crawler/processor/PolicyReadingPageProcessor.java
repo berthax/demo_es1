@@ -95,11 +95,15 @@ public class PolicyReadingPageProcessor implements PageProcessor{
 //        			String publishUnit = str1.substring(0, str1.length()-4).trim();   //分隔结果中第二部分呢，去除掉日期：这三个字符
         			
         			//设置来源
-//	    		spider.setSource(source);
+     //	    		spider.setSource(source);
         			//发文单位(经常是获取到的是国家政策解读，此时需要再同步的时候，获取原文的发文单位)
         			String publishUnit = map.get(page.getUrl().toString());
         			spider.setPublishUnit(publishUnit);
-        			spider.setPolicyLevel(PolicyLevelEnum.getLevelByMultiNames(publishUnit));   //需要整理出来，发文部门需要进一步处理
+        			if(publishUnit.contains("国家政策解读")) {
+        				spider.setPolicyLevel(0);   
+        			}else {
+        				spider.setPolicyLevel(PolicyLevelEnum.getLevelByMultiNames(publishUnit));   //需要整理出来，发文部门需要进一步处理       				
+        			}
 //	    		map.remove(title);   //将map中的该项内容去掉
         			spider.setPublishUrl(page.getUrl().toString());
         			spider.setFromLink("http://zcydt.fzgg.tj.gov.cn");

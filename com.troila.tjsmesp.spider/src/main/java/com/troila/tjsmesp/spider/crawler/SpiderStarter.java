@@ -54,7 +54,7 @@ public class SpiderStarter implements CommandLineRunner{
 //						.addPipeline(mysqlPipeline)
 //						.setDownloader(seleniumDownloader)
 ////						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/sfzggw_197/201902/t20190227_54482.shtml")
+//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/gjzcjd/201903/t20190301_54522.shtml")
 //						.thread(spiderSettings.getThreadNumber());	
 //		spiderReading.runAsync();
 
@@ -100,8 +100,8 @@ public class SpiderStarter implements CommandLineRunner{
 //				.addPipeline(mysqlPipeline)
 //				.setDownloader(seleniumDownloader)
 ////				.addUrl(spiderConfig.getPolicyNewestStartUrl())
-//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201902/t20190211_52738.shtml")
-//				.thread(spiderConfig.getSpiderThreadNumber());
+//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20188.shtml")
+//				.thread(spiderSettings.getThreadNumber());
 //		spiderNewest.runAsync();
 //		logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
 //		policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);

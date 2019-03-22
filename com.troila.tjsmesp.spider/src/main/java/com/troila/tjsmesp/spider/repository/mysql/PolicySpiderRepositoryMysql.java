@@ -21,5 +21,16 @@ public interface PolicySpiderRepositoryMysql extends JpaRepository<PolicySpider,
 	
 	public List<PolicySpider> findByPublishUnitContaining(String publishUntLike);
 	
-	public List<PolicySpider> findByPublishDateGreaterThanEqualAndSpiderModule(Date lastweek,int spiderModule);
+	public List<PolicySpider> findByPublishDateGreaterThanEqualAndSpiderModule(Date lastNDay, int spiderModule);
+	
+	/**
+	 *  主要用于查找 没有对应原文的解读文章，进行可能的矫正
+	 * @param lastNDay
+	 * @param spiderModule
+	 * @return
+	 */
+	public List<PolicySpider> findByParentIdIsNullAndPublishDateGreaterThanEqualAndSpiderModule(Date lastNDay, int spiderModule);
+	
+	
+	public List<PolicySpider> findByTitleContainsAndSpiderModule(String str, int spiderModule);
 }

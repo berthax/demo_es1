@@ -79,7 +79,7 @@ public class CrawlScheduleService implements Runnable{
 	}
 	/**
 	 * 定期执行某项定时任务
-	 * 从0分钟开始，每隔一小时查看一次，定时任务的执行频率由数据库Cron表
+	 * 定时任务的执行频率由数据库Cron表的第一条记录决定
 	 */
 	public void crawlPolicyDataAll() {
 		if(lastIsCompleted) {

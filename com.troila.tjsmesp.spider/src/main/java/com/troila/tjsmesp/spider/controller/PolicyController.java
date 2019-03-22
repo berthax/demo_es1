@@ -74,4 +74,10 @@ public class PolicyController {
 		List<SmePolicy> list = smePolicyRespositoryInformix.findByPublishDateGreaterThanEqualAndType(TimeUtils.getLastNDay(lastDays), 0);
 		return list;
 	}
+	
+	@GetMapping("/getAdjustList")
+	public List<PolicySpider> getAdjustReadingList(@RequestParam(value="lastDays",defaultValue="30",required=false) int lastDays){
+		List<PolicySpider> list = policyService.adjustForReadingRelated(lastDays);
+		return list;
+	}
 }
