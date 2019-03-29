@@ -239,7 +239,7 @@ public class PolicyService {
 			}
 		}
 		if(parentPolicyInformix == null) {
-			logger.error("查找文章链接为：{} 的政策原文出错,Informix库中查询结果为空",publishUrl);
+			logger.warn("查找文章链接为：{} 的政策原文出错,Informix库中查询结果为空",publishUrl);
 			return null;
 		}
 		return parentPolicyInformix;
@@ -255,7 +255,7 @@ public class PolicyService {
 	public PolicySpider getParentPolicyForReadingActicleMysql(String publishUrl) {
 		List<PolicySpider>  list = policySpiderRepositoryMysql.findByArticleReadingContaining(publishUrl);
 		if(list == null || list.size() <= 0) {
-			logger.error("查找文章链接为：{} 的父类文章,Mysql库中查询结果为空",publishUrl);	
+			logger.warn("查找文章链接为：{} 的父类文章,Mysql库中查询结果为空",publishUrl);	
 			return null;
 		}
 		if(list.size() > 1) {
@@ -276,12 +276,7 @@ public class PolicyService {
 		return mysqlList;
 	}
 	
-	/**
-	 *       具体对某一条解读记录进行原文查找
-	 * @param policySpider
-	 * @return
-	 */
-	public static final String TITLE_REGEX = "(\\w+)(关于)(\\w+)(解读)(\\w+)";
+/*	public static final String TITLE_REGEX = "(\\w+)(\\u4E00-\\u9FA5)(\\w+)(\\u4E00-\\u9FA5)(\\w+)";
 	
 	public PolicySpider adjustForReadingRelatedDetail(PolicySpider policySpider) {
 		if(null == policySpider) {
@@ -290,16 +285,6 @@ public class PolicyService {
 		String title = policySpider.getTitle();
 //		if(title.contains("关于") || title.contains("解读") || title.contains("《"))
 		return null;
-	}
-	
-	public static void main(String[] args) {
-		String str1 = "关于《国家税务总局关于深化增值税改革有关事项 的公告》的解读";
-		System.out.println(str1.matches(TITLE_REGEX));
-		
-		String a="关于";
-		System.out.println(a.codePointAt(0));
-		System.out.println((char)20851);
-		
-		
-	}
+	}*/
+
 }

@@ -67,7 +67,7 @@
 	function init(){
 		$.ajax({
 			type: "get",
-			url:"http://localhost:8088/mysql/getOne?id=0f73b1e7faa67200a9490f20f25dafa1",
+			url:"http://localhost:8088/mysql/getOne?id=279a83a087f551344ad959ee245797a5",
 			async: false,
 			timeout: 30000,
 			dataType: 'json',

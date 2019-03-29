@@ -41,7 +41,7 @@ public class ProcessorService {
 	}
 	
 	/**
-	 * 获取到的政策文章中的链接下载地址处理，全部替换成完整地址
+	 * 获取到的政策文章中的附件链接下载地址处理，全部替换成完整地址
 	 * @param content
 	 * @param attachmentList
 	 */
@@ -65,6 +65,10 @@ public class ProcessorService {
 		return returnStr;
 	}
 	
+	
+	
+	
+	
 	/**
 	 * 获取到的政策文章中对应的政策解读链接，全部替换成完整地址
 	 * @param content
@@ -86,5 +90,38 @@ public class ProcessorService {
 			}
 		}
 		return returnStr;
+	}
+	
+	/**
+	 *  将文章中的图片的相对链接地址，全部替换成完整地址
+	 * @param content
+	 * @param imageUrls
+	 * @param pageUrl
+	 * @return
+	 */
+	public String replaceImageUrlForContent(String content,List<String> imageUrls,String pageUrl) {
+		if(content==null || "".equals(content) || imageUrls == null || pageUrl == null) {
+			return "";
+		}
+		//完整地址类似如下的 http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/ssww_199/201804/W020180402379608413246.jpg
+		String returnStr = content;	
+		for(String imageUrl : imageUrls) {
+			if(imageUrl.matches(UrlRegexConst.IMAGE_URL_ADJUST_REX)) {
+				String[] tempArray = pageUrl.split("/");
+				String pageUrlDetailHtml = tempArray[tempArray.length-1];
+				//获取当前页面的基地址
+				String tempUrl = pageUrl.replace(pageUrlDetailHtml, "");
+				String newReplaceImageUrl = imageUrl;
+				String newReplaceImageUrlAfter = newReplaceImageUrl.replaceFirst("\\./", tempUrl);					
+				returnStr = returnStr.replaceAll(imageUrl, newReplaceImageUrlAfter);
+			}
+		}
+		return returnStr;
+	}
+	
+	public static void main(String[] args) {
+		String regex = "(\\./)(\\w+)\\.(png|jpg)";
+		String str1 = "./W020180402379608413246.jpg";
+		System.out.println(str1.matches(UrlRegexConst.IMAGE_URL_ADJUST_REX));
 	}
 }

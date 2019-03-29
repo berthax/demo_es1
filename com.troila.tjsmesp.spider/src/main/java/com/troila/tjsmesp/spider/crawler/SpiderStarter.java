@@ -54,7 +54,7 @@ public class SpiderStarter implements CommandLineRunner{
 //						.addPipeline(mysqlPipeline)
 //						.setDownloader(seleniumDownloader)
 ////						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/gjzcjd/201903/t20190301_54522.shtml")
+//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/ssww_199/201804/t20180402_47347.shtml")
 //						.thread(spiderSettings.getThreadNumber());	
 //		spiderReading.runAsync();
 
@@ -86,11 +86,12 @@ public class SpiderStarter implements CommandLineRunner{
 //				.collect(Collectors.toList());
 //		
 //		
-//		//抓取天津政策一点通最新政策内容
-//		Spider spiderNewest = Spider.create(new PolicyNewestPageProcessor()).addPipeline(mysqlPipeline).thread(3)
+		//抓取天津政策一点通最新政策内容
+//		Spider spiderNewest = Spider.create(policyNewestPageProcessor).addPipeline(mysqlPipeline).thread(1)
 //				.setDownloader(seleniumDownloader)
+//				.addPipeline(mysqlPipeline)
 ////				.addUrl("http://zcydt.fzgg.tj.gov.cn/gllm/zxzc/index.shtml");
-//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20050.shtml");
+//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/sjbm/ssww_131/201902/t20190214_52838.shtml");
 ////		for(String str : list1) {
 ////			spiderNewest.addUrl(str);
 ////		}

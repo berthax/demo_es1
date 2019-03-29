@@ -28,17 +28,17 @@ public class PolicyDataSyncController {
 	private PolicySpiderRepositoryMysql policySpiderRepositoryMysql;
 		
 	@GetMapping("/policy/sync")
-	public List<SmePolicy> dataLastTenDaySync(@RequestParam(value="lastDays",defaultValue="10",required=false) int lastDays){
+	public List<SmePolicy> dataLastTenDaySync(@RequestParam(value="lastDays",defaultValue="7",required=false) int lastDays){
 		List<SmePolicy> list = new ArrayList<>();
 		try {
-			logger.info("{}开始执行数据同步任务，……",new Date());  //数据查重问题
+			logger.info("{}开始执行数据同步任务，……",new Date());
 			//同步政策原文
 			list = policyService.syncLatestPolicyData(SpiderModuleEnum.POLICY_NEWEST,lastDays);
 //			Thread.sleep(10);
 			//同步政策解读
 			List<SmePolicy> list2 = policyService.syncLatestPolicyData(SpiderModuleEnum.POLICY_READING,lastDays);
 			list.addAll(list2);
-			logger.info("{}数据同步任务结束，……",new Date());    //数据查重问题
+			logger.info("{}数据同步任务结束，……",new Date());  
 		} catch (Exception e) {
 			logger.error("数据同步任务出现异常，异常信息如下：",e);
 		}			

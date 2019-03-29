@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jsoup.nodes.Element;
 import org.seimicrawler.xpath.JXDocument;
 import org.seimicrawler.xpath.JXNode;
 import org.slf4j.Logger;
@@ -148,7 +149,17 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
 					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));
 					removeScriptTagContent = processorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
-				}				
+				}
+				
+				//将一些图片链接也需要矫正(此处的list得到的是img标签)
+				List<Element> imageUrlList = Selectors.xpath("//img/@src").selectElements(content);
+				if(imageUrlList != null && imageUrlList.size() > 0) {
+					List<String> srcList = imageUrlList.stream()
+							.map(e->{return Selectors.xpath("img/@src").select(e);})
+							.collect(Collectors.toList());
+					removeScriptTagContent = processorService.replaceImageUrlForContent(removeScriptTagContent, srcList, page.getUrl().toString());    					
+				}
+				
 				spider.setContent(removeScriptTagContent);
 				page.putField("policy", spider);				
 			}					

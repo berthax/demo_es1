@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
+import org.seimicrawler.xpath.JXDocument;
+import org.seimicrawler.xpath.JXNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,12 +101,12 @@ public class PolicyReadingPageProcessor implements PageProcessor{
         			//发文单位(经常是获取到的是国家政策解读，此时需要再同步的时候，获取原文的发文单位)
         			String publishUnit = map.get(page.getUrl().toString());
         			spider.setPublishUnit(publishUnit);
-        			if(publishUnit.contains("国家政策解读")) {
+        			if(publishUnit== null || publishUnit.contains("国家政策解读")) {
         				spider.setPolicyLevel(0);   
         			}else {
         				spider.setPolicyLevel(PolicyLevelEnum.getLevelByMultiNames(publishUnit));   //需要整理出来，发文部门需要进一步处理       				
         			}
-//	    		map.remove(title);   //将map中的该项内容去掉
+    //	    		map.remove(title);   //将map中的该项内容去掉
         			spider.setPublishUrl(page.getUrl().toString());
         			spider.setFromLink("http://zcydt.fzgg.tj.gov.cn");
         			spider.setFromSite("政策一点通");
@@ -117,8 +119,21 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
     					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));
     					removeScriptTagContent = processorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
-    				}			
-    				spider.setContent(removeScriptTagContent);        			
+    				}			    				
+    				//将一些图片链接也需要矫正(此处的list得到的是)
+    				List<Element> list = Selectors.xpath("//img/@src").selectElements(content);
+    				if(list != null && list.size() > 0) {
+    					List<String> srcList = list.stream()
+    							.map(e->{return Selectors.xpath("img/@src").select(e);})
+    							.collect(Collectors.toList());
+    					removeScriptTagContent = processorService.replaceImageUrlForContent(removeScriptTagContent, srcList, page.getUrl().toString());    					
+    				}
+    				spider.setContent(removeScriptTagContent);       				
+//    				JXDocument jxDocument = JXDocument.create(page.getHtml().toString()); 
+//    				List<JXNode> jxNodes = jxDocument.selN("//img//@src"); 
+//    				for(JXNode jx_temp : jxNodes) {
+//    					System.out.println(jx_temp);    					
+//    				} 					   				
         			page.putField("policy", spider);       			
         		}
         	}else if(page.getUrl().regex(LIST_URL).match()){ 
