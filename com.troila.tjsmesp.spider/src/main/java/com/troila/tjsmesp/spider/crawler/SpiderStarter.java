@@ -13,6 +13,7 @@ import com.troila.tjsmesp.spider.crawler.pipeline.InformixPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.MysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsDistrictPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.PolicyService;
@@ -118,10 +119,10 @@ public class SpiderStarter implements CommandLineRunner{
 //				.addUrl("http://www.sme.gov.cn/cms/news/100000/0000000224/0000000224.shtml");
 //		spiderMinistriesDynamic.runAsync();
 //		
-//		Spider spiderNewsDistrict = Spider.create(new PolicyNewsDistrictPageProcessor()).addPipeline(informixPipeline).thread(2)
-//				.setDownloader(seleniumDownloader)
-//				.addUrl("http://www.tj.gov.cn/xw/qx1/index.html");
-//		spiderNewsDistrict.runAsync();
+		Spider spiderNewsDistrict = Spider.create(new PolicyNewsDistrictPageProcessor()).addPipeline(mysqlPipeline).thread(1)
+				.setDownloader(seleniumDownloader)
+				.addUrl("http://www.tj.gov.cn/xw/qx1/index.html");
+		spiderNewsDistrict.runAsync();
 		
 	}
 	

@@ -41,7 +41,7 @@ public class SeleniumDownloader implements Downloader, Closeable{
 		try {
 			webDriver = webDriverPool.get();
 		} catch (Exception e) {
-			logger.warn("interrupted", e);
+			logger.error("interrupted", e);
 			return null;
 		}
 		 

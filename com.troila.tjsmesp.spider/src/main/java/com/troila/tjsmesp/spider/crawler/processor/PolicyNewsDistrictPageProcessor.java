@@ -69,7 +69,7 @@ public class PolicyNewsDistrictPageProcessor implements PageProcessor{
 			spider.setFromLink("http://www.tj.gov.cn");
 			spider.setFromSite("天津政务网");
 			spider.setForwardTime(new Date());	
-			spider.setId(MD5Util.getMD5(spider.toString()));   //根据特定的内容生成MD5，作为该条记录的id
+			spider.setId(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
 			spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWS_DISTRICT.getIndex());
 			page.putField("policy", spider);
 		}else {

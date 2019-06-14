@@ -222,6 +222,9 @@ public class TimeUtils {
 //		System.out.println("资金扶持".hashCode());  //1114041624 已有
 //		System.out.println("产业指导".hashCode());  //619865448    已有
 		
+    	
+    	Date date = getLastNDay(36);
+    	System.out.println(date);
 	}
     
 }
