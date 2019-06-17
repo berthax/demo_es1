@@ -1,7 +1,6 @@
 package com.troila.tjsmesp.spider.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,6 +26,10 @@ public class SpiderSettings {
 	 * 天津政策一点通政策解读爬取的开始地址
 	 */
 	private String readingStartUrl = "http://zcydt.fzgg.tj.gov.cn/zcbjd/index.shtml";
+	/**
+	 * 要闻焦点-》天津模块爬取的开始地址（对应天津政务网）
+	 */
+	private String newsFocusTianjinStartUrl = "http://www.tj.gov.cn/xw/qx1/index.html";
 	
 	public SpiderSettings() {
 		System.out.println("正在初始化该实例……");
@@ -55,4 +58,11 @@ public class SpiderSettings {
 	public void setReadingStartUrl(String readingStartUrl) {
 		this.readingStartUrl = readingStartUrl;
 	}
+	public String getNewsFocusTianjinStartUrl() {
+		return newsFocusTianjinStartUrl;
+	}
+	public void setNewsFocusTianjinStartUrl(String newsFocusTianjinStartUrl) {
+		this.newsFocusTianjinStartUrl = newsFocusTianjinStartUrl;
+	}
+	
 }

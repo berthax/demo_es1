@@ -18,10 +18,10 @@ import us.codecraft.webmagic.pipeline.Pipeline;
  *
  */
 @Component
-public class MysqlPipeline implements Pipeline{
-	private static final Logger logger = LoggerFactory.getLogger(MysqlPipeline.class);
+public class PolicyMysqlPipeline implements Pipeline{
+	private static final Logger logger = LoggerFactory.getLogger(PolicyMysqlPipeline.class);
 	@Autowired
-	private PolicySpiderRepositoryMysql PolicySpiderRepositoryMysql;
+	private PolicySpiderRepositoryMysql policySpiderRepositoryMysql;
 	
 	@Override
 	public void process(ResultItems resultItems, Task task) {
@@ -31,7 +31,7 @@ public class MysqlPipeline implements Pipeline{
  				 //如果是列表页，没有此项内容
  				 return;
  			 }
- 			 PolicySpiderRepositoryMysql.save(policySpider);
+ 			policySpiderRepositoryMysql.save(policySpider);
 		} catch (Exception e) {
 			logger.error("持久化到mysql数据库发生异常，异常信息如下：",e);
 		}

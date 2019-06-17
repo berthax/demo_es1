@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.InformixPipeline;
-import com.troila.tjsmesp.spider.crawler.pipeline.MysqlPipeline;
+import com.troila.tjsmesp.spider.crawler.pipeline.NewsMysqlPipeline;
+import com.troila.tjsmesp.spider.crawler.pipeline.PolicyMysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
-import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsDistrictPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusTianjinPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.PolicyService;
@@ -26,7 +27,7 @@ import us.codecraft.webmagic.Spider;
 public class SpiderStarter implements CommandLineRunner{
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	private MysqlPipeline mysqlPipeline;
+	private PolicyMysqlPipeline policyMysqlPipeline;
 	@Autowired
 	private InformixPipeline informixPipeline;
 	@Autowired
@@ -46,6 +47,11 @@ public class SpiderStarter implements CommandLineRunner{
 	private PolicyNewestPageProcessor policyNewestPageProcessor;
 	@Autowired
 	private PolicyReadingPageProcessor policyReadingPageProcessor;
+	
+	@Autowired
+	private PolicyNewsFocusTianjinPageProcessor policyNewsFocusTianjinPageProcessor;
+	@Autowired
+	private NewsMysqlPipeline newsMysqlPipeline;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -118,11 +124,12 @@ public class SpiderStarter implements CommandLineRunner{
 //				.setDownloader(seleniumDownloader)
 //				.addUrl("http://www.sme.gov.cn/cms/news/100000/0000000224/0000000224.shtml");
 //		spiderMinistriesDynamic.runAsync();
-//		
-		Spider spiderNewsDistrict = Spider.create(new PolicyNewsDistrictPageProcessor()).addPipeline(mysqlPipeline).thread(1)
-				.setDownloader(seleniumDownloader)
-				.addUrl("http://www.tj.gov.cn/xw/qx1/index.html");
-		spiderNewsDistrict.runAsync();
+//	
+		
+//		Spider spiderNewsDistrict = Spider.create(policyNewsFocusTianjinPageProcessor).addPipeline(newsMysqlPipeline).thread(1)
+//				.setDownloader(seleniumDownloader)
+//				.addUrl("http://www.tj.gov.cn/xw/qx1/index.html");
+//		spiderNewsDistrict.runAsync();
 		
 	}
 	

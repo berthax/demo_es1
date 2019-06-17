@@ -7,15 +7,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
-import org.seimicrawler.xpath.JXDocument;
-import org.seimicrawler.xpath.JXNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.constant.UrlRegexConst;
@@ -58,10 +56,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     @Autowired
     @Qualifier("processorService")
     private ProcessorService processorService;
-    
-    @Autowired
-	private RedisTemplate<String, Object> redisTemplate;
-      
+          
     String printStr = "<div class=\"function\"><a href=\"javascript:window.print();\">打印本页</a></div>";
     
 	@Override
@@ -92,7 +87,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
         			Date date = TimeUtils.getShortFormatDate(dateStr);
         			//设置发布时间
         			spider.setPublishDate(date);	    		
-        			String str1 = str[1];
+//        			String str1 = str[1];
         			//政策解读详情页获取的发布单位经常是没有内容的，此处换成从列表页获取的内容
 //        			String publishUnit = str1.substring(0, str1.length()-4).trim();   //分隔结果中第二部分呢，去除掉日期：这三个字符
         			
@@ -108,8 +103,8 @@ public class PolicyReadingPageProcessor implements PageProcessor{
         			}
     //	    		map.remove(title);   //将map中的该项内容去掉
         			spider.setPublishUrl(page.getUrl().toString());
-        			spider.setFromLink("http://zcydt.fzgg.tj.gov.cn");
-        			spider.setFromSite("政策一点通");
+        			spider.setFromLink(FromSiteEnum.TIANJINZHEGNCEYIDIANTONG.getName());
+    				spider.setFromSite(FromSiteEnum.TIANJINZHEGNCEYIDIANTONG.getLink());
         			spider.setForwardTime(new Date());	
         			spider.setId(MD5Util.getMD5(page.getUrl().toString()));   //根据文章链接生成MD5，作为该条记录的id，因为文章链接是唯一的
         			spider.setSpiderModule(SpiderModuleEnum.POLICY_READING.getIndex());

@@ -51,4 +51,5 @@ public class PolicyDataSyncController {
 		SmePolicy smePolicy = policyService.convertTo(policySpider);
 		return smePolicy;
 	}
+	
 }

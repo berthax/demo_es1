@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.constant.UrlRegexConst;
@@ -125,8 +126,8 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 								
 				spider.setStripContent(page.getHtml().xpath("//div[@class='JD_article']/tidyText()").toString());
 				spider.setPublishUrl(page.getUrl().toString());
-				spider.setFromLink(SpiderModuleEnum.POLICY_NEWEST.getSiteUrl());
-				spider.setFromSite("政策一点通");
+				spider.setFromLink(FromSiteEnum.TIANJINZHEGNCEYIDIANTONG.getName());
+				spider.setFromSite(FromSiteEnum.TIANJINZHEGNCEYIDIANTONG.getLink());
 				spider.setForwardTime(new Date());	
 				spider.setId(MD5Util.getMD5(page.getUrl().toString()));   //根据特定的内容生成MD5，作为该条记录的id,对于每篇文章，下载链接是唯一的
 				spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWEST.getIndex());  

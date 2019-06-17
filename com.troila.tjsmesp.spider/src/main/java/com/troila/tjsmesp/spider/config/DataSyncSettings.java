@@ -16,6 +16,8 @@ public class DataSyncSettings {
 	 * 当同步到informix数据库时，默认的政策发布者
 	 */
 	private String defaultPublisher = "5d7f07d1d8ca4b66b7da5b8e7f191435";
+	
+	private Integer defaultPublisherId = 140;
 	/**
 	 * 初次同步数据时，同步数据的最大条目数
 	 */
@@ -24,6 +26,11 @@ public class DataSyncSettings {
 	 * 同步多少天之内的数据
 	 */
 	private int lastDays = 7;
+	/**
+	 * 新闻部分同步多少天之内的数据
+	 */
+	private int newsLastDays = 7;
+	
 	public String getDefaultPublisher() {
 		return defaultPublisher;
 	}
@@ -42,4 +49,17 @@ public class DataSyncSettings {
 	public void setLastDays(int lastDays) {
 		this.lastDays = lastDays;
 	}
+	public Integer getDefaultPublisherId() {
+		return defaultPublisherId;
+	}
+	public void setDefaultPublisherId(Integer defaultPublisherId) {
+		this.defaultPublisherId = defaultPublisherId;
+	}
+	public int getNewsLastDays() {
+		return newsLastDays;
+	}
+	public void setNewsLastDays(int newsLastDays) {
+		this.newsLastDays = newsLastDays;
+	}
+	
 }

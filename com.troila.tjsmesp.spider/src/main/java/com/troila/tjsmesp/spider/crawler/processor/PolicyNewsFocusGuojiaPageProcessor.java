@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.util.MD5Util;
@@ -19,20 +20,20 @@ import us.codecraft.webmagic.selector.Selectors;
 /**
  * 中小企业信息网-》新闻资讯-》焦点新闻相关政策的爬取
  * 网址http://www.sme.gov.cn/cms/news/100000/0000000033/0000000033.shtml
- * 此部分对应中小企网站的国家模块的内容
+ * 此部分对应中小企网站要闻焦点-》国家模块的内容
  * @author xuanguojing
  *
  */
 @Component("policyNewsFocusPageProcessor")
-public class PolicyNewsFocusPageProcessor implements PageProcessor{
+public class PolicyNewsFocusGuojiaPageProcessor implements PageProcessor{
 
 	 /**
-     * 焦点新闻详情页的正则表达式
+     * 要闻焦点-国家详情页的正则表达式
      */
     private static final String ARTICLE_URL = "http://www.sme.gov.cn/cms/news/100000/0000000033/(\\d+)/(\\d+)/(\\d+)/(\\w+)\\.shtml";
     
     /**
-     * 焦点新闻列表页的正则表达式
+     *要闻焦点-国家列表页的正则表达式
      */    
     private static final String LIST_URL = "http://www\\.sme\\.gov\\.cn/cms/news/100000/0000000033/0000000033(_\\d+)*\\.shtml";
 	
@@ -69,11 +70,11 @@ public class PolicyNewsFocusPageProcessor implements PageProcessor{
 			spider.setContent(page.getHtml().xpath("//div[@class='news_nav']/tidyText()").toString());
 			spider.setStripContent(page.getHtml().xpath("//div[@class='news_nav']/tidyText()").toString());
 			spider.setPublishUrl(page.getUrl().toString());
-			spider.setFromLink("http://www.sme.gov.cn");
-			spider.setFromSite("中小企业信息网");
+			spider.setFromLink(FromSiteEnum.ZHONGXIAOQIYEXINXIWANG.getLink());
+			spider.setFromSite(FromSiteEnum.ZHONGXIAOQIYEXINXIWANG.getName());
 			spider.setForwardTime(new Date());	
-			spider.setId(MD5Util.getMD5(spider.toString()));   //根据特定的内容生成MD5，作为该条记录的id
-			spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWS_FOCUS.getIndex());
+			spider.setId(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
+			spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA.getIndex());
 			page.putField("policy", spider);
 		}else {
 			page.setSkip(true);

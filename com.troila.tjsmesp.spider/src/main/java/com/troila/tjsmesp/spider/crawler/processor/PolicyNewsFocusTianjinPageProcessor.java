@@ -1,15 +1,17 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.model.primary.PolicySpider;
+import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
+import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 
@@ -21,61 +23,73 @@ import us.codecraft.webmagic.selector.Selectors;
 /**
  * 天津政务网-》新闻-》各区动态相关政策的爬取
  * 网址http://www.tj.gov.cn/xw/qx1/
- * 此部分对应中小企网站的天津模块的内容
+ * 此部分对应中小企网站的要闻焦点-》天津模块的内容
  * @author xuanguojing
  *
  */
-@Component("policyNewsDistrictPageProcessor")
-public class PolicyNewsDistrictPageProcessor implements PageProcessor{
+@Component
+public class PolicyNewsFocusTianjinPageProcessor implements PageProcessor{
 	
 	/**
-     * 各区动态详情页的正则表达式
+     * 要闻焦点-天津详情页的正则表达式
      */
     private static final String ARTICLE_URL = "http://www.tj.gov.cn/xw/qx1/(\\d+)/(\\w+)\\.html";
     		
     /**
-     * 各区动态列表页的正则表达式
+     *要闻焦点-天津列表页的正则表达式
      */    
     private static final String LIST_URL = "http://www\\.tj\\.gov\\.cn/xw/qx1/index(_\\d+)*\\.html";
+    
+    @Autowired
+    private  NewsProcessorService  newsProcessorService;
 		
 	@Override
 	public void process(Page page) {
 		if(page.getUrl().regex(LIST_URL).match()) {
 			List<String> list =  page.getHtml().xpath("//div[@class='left leftlist']").links().all();
-//			System.out.println(list);
 			
-			for(String str : list)
-				System.out.println(str);
-			//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
+//			for(String str : list)
+//				System.out.println(str);
+			
+			//	将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 			List<String> articleList = list.stream().filter(p->p.matches(ARTICLE_URL)).collect(Collectors.toList());
+			
+			// 过滤掉以前已经爬取过的记录，不再重复爬取
+			List<String> pastCrawledUrls = newsProcessorService.getCrawledUrls(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN.getIndex());	
+			if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
+				articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
+			}
+			
 			page.addTargetRequests(articleList);
 			//将下一页的列表页链接加入到后续的url地址，有待继续爬取
 			List<String> urlList = list.stream().filter(p->p.matches(LIST_URL)).collect(Collectors.toList());
 			page.addTargetRequests(urlList);  			
 		}else if(page.getUrl().regex(ARTICLE_URL).match()){
 			System.out.println("当前下载的页面url为："+page.getUrl());
-			PolicySpider spider = new PolicySpider();
+			NewsSpider spider = new NewsSpider();
 			String selectedDiv = page.getHtml().xpath("//div[@class='left leftlist']").toString();
 			spider.setTitle(Selectors.xpath("//div[@class='title']/text()").select(selectedDiv));
 			List<Element> list1 = Selectors.xpath("//div[@class='time xwlc pd']/span").selectElements(selectedDiv);
-			String sourceStr =  Selectors.xpath("//span/text()").select(list1.get(0).toString()).split("来源：")[1];
-			spider.setSource(sourceStr);
-			String dateStr = Selectors.xpath("//span/text()").select(list1.get(1).toString()).split("发布时间：")[1];
-			spider.setPublishDate(TimeUtils.getFormatDate(new SimpleDateFormat("yyyy-MM-dd HH:mm"), dateStr));
+			String[] sourceStrArray =  Selectors.xpath("//span/text()").select(list1.get(0).toString()).split("来源：");
+			// 注意判断一下，避免有的记录没有指定该字段，那么数据项为空，出现异常
+			if(sourceStrArray.length > 1) {
+				spider.setSource(sourceStrArray[1]);				
+			}
+			String[] dateStrArray = Selectors.xpath("//span/text()").select(list1.get(1).toString()).split("发布时间：");
+			if(dateStrArray.length > 1) {				
+				spider.setPublishDate(TimeUtils.getFormatDate(new SimpleDateFormat("yyyy-MM-dd HH:mm"), dateStrArray[1]));
+			}
 			String content = Selectors.xpath("//div[@class='concon']/tidyText()").select(selectedDiv);
 			spider.setContent(content);
-			spider.setStripContent(content);
 			spider.setPublishUrl(page.getUrl().toString());
-			spider.setFromLink("http://www.tj.gov.cn");
-			spider.setFromSite("天津政务网");
-			spider.setForwardTime(new Date());	
-			spider.setId(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
-			spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWS_DISTRICT.getIndex());
-			page.putField("policy", spider);
+			spider.setFromSite(FromSiteEnum.TIANJINZHENGWUWANG.getName());
+			spider.setFromLink(FromSiteEnum.TIANJINZHENGWUWANG.getLink());
+			spider.setNewsCode(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
+			spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN.getIndex());
+			page.putField("news", spider);
 		}else {
 			return;
 		}
-		
 	}
 
 	@Override

@@ -23,7 +23,6 @@ public class ProcessorService {
 	
 	@Autowired 
 	private PolicySpiderRepositoryMysql policySpiderRepositoryMysql;
-	 
  
 	/**
 	 * 获取之前已经下载过的文章链接，不再重复下载(以数据库中当前的存储为准)
