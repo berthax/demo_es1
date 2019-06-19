@@ -125,7 +125,7 @@ public class PolicyService {
 			long size = redisTemplate.opsForList().size(spiderMoudleEnum.getKey());
 			if(size == 0) {
 				logger.info("当前Reids中未查询到任何爬取的数据，本次爬取没有更新的内容");
-				return null;
+				return new ArrayList<>();
 			}
 			//从redis中获取本次爬取的所有记录
 			List<Object> redisListObj = redisTemplate.opsForList().range(spiderMoudleEnum.getKey(), 0L, size-1);

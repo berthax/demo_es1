@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
+import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.model.secondary.BmsPlatformPublishInfo;
 import com.troila.tjsmesp.spider.service.NewsService;
 import com.troila.tjsmesp.spider.util.TimeUtils;
@@ -29,6 +30,12 @@ public class NewsController {
 	@GetMapping("/news/dataSync")
 	public List<BmsPlatformPublishInfo> newsDataSync(@RequestParam int spiderModule, int lastNDays){
 		return newsService.newsDataSync(SpiderModuleEnum.getSpiderModuleEnum(spiderModule), lastNDays);
+	}
+	
+	@GetMapping("/news/dataUpdate")
+	public int newsDataUpdate(@RequestParam int spiderModule) {
+		List<NewsSpider> list = newsService.dataUpdate(SpiderModuleEnum.getSpiderModuleEnum(spiderModule));
+		return list.size();
 	}
 
 }
