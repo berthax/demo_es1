@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.constant.FromSiteEnum;
+import com.troila.tjsmesp.spider.crawler.processor.abs.PageSettings;
 import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
 import com.troila.tjsmesp.spider.model.primary.BaseSpider;
 import com.troila.tjsmesp.spider.util.MD5Util;
@@ -29,11 +30,11 @@ public class TjGovCn implements SpiderProcess{
 	@Autowired
 	private NewsProcessorService newsProcessorService;
 	
-	private String listUrlRegex;
-	
-	private String detailUrlRegex;
-	
-	private int spiderModule;
+//	private String listUrlRegex;
+//	
+//	private String detailUrlRegex;
+//	
+//	private int spiderModule;
 	/**
 	 * 
 	 * @Description 天津政务网-》处理列表页信息
@@ -41,20 +42,20 @@ public class TjGovCn implements SpiderProcess{
 	 * @param spiderModuleEnum
 	 */
 	@Override
-	public void listProcess(Page page) {
+	public void listProcess(Page page, PageSettings pageSettings) {
 		List<String> list =  page.getHtml().xpath("//div[@class='left leftlist']").links().all();		
 		//	将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
-		List<String> articleList = list.stream().filter(p->p.matches(detailUrlRegex)).collect(Collectors.toList());
+		List<String> articleList = list.stream().filter(p->p.matches(pageSettings.getArticleUrlRegex())).collect(Collectors.toList());
 		
 		// 过滤掉以前已经爬取过的记录，不再重复爬取
-		List<String> pastCrawledUrls = newsProcessorService.getCrawledUrls(spiderModule);	
+		List<String> pastCrawledUrls = newsProcessorService.getCrawledUrls(pageSettings.getModule().getIndex());	
 		if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
 			articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
 		}
 		
 		page.addTargetRequests(articleList);
 		//将下一页的列表页链接加入到后续的url地址，有待继续爬取
-		List<String> urlList = list.stream().filter(p->p.matches(listUrlRegex)).collect(Collectors.toList());
+		List<String> urlList = list.stream().filter(p->p.matches(pageSettings.getListUrlRegex())).collect(Collectors.toList());
 		page.addTargetRequests(urlList);  		
 	}
 	
@@ -65,7 +66,7 @@ public class TjGovCn implements SpiderProcess{
 	 * @param spiderModuleEnum
 	 */
 	@Override
-	public void detailProcess(Page page) {
+	public void detailProcess(Page page, PageSettings pageSettings) {
 		BaseSpider spider = new BaseSpider();
 		String selectedDiv = page.getHtml().xpath("//div[@class='left leftlist']").toString();
 		spider.setTitle(Selectors.xpath("//div[@class='title']/text()").select(selectedDiv));
@@ -85,7 +86,7 @@ public class TjGovCn implements SpiderProcess{
 		spider.setFromSite(FromSiteEnum.TIANJINZHENGWUWANG.getName());
 		spider.setFromLink(FromSiteEnum.TIANJINZHENGWUWANG.getLink());
 		spider.setSpiderCode(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
-		spider.setSpiderModule(spiderModule);
+		spider.setSpiderModule(pageSettings.getModule().getIndex());
 		page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);	
 	}
 }

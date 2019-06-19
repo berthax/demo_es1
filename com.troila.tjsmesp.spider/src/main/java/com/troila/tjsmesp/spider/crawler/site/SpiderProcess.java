@@ -1,5 +1,7 @@
 package com.troila.tjsmesp.spider.crawler.site;
 
+import com.troila.tjsmesp.spider.crawler.processor.abs.PageSettings;
+
 import us.codecraft.webmagic.Page;
 /**
  * 
@@ -15,11 +17,11 @@ public interface SpiderProcess {
 	 * 对爬取的列表页的处理   
 	 * @param page
 	 */	
-	public void listProcess(Page page);
+	public void listProcess(Page page, PageSettings pageSettings);
 	/**
 	 * 
 	 * 对爬取的详情页的处理   
 	 * @param page
 	 */
-	public void detailProcess(Page page);
+	public void detailProcess(Page page, PageSettings pageSettings);
 }

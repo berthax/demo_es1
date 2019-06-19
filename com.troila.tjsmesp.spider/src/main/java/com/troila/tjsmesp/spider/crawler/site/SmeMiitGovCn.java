@@ -1,5 +1,7 @@
 package com.troila.tjsmesp.spider.crawler.site;
 
+import com.troila.tjsmesp.spider.crawler.processor.abs.PageSettings;
+
 import us.codecraft.webmagic.Page;
 
 /**
@@ -13,15 +15,16 @@ import us.codecraft.webmagic.Page;
 public class SmeMiitGovCn implements SpiderProcess{
 
 	@Override
-	public void listProcess(Page page) {
+	public void listProcess(Page page, PageSettings pageSettings) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void detailProcess(Page page) {
+	public void detailProcess(Page page, PageSettings pageSettings) {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }
