@@ -12,8 +12,10 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 
 import com.troila.tjsmesp.spider.repository.mysql.CronRepository;
-import com.troila.tjsmesp.spider.service.CrawlScheduleService;
-import com.troila.tjsmesp.spider.service.DataSyncService;
+import com.troila.tjsmesp.spider.scheduled.CrawlScheduleService;
+import com.troila.tjsmesp.spider.scheduled.DataSyncService;
+import com.troila.tjsmesp.spider.scheduled.NewsCrawlScheduleService;
+import com.troila.tjsmesp.spider.scheduled.NewsDataSyncService;
 
 
 /**
@@ -31,9 +33,11 @@ public class ScheduleConfig implements SchedulingConfigurer{
 	private CrawlScheduleService crawlScheduleService;
 	@Autowired
 	private DataSyncService dataSyncService;
-	
-	
-	
+	@Autowired
+	private NewsCrawlScheduleService newsCrawlScheduleService;
+	@Autowired
+	private NewsDataSyncService newsDataSyncService;
+		
 //	@Override
 //	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
 //		taskRegistrar.setScheduler(taskExecutor());
@@ -43,14 +47,18 @@ public class ScheduleConfig implements SchedulingConfigurer{
 //    public Executor taskExecutor() {
 //        return Executors.newScheduledThreadPool(10);
 //    }
-	
-	
+		
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-		//注册爬取定时任务
+		// 注册政策爬取定时任务
 		//taskRegistrar.addTriggerTask(crawlScheduleService,getTrigger(1));  
-		//注册数据同步定时任务
-//		taskRegistrar.addTriggerTask(dataSyncService,getTrigger(2));
+		// 注册政策数据同步定时任务
+		//taskRegistrar.addTriggerTask(dataSyncService,getTrigger(2));
+		
+		// 注册新闻信息爬取定时任务
+		taskRegistrar.addTriggerTask(newsCrawlScheduleService,getTrigger(7));  
+		// 注册新闻信息数据同步定时任务
+		taskRegistrar.addTriggerTask(newsDataSyncService,getTrigger(8));
 	}
 	
 	/**

@@ -1,5 +1,12 @@
 package com.troila.tjsmesp.spider.constant;
-
+/**
+ * 
+ * @ClassName:  FromSiteEnum   
+ * @Description:转载信息的各种网站记录
+ * @author: xgj
+ * @date:   2019年6月18日 上午9:04:55   
+ *
+ */
 public enum FromSiteEnum {
 	/**
 	 * 天津政策一点通
@@ -12,8 +19,12 @@ public enum FromSiteEnum {
 	/**
 	 * 中小企业信息网
 	 */
-	ZHONGXIAOQIYEXINXIWANG("中小企业信息网","http://sme.miit.gov.cn");
-	
+	ZHONGXIAOQIYEXINXIWANG("中小企业信息网","http://sme.miit.gov.cn"),
+	/**
+	 * 中国政府网
+	 */
+	ZHONGGUOZHENGFUWANG("中国政府网","http://www.gov.cn");
+		
 	/**
 	 * 转载网站的名称
 	 */

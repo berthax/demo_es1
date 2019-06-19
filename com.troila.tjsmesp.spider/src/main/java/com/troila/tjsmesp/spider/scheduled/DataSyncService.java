@@ -1,4 +1,4 @@
-package com.troila.tjsmesp.spider.service;
+package com.troila.tjsmesp.spider.scheduled;
 
 import java.util.Date;
 
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.troila.tjsmesp.spider.config.DataSyncSettings;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
+import com.troila.tjsmesp.spider.service.PolicyService;
 
 @Service
 public class DataSyncService implements Runnable{

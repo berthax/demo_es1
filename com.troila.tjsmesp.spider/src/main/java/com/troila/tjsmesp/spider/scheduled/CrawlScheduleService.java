@@ -1,4 +1,4 @@
-package com.troila.tjsmesp.spider.service;
+package com.troila.tjsmesp.spider.scheduled;
 
 import java.util.Date;
 
@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
+import com.troila.tjsmesp.spider.constant.SpiderStartUrlConst;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
-import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
+import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipeline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
+import com.troila.tjsmesp.spider.service.PolicyService;
 
 import us.codecraft.webmagic.Spider;
 
@@ -23,7 +25,7 @@ public class CrawlScheduleService implements Runnable{
 	private static final Logger logger = LoggerFactory.getLogger(CrawlScheduleService.class);
 	
 	@Autowired
-	private RedisPipiline redisPipeline;
+	private RedisPipeline redisPipeline;
 	@Autowired
 	private SeleniumDownloader seleniumDownloader;
 //	@Autowired
@@ -60,7 +62,7 @@ public class CrawlScheduleService implements Runnable{
 		spiderNewest = Spider.create(policyNewestPageProcessor)
 				.addPipeline(redisPipeline)
 				.setDownloader(seleniumDownloader)
-				.addUrl(spiderSettings.getNewestStartUrl())
+				.addUrl(SpiderStartUrlConst.NEWEST_START_URL)
 				.thread(spiderSettings.getThreadNumber());
 		//删除原缓存中的内容
 		redisTemplate.delete(SpiderModuleEnum.POLICY_NEWEST.getKey());
@@ -70,7 +72,7 @@ public class CrawlScheduleService implements Runnable{
 		spiderReading = Spider.create(policyReadingPageProcessor)
 				.addPipeline(redisPipeline)
 				.setDownloader(seleniumDownloader)
-				.addUrl(spiderSettings.getReadingStartUrl())
+				.addUrl(SpiderStartUrlConst.READING_START_URL)
 				.thread(spiderSettings.getThreadNumber());	
 		//删除原缓存中的内容
 		redisTemplate.delete(SpiderModuleEnum.POLICY_READING.getKey());

@@ -9,14 +9,20 @@ import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
-import com.troila.tjsmesp.spider.crawler.pipeline.InformixPipeline;
+import com.troila.tjsmesp.spider.crawler.pipeline.BaseRedisPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.NewsMysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.PolicyMysqlPipeline;
-import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipiline;
+import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipeline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusBuweiPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusGuojiaPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusTianjinPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsIndustryInfoPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsRegionalDynamicPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
+import com.troila.tjsmesp.spider.scheduled.CrawlScheduleService;
+import com.troila.tjsmesp.spider.scheduled.NewsCrawlScheduleService;
 import com.troila.tjsmesp.spider.service.PolicyService;
 import com.troila.tjsmesp.spider.service.ProcessorService;
 
@@ -29,14 +35,12 @@ public class SpiderStarter implements CommandLineRunner{
 	@Autowired
 	private PolicyMysqlPipeline policyMysqlPipeline;
 	@Autowired
-	private InformixPipeline informixPipeline;
-	@Autowired
 	private SeleniumDownloader seleniumDownloader;
 	@Autowired
 	private PolicySpiderRepositoryMysql policySpiderRepositoryMysql;
 	
 	@Autowired
-	private RedisPipiline redisPipeline;
+	private RedisPipeline redisPipeline;
 	@Autowired
 	private SpiderSettings spiderSettings;
 	@Autowired
@@ -46,64 +50,31 @@ public class SpiderStarter implements CommandLineRunner{
 	@Autowired
 	private PolicyNewestPageProcessor policyNewestPageProcessor;
 	@Autowired
-	private PolicyReadingPageProcessor policyReadingPageProcessor;
-	
+	private PolicyReadingPageProcessor policyReadingPageProcessor;	
 	@Autowired
 	private PolicyNewsFocusTianjinPageProcessor policyNewsFocusTianjinPageProcessor;
 	@Autowired
+	private PolicyNewsFocusBuweiPageProcessor policyNewsFocusBuweiPageProcessor;
+	@Autowired
+	private PolicyNewsRegionalDynamicPageProcessor policyNewsRegionalDynamicPageProcessor;
+	@Autowired
 	private NewsMysqlPipeline newsMysqlPipeline;
+	@Autowired
+	private BaseRedisPipeline baseRedisPipeline;
+	@Autowired
+	private PolicyNewsFocusGuojiaPageProcessor policyNewsFocusGuojiaPageProcessor;
+	@Autowired
+	private PolicyNewsIndustryInfoPageProcessor policyNewsIndustryInfoPageProcessor;
+	@Autowired
+	private NewsCrawlScheduleService newsCrawlScheduleService;
+	@Autowired
+	private CrawlScheduleService crawlScheduleService;
+	
 	
 	@Override
 	public void run(String... args) throws Exception {
 		
-		//初始化政策解读的爬虫实例
-//		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
-//						.addPipeline(mysqlPipeline)
-//						.setDownloader(seleniumDownloader)
-////						.addUrl(spiderConfig.getPolicyReadingStartUrl())
-//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/ssww_199/201804/t20180402_47347.shtml")
-//						.thread(spiderSettings.getThreadNumber());	
-//		spiderReading.runAsync();
-
-
-		// TODO Auto-generated method stub
-//		Spider spider = Spider.create(new PolicyReadingPageProcessor()).addPipeline(mysqlPipeline).thread(2)
-//				.setDownloader(seleniumDownloader)
-//				.setScheduler(new QueueScheduler())
-//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/index.shtml");
-//		spider.runAsync();  //异步启动
-		
-		//抓取中小企信息网地方政府相关政策
-//		Spider spider_localGov = Spider.create(new PolicyLocalGovPageProcessor()).addPipeline(informixPipeline).thread(1)
-//				.setDownloader(seleniumDownloader)
-////				.addUrl("http://www.sme.gov.cn/cms/news/100000/0000000225/0000000225.shtml");
-//				.addUrl("http://www.sme.gov.cn/cms/news/100000/0000000225/2018/12/12/f096cf558a754e4fb42b5b98208de1ad.shtml");
-//		spider_localGov.runAsync();  	//异步启动
-		
-		
-		
-		//抓取中小企信息网行业热点相关政策
-//		Spider spiderIndustryFocus = Spider.create(new PolicyIndustryFocusPageProcessor()).addPipeline(informixPipeline).thread(1)
-//				.setDownloader(seleniumDownloader)
-//				.addUrl("http://www.sme.gov.cn/cms/news/100000/0000000071/0000000071_20.shtml");
-//		spiderIndustryFocus.runAsync();  //异步启动
-		
-//		List<PolicySpider> list = policySpiderRepositoryMysql.findByPublishUnitContaining("国家政策");
-//		List<String> list1 = list.stream().map(PolicySpider::getPublishUrl)
-//				.collect(Collectors.toList());
-//		
-//		
 		//抓取天津政策一点通最新政策内容
-//		Spider spiderNewest = Spider.create(policyNewestPageProcessor).addPipeline(mysqlPipeline).thread(1)
-//				.setDownloader(seleniumDownloader)
-//				.addPipeline(mysqlPipeline)
-////				.addUrl("http://zcydt.fzgg.tj.gov.cn/gllm/zxzc/index.shtml");
-//				.addUrl("http://zcydt.fzgg.tj.gov.cn/zcb/sjbm/ssww_131/201902/t20190214_52838.shtml");
-////		for(String str : list1) {
-////			spiderNewest.addUrl(str);
-////		}
-//		spiderNewest.runAsync();  //异步启动
-//		http://zcydt.fzgg.tj.gov.cn/zcb/gjzc/201703/t20170322_20188.shtml    //财政部国家税务总局
 //		Spider spiderNewest = Spider.create(policyNewestPageProcessor)
 //				.addPipeline(mysqlPipeline)
 //				.setDownloader(seleniumDownloader)
@@ -114,23 +85,56 @@ public class SpiderStarter implements CommandLineRunner{
 //		logger.info("本次爬取最新政策任务已完成，共爬取记录数："+spiderNewest.getPageCount());
 //		policyService.dataSync(SpiderModuleEnum.POLICY_NEWEST);
 		
-		//抓取中小企信息网焦点新闻的政策内容
-//		Spider spiderNewestFocus = Spider.create(new PolicyNewsFocusPageProcessor()).addPipeline(informixPipeline).thread(1)
-//				.setDownloader(seleniumDownloader)
-//				.addUrl("http://www.sme.gov.cn/cms/news/100000/0000000033/0000000033.shtml");
-//		spiderNewestFocus.runAsync();
+		//初始化政策解读的爬虫实例
+//		Spider	spiderReading = Spider.create(policyReadingPageProcessor)
+//						.addPipeline(mysqlPipeline)
+//						.setDownloader(seleniumDownloader)
+////						.addUrl(spiderConfig.getPolicyReadingStartUrl())
+//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/ssww_199/201804/t20180402_47347.shtml")
+//						.addUrl("http://zcydt.fzgg.tj.gov.cn/zcbjd/index.shtml");
+//						.thread(spiderSettings.getThreadNumber());	
+//		spiderReading.runAsync();
 		
-//		Spider spiderMinistriesDynamic = Spider.create(new PolicyMinistriesDynamicPageProcessor()).addPipeline(informixPipeline).thread(2)
-//				.setDownloader(seleniumDownloader)
-//				.addUrl("http://www.sme.gov.cn/cms/news/100000/0000000224/0000000224.shtml");
-//		spiderMinistriesDynamic.runAsync();
-//	
-		
-//		Spider spiderNewsDistrict = Spider.create(policyNewsFocusTianjinPageProcessor).addPipeline(newsMysqlPipeline).thread(1)
+				
+//		Spider spiderNewsFocusTianjin = Spider.create(policyNewsFocusTianjinPageProcessor).addPipeline(newsMysqlPipeline).thread(1)
 //				.setDownloader(seleniumDownloader)
 //				.addUrl("http://www.tj.gov.cn/xw/qx1/index.html");
-//		spiderNewsDistrict.runAsync();
+//		spiderNewsFocusTianjin.runAsync();
+				
+//		http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml
 		
+/*		Spider spiderNewsFocusBuwei = Spider.create(policyNewsFocusBuweiPageProcessor)
+		.addPipeline(newsMysqlPipeline)
+		.thread(2)
+		.setDownloader(seleniumDownloader)
+		.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000224/0000000224.shtml");
+		spiderNewsFocusBuwei.runAsync();*/
+		
+/*		Spider spiderNewsFocusGuojia = Spider.create(policyNewsFocusGuojiaPageProcessor)
+				.addPipeline(newsMysqlPipeline)
+				.thread(2)
+				.setDownloader(seleniumDownloader)
+				.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml");
+		spiderNewsFocusGuojia.runAsync();*/
+		
+//		Spider spiderNewsRegionalDynamic = Spider.create(policyNewsRegionalDynamicPageProcessor)
+//		.addPipeline(newsMysqlPipeline)
+//		.addPipeline(baseRedisPipeline)
+//		.thread(2)
+//		.setDownloader(seleniumDownloader)
+//		.addUrl("http://sousuo.gov.cn/column/30902/0.htm");
+//		spiderNewsRegionalDynamic.runAsync();
+		
+//		Spider spiderNewsIndustryInfo = Spider.create(policyNewsIndustryInfoPageProcessor)
+//				.addPipeline(newsMysqlPipeline)
+//				.thread(2)
+//				.setDownloader(seleniumDownloader)
+//				.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000071/0000000071.shtml");
+//		spiderNewsIndustryInfo.runAsync();
+		
+		// 系统启动时，将信息爬取一次
+		newsCrawlScheduleService.crawlNewsDataAll();
+			
 	}
 	
 		
@@ -162,5 +166,7 @@ public class SpiderStarter implements CommandLineRunner{
 	                .thread(5).run();
 		
 	}*/
+	
+	
 	
 }

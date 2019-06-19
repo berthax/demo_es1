@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 
@@ -26,7 +27,7 @@ public class PolicyMysqlPipeline implements Pipeline{
 	@Override
 	public void process(ResultItems resultItems, Task task) {
  		 try {
- 			 PolicySpider policySpider = (PolicySpider)resultItems.get("policy");
+ 			 PolicySpider policySpider = (PolicySpider)resultItems.get(CrawlConst.CRAWL_ITEM_KEY);
  			 if(policySpider == null) {
  				 //如果是列表页，没有此项内容
  				 return;

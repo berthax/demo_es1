@@ -1,62 +1,51 @@
 package com.troila.tjsmesp.spider.model.primary;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import java.util.Date;
 
-@Entity
-@Table(name="sme_news_spider")
-public class NewsSpider extends BaseSpider{
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
+import javax.persistence.MappedSuperclass;
+/**
+ * 	
+ * @ClassName:  BaseSpider   
+ * @Description:表明这是父类，可以将属性映射到子类中使用JPA生成表
+ * @author: xgj
+ * @date:   2019年6月18日 下午2:56:04   
+ *
+ */
+@MappedSuperclass 
+public class BaseSpider {
 	
-	public Integer getId() {
-		return id;
-	}
+	protected String spiderCode;
 	
-	public void setId(Integer id) {
-		this.id = id;
-	}
+	protected String title;
 	
-	/*private String newsCode;
-	
-	private String title;
-	
-	private String content;
-	*//**
+	protected String content;
+	/**
 	 * 来源，即具体的发文部门
-	 *//*
-	private String source;
-	*//**
+	 */
+	protected String source;
+	/**
 	 * 发文时间
-	 *//*
-	private Date publishDate;	
-	*//**
+	 */
+	protected Date publishDate;	
+	/**
 	 * 发布文章的具体链接地址
-	 *//*
-	private String publishUrl;
-	*//**
+	 */
+	protected String publishUrl;
+	/**
 	 * 爬取模块记录，1最新政策原文，2政策解读，3产业资讯，4区域动态，5要闻焦点国家"，6要闻焦点部委，7要闻焦点天津
-	 *//*
-	private Integer spiderModule;
+	 */
+	protected Integer spiderModule;
 	
-	private String fromSite;
+	protected String fromSite;
 	
-	private String fromLink;
+	protected String fromLink;
 	
-	private Date gmtCreate = new Date();
+	protected Date gmtCreate = new Date();
 	
-	private Date gmtModified = new Date();
+	protected Date gmtModified = new Date();
 
-	public Integer getId() {
-		return id;
-	}
-
-	public String getNewsCode() {
-		return newsCode;
+	public String getSpiderCode() {
+		return spiderCode;
 	}
 
 	public String getTitle() {
@@ -99,12 +88,8 @@ public class NewsSpider extends BaseSpider{
 		return gmtModified;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public void setNewsCode(String newsCode) {
-		this.newsCode = newsCode;
+	public void setSpiderCode(String spiderCode) {
+		this.spiderCode = spiderCode;
 	}
 
 	public void setTitle(String title) {
@@ -145,5 +130,7 @@ public class NewsSpider extends BaseSpider{
 
 	public void setGmtModified(Date gmtModified) {
 		this.gmtModified = gmtModified;
-	}*/
+	}
+	
+	
 }

@@ -27,8 +27,8 @@ public class NewsController {
 	}
 	
 	@GetMapping("/news/dataSync")
-	public List<BmsPlatformPublishInfo> newsDataSync(@RequestParam int lastNDays){
-		return newsService.newsDataSync(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN, lastNDays);
+	public List<BmsPlatformPublishInfo> newsDataSync(@RequestParam int spiderModule, int lastNDays){
+		return newsService.newsDataSync(SpiderModuleEnum.getSpiderModuleEnum(spiderModule), lastNDays);
 	}
 
 }

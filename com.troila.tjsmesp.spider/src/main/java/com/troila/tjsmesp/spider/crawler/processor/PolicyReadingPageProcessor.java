@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
@@ -129,7 +130,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
 //    				for(JXNode jx_temp : jxNodes) {
 //    					System.out.println(jx_temp);    					
 //    				} 					   				
-        			page.putField("policy", spider);       			
+        			page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);       			
         		}
         	}else if(page.getUrl().regex(LIST_URL).match()){ 
         		//解读的文章详情页很多没有发布单位，需要从列表页爬取这个字段内容

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
@@ -162,7 +163,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				}
 				
 				spider.setContent(removeScriptTagContent);
-				page.putField("policy", spider);				
+				page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);				
 			}					
 		}
 	}

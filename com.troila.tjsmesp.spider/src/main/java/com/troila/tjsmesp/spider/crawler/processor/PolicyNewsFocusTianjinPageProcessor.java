@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
@@ -65,7 +66,6 @@ public class PolicyNewsFocusTianjinPageProcessor implements PageProcessor{
 			List<String> urlList = list.stream().filter(p->p.matches(LIST_URL)).collect(Collectors.toList());
 			page.addTargetRequests(urlList);  			
 		}else if(page.getUrl().regex(ARTICLE_URL).match()){
-			System.out.println("当前下载的页面url为："+page.getUrl());
 			NewsSpider spider = new NewsSpider();
 			String selectedDiv = page.getHtml().xpath("//div[@class='left leftlist']").toString();
 			spider.setTitle(Selectors.xpath("//div[@class='title']/text()").select(selectedDiv));
@@ -79,14 +79,14 @@ public class PolicyNewsFocusTianjinPageProcessor implements PageProcessor{
 			if(dateStrArray.length > 1) {				
 				spider.setPublishDate(TimeUtils.getFormatDate(new SimpleDateFormat("yyyy-MM-dd HH:mm"), dateStrArray[1]));
 			}
-			String content = Selectors.xpath("//div[@class='concon']/tidyText()").select(selectedDiv);
+			String content = Selectors.xpath("//div[@class='concon']").select(selectedDiv);
 			spider.setContent(content);
 			spider.setPublishUrl(page.getUrl().toString());
 			spider.setFromSite(FromSiteEnum.TIANJINZHENGWUWANG.getName());
 			spider.setFromLink(FromSiteEnum.TIANJINZHENGWUWANG.getLink());
-			spider.setNewsCode(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
+			spider.setSpiderCode(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
 			spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN.getIndex());
-			page.putField("news", spider);
+			page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);
 		}else {
 			return;
 		}

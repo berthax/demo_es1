@@ -9,7 +9,7 @@ import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 
 public interface NewsSpiderRepositoryMysql extends JpaRepository<NewsSpider, Integer>{
 	
-	public NewsSpider findByNewsCode(String newsCode);
+	public NewsSpider findBySpiderCode(String spiderCode);
 	
 	public List<NewsSpider> findBySpiderModule(int spiderModule);
 		

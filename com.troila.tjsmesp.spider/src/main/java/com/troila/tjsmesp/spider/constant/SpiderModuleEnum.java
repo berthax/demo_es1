@@ -81,4 +81,13 @@ public enum SpiderModuleEnum {
         }  
         return null;    //说明该枚举类中不存在
     }  
+    
+    public static SpiderModuleEnum getSpiderModuleEnum(int index) {  
+        for (SpiderModuleEnum s : SpiderModuleEnum.values()) {  
+            if (s.getIndex() == index) {  
+                return s;  
+            }  
+        }  
+        return null;    //说明该枚举类中不存在
+    }  
 }

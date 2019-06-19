@@ -1,84 +1,100 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import com.troila.tjsmesp.spider.constant.CrawlConst;
+import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.model.primary.PolicySpider;
+import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
+import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectors;
 
 /**
- * 中小企业信息网-》政务频道-》地方政府的相关政策爬取
- * 网址：http://www.sme.gov.cn/cms/news/100000/0000000225/0000000225.shtml
+ * 中国政府网-》新闻-》政务联播-》地方	的相关政策爬取
+ * 网址：http://sousuo.gov.cn/column/30902/0.htm
  * 此部分对应中小企网站区域动态模块的内容
  * @author xuanguojing
  *
  */
-@Component("policyLocalGovPageProcessor")
+@Component("policyNewsRegionalDynamicPageProcessor")
 public class PolicyNewsRegionalDynamicPageProcessor implements PageProcessor{
-
+	
 	 /**
      * 区域动态详情页的正则表达式
      */
-    private static final String ARTICLE_URL = "http://www.sme.gov.cn/cms/news/100000/0000000225/(\\d+)/(\\d+)/(\\d+)/(\\w+)\\.shtml";
+    private static final String ARTICLE_URL = "http://www.gov.cn/xinwen/(\\d+)-(\\d+)/(\\d+)/content_(\\d+).htm";
+    											
     /**
      * 区域动态列表页的正则表达式
-     */    
-    private static final String LIST_URL = "http://www\\.sme\\.gov\\.cn/cms/news/100000/0000000225/0000000225(_\\d+)*\\.shtml";
-	
-    private boolean isFlag = false;  //是否需要停止爬取  默认最近三天的政策记录
-	
+     */ 
+    private static final String LIST_URL = "http://sousuo.gov.cn/column/30902/(\\d+).htm";
+    
+    @Autowired
+    private NewsProcessorService newsProcessorService;
+		
 	@Override
 	public void process(Page page) {
 		if(page.getUrl().regex(LIST_URL).match()) {
-			List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
+			List<String> list =  page.getHtml().xpath("//div[@class='news_box']").links().all();
 			//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 			List<String> articleList = list.stream().filter(p->p.matches(ARTICLE_URL)).collect(Collectors.toList());
+			
+			//查看已经爬取过的链接记录
+			List<String> pastCrawledUrls = newsProcessorService.getCrawledUrls(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC.getIndex());
+			if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
+				articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
+			}			
 			page.addTargetRequests(articleList);
 			//将其他的最新政策列表页加入到后续的url地址，有待继续爬取,该网站列表页的连接是用js函数去做的，不能直接抓取
-//			List<String> urlList = list.stream().filter(p->p.matches(LIST_URL)).collect(Collectors.toList());
-//			page.addTargetRequests(urlList);
-//			String selectPage = page.getHtml().xpath("//div[@class='fl_page2']/a[@class='selected']/text()").toString();
-			//获取底部分页栏的所有a标签
-			List<Element> urlList = Selectors.xpath("//div[@class='fl_page2']/a").selectElements(page.getHtml().toString());
-			//获取总页码数，倒数第2个a标签为最后一页的页码
-			String totalStr = Selectors.xpath("//a/text()").select(urlList.get(urlList.size()-2).toString()).replace(".", "");  
-			//获取当前选择的页码数
-			String currentPage = page.getHtml().xpath("//div[@class='fl_page2']/a[@class='selected']/text()").toString();
-			if(Integer.parseInt(currentPage)<Integer.parseInt(totalStr)) {
-				//将当前页的下一个列表页加入到后续爬取的url地址中
-				page.addTargetRequest("http://www.sme.gov.cn/cms/news/100000/0000000225/0000000225_"+(Integer.parseInt(currentPage)+1)+".shtml");
-			}
+
+			//将下一页的列表页链接加入到后续的url地址，有待继续爬取
+			List<String> urlList = list.stream().filter(p->p.matches(LIST_URL)).collect(Collectors.toList());
+			page.addTargetRequests(urlList); 			
 		}else {
-			System.out.println("当前下载的页面url为："+page.getUrl());
+//			System.out.println("当前下载的页面url为："+page.getUrl());
 			//具体页面内容获取，具体字段拆分待完成
-			PolicySpider spider = new PolicySpider();
-//			spider.setTitle(page.getHtml().xpath("//div[@class='head_1']/a/@title").toString());  //此种选法有时候不准确，会截断一部分文字
-			spider.setTitle(page.getHtml().xpath("//div[@class='head_1']/a/font/tidyText()").toString());
-			List<Element> list = Selectors.xpath("//div[@class='head_2']/span/a").selectElements(page.getHtml().toString()); 
-			String dateStr = Selectors.xpath("//a/@title").select(list.get(0).toString());
-			spider.setPublishDate(TimeUtils.getLongFormatDate(dateStr));
-			String sourceStr = Selectors.xpath("//a/@title").select(list.get(1).toString());
-			spider.setSource(sourceStr);
-			spider.setContent(page.getHtml().xpath("//div[@class='news_nav']/tidyText()").toString());
-			spider.setStripContent(page.getHtml().xpath("//div[@class='news_nav']/tidyText()").toString());
+			NewsSpider spider = new NewsSpider();
+			String title = page.getHtml().xpath("//div[@class='article oneColumn pub_border']/h1/tidyText()").toString();
+			spider.setTitle(title);
+			
+			// 处理时间和来源字段
+			String page_date = page.getHtml().xpath("//div[@class='pages-date']/tidyText()").toString();			
+			String pages_print = page.getHtml().xpath("//div[@class='pages_print']/tidyText()").toString();			
+			String dateSourceStr = page_date.replaceFirst(pages_print, "");	
+			String source = page.getHtml().xpath("//div[@class='pages-date']/span/tidyText()").toString();
+			String dateStr = dateSourceStr.replaceFirst(source, "").trim();			
+			// 设置来源
+			spider.setSource(source.replaceAll("来源：", "").trim());
+			// 设置时间
+			if(!StringUtils.isEmpty(dateStr)) {
+				spider.setPublishDate(TimeUtils.getFormatDate(new SimpleDateFormat("yyyy-MM-dd HH:mm"), dateStr));
+			}
+//			String dateSourceStrArray[] = dateSourceStr.split("来源：");
+//			if(dateSourceStrArray.length > 2) {				
+//				spider.setPublishDate(TimeUtils.getFormatDate(new SimpleDateFormat("yyyy-MM-dd HH:mm"), dateSourceStrArray[0]));
+//			}
+									
+//			String content = page.getHtml().xpath("//div[@class='pages_content']").toString();
+			spider.setContent(page.getHtml().xpath("//div[@class='pages_content']").toString());
+			
 			spider.setPublishUrl(page.getUrl().toString());
-			spider.setFromLink("http://www.sme.gov.cn");
-			spider.setFromSite("中小企业信息网");
-			spider.setForwardTime(new Date());	
-			spider.setId(MD5Util.getMD5(spider.toString()));   //根据特定的内容生成MD5，作为该条记录的id
+			spider.setFromLink(FromSiteEnum.ZHONGGUOZHENGFUWANG.getLink());
+			spider.setFromSite(FromSiteEnum.ZHONGGUOZHENGFUWANG.getName());
+			
+			spider.setSpiderCode(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
 			spider.setSpiderModule(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC.getIndex());
-			page.putField("policy", spider);
+			page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);
 		}		
 	}
 
@@ -88,15 +104,19 @@ public class PolicyNewsRegionalDynamicPageProcessor implements PageProcessor{
 	}
 	
 	public static void main(String[] args) {
-		String listStr1 = "http://www.sme.gov.cn/cms/news/100000/0000000225/0000000225.shtml";
+		String listStr1 = "http://sousuo.gov.cn/column/30902/0.htm";
 		System.out.println(listStr1.matches(LIST_URL));
-		String listStr2 = "http://www.sme.gov.cn/cms/news/100000/0000000225/0000000225_2.shtml";
+		String listStr2 = "http://sousuo.gov.cn/column/30902/2.htm";
 		System.out.println(listStr2.matches(LIST_URL));
 		
-		String articleStr1="http://www.sme.gov.cn/cms/news/100000/0000000225/2018/12/12/94c061b485224e4991f9bd78b7b118b1.shtml";
-		String articelStr2="http://www.sme.gov.cn/cms/news/100000/0000000225/2018/11/26/15177098b9f74ce8af64ef4290416fdb.shtml";
+		String articleStr1="http://www.gov.cn/xinwen/2019-06/18/content_5401108.htm";
+		String articelStr2="http://www.gov.cn/xinwen/2019-06/17/content_5400938.htm";
 		System.out.println(articleStr1.matches(ARTICLE_URL));
 		System.out.println(articelStr2.matches(ARTICLE_URL));
+		
+		String str = "2019-06-17 09:42  来源： 海南日报";
+		String[] strArray = str.split("来源：");
+		System.out.println(strArray);
 	}
 
 }
