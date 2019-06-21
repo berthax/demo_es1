@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.troila.tjsmesp.spider.config.SpiderSettings;
@@ -82,7 +83,9 @@ public class CrawlScheduleService implements Runnable{
 	/**
 	 * 定期执行某项定时任务
 	 * 定时任务的执行频率由数据库Cron表的第一条记录决定
+	 * 政策部分的定时任务，每个星期的星期-到星期日，从0~20点，每隔一小时的0分，45分进行数据爬取
 	 */
+	@Scheduled(cron="0 45 0-20/1 ? * 1,2,3,4,5,6,7 ")
 	public void crawlPolicyDataAll() {
 		if(lastIsCompleted) {
 			logger.info("{}开始执行定时爬取任务，……",new Date());
@@ -109,4 +112,21 @@ public class CrawlScheduleService implements Runnable{
 			logger.info("{}上次任务还未完成，本次任务略过……",new Date());
 		}
 	}
+	
+	/**
+	 * 
+	 * @Description 单独的数据更新任务，避免如果因记录过多，
+	 * 导致长时间爬取不完，因为出什么意外而致使已经爬取完的信息浪费
+	 */
+	@Scheduled(cron="0 0/30 * * * ? ")
+	public void updatePolicyDataAll() {
+		logger.info("{}开始执行数据更新任务，从redis更新到数据库中，……", new Date());
+		try {
+			policyService.dataUpdate(SpiderModuleEnum.POLICY_NEWEST);
+			policyService.dataUpdate(SpiderModuleEnum.POLICY_READING);
+		} catch (Exception e) {
+			logger.error("执行数据更新任务时发生异常……", e);
+		} 
+	}
+		
 }

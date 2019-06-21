@@ -12,7 +12,7 @@ import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.repository.mysql.NewsSpiderRepositoryMysql;
 
 @Component
-public class NewsProcessorService {
+public class NewsProcessorService implements ProcessorService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(NewsProcessorService.class);
 	@Autowired
@@ -23,6 +23,7 @@ public class NewsProcessorService {
 	 * 获取之前已经下载过的文章链接，不再重复下载(以数据库中当前的存储为准)
 	 * @return
 	 */
+	@Override
 	public List<String> getCrawledUrls(int spiderMoudleIndex){
 		try {			
 			List<NewsSpider> list = newsSpiderRepositoryMysql.findBySpiderModule(spiderMoudleIndex);

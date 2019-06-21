@@ -1,25 +1,14 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.troila.tjsmesp.spider.constant.CrawlConst;
-import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
+import com.troila.tjsmesp.spider.crawler.processor.base.AbstractPolicyPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.base.PageSettings;
 import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
-import com.troila.tjsmesp.spider.model.primary.NewsSpider;
-import com.troila.tjsmesp.spider.util.MD5Util;
-import com.troila.tjsmesp.spider.util.TimeUtils;
-
-import us.codecraft.webmagic.Page;
-import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectors;
+import com.troila.tjsmesp.spider.crawler.site.SiteProcessorFactory;
+import com.troila.tjsmesp.spider.crawler.site.TjGovCnProcessor;
 
 /**
  * 天津政务网-》新闻-》各区动态相关政策的爬取
@@ -29,7 +18,7 @@ import us.codecraft.webmagic.selector.Selectors;
  *
  */
 @Component
-public class PolicyNewsFocusTianjinPageProcessor implements PageProcessor{
+public class PolicyNewsFocusTianjinPageProcessor extends AbstractPolicyPageProcessor{
 	
 	/**
      * 要闻焦点-天津详情页的正则表达式
@@ -43,8 +32,20 @@ public class PolicyNewsFocusTianjinPageProcessor implements PageProcessor{
     
     @Autowired
     private  NewsProcessorService  newsProcessorService;
-		
+
 	@Override
+	protected void configure(PageSettings pageSettings) {
+		pageSettings.setArticleUrlRegex(ARTICLE_URL)
+		.setListUrlRegex(LIST_URL)
+		// 1.需要配置一个SpiderProcess
+		.setSpiderProcess(SiteProcessorFactory.create(TjGovCnProcessor.class))
+		.setWebSiteListPrefix("")
+		.setModule(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN)
+		.setDomain("http://sme.miit.gov.cn")
+		.setProcessorService(newsProcessorService);		
+	}
+		
+	/*@Override
 	public void process(Page page) {
 		if(page.getUrl().regex(LIST_URL).match()) {
 			List<String> list =  page.getHtml().xpath("//div[@class='left leftlist']").links().all();
@@ -105,5 +106,5 @@ public class PolicyNewsFocusTianjinPageProcessor implements PageProcessor{
 		System.out.println(url1.matches(ARTICLE_URL));
 		System.out.println(url2.matches(ARTICLE_URL));
 		System.out.println(url3.matches(ARTICLE_URL));
-	}
+	}*/
 }

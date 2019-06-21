@@ -67,7 +67,7 @@ public class PrimaryConfig {
                 .build();
     }
 
-    private Map getVendorProperties(DataSource dataSource) {
+    private Map<String, ?> getVendorProperties(DataSource dataSource) {
 //        return jpaProperties.getHibernateProperties(dataSource);
     	Map<String,String> map = new HashMap<>();
         map.put("hibernate.dialect",primaryDialect);// 设置对应的数据库方言

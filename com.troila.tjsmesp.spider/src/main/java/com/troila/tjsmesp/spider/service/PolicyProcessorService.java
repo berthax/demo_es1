@@ -17,9 +17,9 @@ import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
  * @author xuanguojing
  *
  */
-@Component("processorService")
-public class ProcessorService {
-	private static final Logger logger = LoggerFactory.getLogger(ProcessorService.class);
+@Component("policyProcessorService")
+public class PolicyProcessorService {
+	private static final Logger logger = LoggerFactory.getLogger(PolicyProcessorService.class);
 	
 	@Autowired 
 	private PolicySpiderRepositoryMysql policySpiderRepositoryMysql;
@@ -118,9 +118,9 @@ public class ProcessorService {
 		return returnStr;
 	}
 	
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		String regex = "(\\./)(\\w+)\\.(png|jpg)";
 		String str1 = "./W020180402379608413246.jpg";
 		System.out.println(str1.matches(UrlRegexConst.IMAGE_URL_ADJUST_REX));
-	}
+	}*/
 }

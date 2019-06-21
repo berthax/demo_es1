@@ -20,7 +20,6 @@ import com.troila.tjsmesp.spider.constant.SmeNewsTypeConst;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.model.secondary.BmsPlatformPublishInfo;
-import com.troila.tjsmesp.spider.model.secondary.SmePolicy;
 import com.troila.tjsmesp.spider.repository.informix.BmsPlatformPublishInfoRepositoryInformix;
 import com.troila.tjsmesp.spider.repository.mysql.NewsSpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.util.TimeUtils;
@@ -43,6 +42,8 @@ public class NewsService {
 	private RedisTemplate<String, Object> redisTemplate;
 	
 	private Map<String,NewsSpider> map = new ConcurrentHashMap<>();
+	
+//	private ObjectMapper mapper = new ObjectMapper();
 	
 	/**
 	 * mysql数据库的数据实体类与informix数据库实体类之间的转换
@@ -123,7 +124,9 @@ public class NewsService {
 			//从redis中获取本次爬取的所有记录
 			List<Object> redisListObj = redisTemplate.opsForList().range(spiderMoudleEnum.getKey(), 0L, size-1);
 			//进行类型转换
-			List<NewsSpider> redisList = redisListObj.stream().map(e->{return (NewsSpider)e;}).collect(Collectors.toList());
+			List<NewsSpider> redisList = redisListObj.stream().map(e->{
+				return (NewsSpider)e;
+				}).collect(Collectors.toList());
 			List<NewsSpider> updateList = new ArrayList<NewsSpider>();
 			//redis中本次爬取的所有记录中筛选出原来数据库中没有的记录，即为距离上次爬取的这段时间的更新的记录
 			updateList = redisList.stream()
@@ -133,6 +136,11 @@ public class NewsService {
 			if(updateList.size()>0) {				
 				newsSpiderRepositoryMysql.saveAll(updateList);	
 				logger.info("Mysql本地库本次更新模块：【{}】完成,增加条目数为：【{}】 条",spiderMoudleEnum.getName(),updateList.size());
+			}
+			
+			//更新成功后，将redis中的这些已经同步的数据删除
+			for(Object obj : redisListObj) {
+				redisTemplate.opsForList().remove(spiderMoudleEnum.getKey(), 0, obj);			
 			}
 			return updateList;	
 		} catch (Exception e2) {

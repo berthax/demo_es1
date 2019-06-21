@@ -10,7 +10,6 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.CrawlConst;
@@ -19,7 +18,7 @@ import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.constant.UrlRegexConst;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
-import com.troila.tjsmesp.spider.service.ProcessorService;
+import com.troila.tjsmesp.spider.service.PolicyProcessorService;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
 import com.troila.tjsmesp.spider.util.TimeUtils;
@@ -55,8 +54,8 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     private Map<String,String> map = new ConcurrentHashMap<>();
     
     @Autowired
-    @Qualifier("processorService")
-    private ProcessorService processorService;
+//    @Qualifier("processorService")
+    private PolicyProcessorService policyProcessorService;
           
     String printStr = "<div class=\"function\"><a href=\"javascript:window.print();\">打印本页</a></div>";
     
@@ -114,7 +113,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(UrlRegexConst.ATTACHMENT_URL_REX)).collect(Collectors.toList());
     				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
     					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));
-    					removeScriptTagContent = processorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
+    					removeScriptTagContent = policyProcessorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
     				}			    				
     				//将一些图片链接也需要矫正(此处的list得到的是)
     				List<Element> list = Selectors.xpath("//img/@src").selectElements(content);
@@ -122,7 +121,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     					List<String> srcList = list.stream()
     							.map(e->{return Selectors.xpath("img/@src").select(e);})
     							.collect(Collectors.toList());
-    					removeScriptTagContent = processorService.replaceImageUrlForContent(removeScriptTagContent, srcList, page.getUrl().toString());    					
+    					removeScriptTagContent = policyProcessorService.replaceImageUrlForContent(removeScriptTagContent, srcList, page.getUrl().toString());    					
     				}
     				spider.setContent(removeScriptTagContent);       				
 //    				JXDocument jxDocument = JXDocument.create(page.getHtml().toString()); 
@@ -185,7 +184,7 @@ public class PolicyReadingPageProcessor implements PageProcessor{
     			//将所有的政策解读文章详情页链接加入到后续的url地址，有待继续爬取
     			List<String> articleList = list.stream().filter(p->p.matches(ARTICLE_URL)).collect(Collectors.toList());
     			//获取到过去已经成功爬取的链接记录
-    			List<String> pastCrawledUrls = processorService.getCrawledUrls(SpiderModuleEnum.POLICY_READING);		
+    			List<String> pastCrawledUrls = policyProcessorService.getCrawledUrls(SpiderModuleEnum.POLICY_READING);		
     			if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
     				articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
     			}

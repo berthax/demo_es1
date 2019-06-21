@@ -20,7 +20,7 @@ import com.troila.tjsmesp.spider.constant.PolicyLevelEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.constant.UrlRegexConst;
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
-import com.troila.tjsmesp.spider.service.ProcessorService;
+import com.troila.tjsmesp.spider.service.PolicyProcessorService;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.ReduceHtml2Text;
 import com.troila.tjsmesp.spider.util.StringUtils;
@@ -52,7 +52,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
     private static final String LIST_URL_REX = "http://zcydt\\.fzgg\\.tj\\.gov\\.cn/gllm/zxzc/index(_\\d+)*\\.shtml"; 
    
     @Autowired
-    private ProcessorService processorService;
+    private PolicyProcessorService policyProcessorService;
     
 	@Override
 	public void process(Page page) {
@@ -60,7 +60,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 		if(page.getUrl().regex(LIST_URL_REX).match()) {
 			List<String> list =  page.getHtml().xpath("//div[@class='list_jd_content']").links().all();
 			//获取到过去已经成功爬取的链接记录
-			List<String> pastCrawledUrls = processorService.getCrawledUrls(SpiderModuleEnum.POLICY_NEWEST);			
+			List<String> pastCrawledUrls = policyProcessorService.getCrawledUrls(SpiderModuleEnum.POLICY_NEWEST);			
 			//将所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 			List<String> articleList = list.stream().filter(p->p.matches(ARTICLE_URL_REX)).collect(Collectors.toList());
 			if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
@@ -139,7 +139,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				if(list != null && list.size()>0) {
 					spider.setArticleReading(list.toString().substring(1,list.toString().length()-1));
 					//将政策解读也替换成完整路径地址，以便可以查看
-					removeScriptTagContent = processorService.replaceArticelReadingUrlForContent(removeScriptTagContent, list);				
+					removeScriptTagContent = policyProcessorService.replaceArticelReadingUrlForContent(removeScriptTagContent, list);				
 				}
 				//查看是否有附件
 //				String str1 =  Selectors.xpath("//div[text()='附件下载:']//following::*[1]").select(content);
@@ -150,7 +150,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 				List<String> attachmentListFilter = attachmentList.stream().filter(p->p.matches(UrlRegexConst.ATTACHMENT_URL_REX)).collect(Collectors.toList());
 				if(attachmentListFilter !=null && attachmentListFilter.size()>0) {	
 					spider.setAttachment(attachmentListFilter.toString().substring(1,attachmentListFilter.toString().length()-1));
-					removeScriptTagContent = processorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
+					removeScriptTagContent = policyProcessorService.replaceAttachmentsUrlForContent(removeScriptTagContent, attachmentListFilter);
 				}
 				
 				//将一些图片链接也需要矫正(此处的list得到的是img标签)
@@ -159,7 +159,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 					List<String> srcList = imageUrlList.stream()
 							.map(e->{return Selectors.xpath("img/@src").select(e);})
 							.collect(Collectors.toList());
-					removeScriptTagContent = processorService.replaceImageUrlForContent(removeScriptTagContent, srcList, page.getUrl().toString());    					
+					removeScriptTagContent = policyProcessorService.replaceImageUrlForContent(removeScriptTagContent, srcList, page.getUrl().toString());    					
 				}
 				
 				spider.setContent(removeScriptTagContent);
@@ -261,7 +261,7 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 		
 	
 	
-	//方法测试
+/*	//方法测试
 	public static void main(String[] args) {
 //		Spider spider = Spider.create(new PolicyNewestPageProcessor())
 //				.addPipeline(new ConsolePipeline()).thread(1)
@@ -284,5 +284,5 @@ public class PolicyNewestPageProcessor implements PageProcessor {
 		String str = "<a href="+"../../../../zcbjd/sjbmjd/ssww_199/201807/t20180726_49716.shtml>"+"市商务委 市财政局关于印发天津市2018年度市外经贸发展资金鼓励企业开展技术研发和创新项目申报指南政策解读</a>";
 		String replaceStr = "http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/ssww_199/201807/t20180726_49716.shtml";
 		
-	}
+	}*/
 }

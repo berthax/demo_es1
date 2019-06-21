@@ -1,24 +1,14 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import com.troila.tjsmesp.spider.constant.CrawlConst;
-import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
+import com.troila.tjsmesp.spider.crawler.processor.base.AbstractPolicyPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.base.PageSettings;
 import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
-import com.troila.tjsmesp.spider.model.primary.NewsSpider;
-import com.troila.tjsmesp.spider.util.MD5Util;
-import com.troila.tjsmesp.spider.util.TimeUtils;
-
-import us.codecraft.webmagic.Page;
-import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.processor.PageProcessor;
+import com.troila.tjsmesp.spider.crawler.site.SiteProcessorFactory;
+import com.troila.tjsmesp.spider.crawler.site.SouSouGovCn;
 
 /**
  * 中国政府网-》新闻-》政务联播-》地方	的相关政策爬取
@@ -28,7 +18,8 @@ import us.codecraft.webmagic.processor.PageProcessor;
  *
  */
 @Component("policyNewsRegionalDynamicPageProcessor")
-public class PolicyNewsRegionalDynamicPageProcessor implements PageProcessor{
+//public class PolicyNewsRegionalDynamicPageProcessor implements PageProcessor{
+public class PolicyNewsRegionalDynamicPageProcessor extends AbstractPolicyPageProcessor{
 	
 	 /**
      * 区域动态详情页的正则表达式
@@ -42,8 +33,21 @@ public class PolicyNewsRegionalDynamicPageProcessor implements PageProcessor{
     
     @Autowired
     private NewsProcessorService newsProcessorService;
-		
+
 	@Override
+	protected void configure(PageSettings pageSettings) {
+		pageSettings.setArticleUrlRegex(ARTICLE_URL)
+		.setListUrlRegex(LIST_URL)
+		// 1.需要配置一个SpiderProcess
+		.setSpiderProcess(SiteProcessorFactory.create(SouSouGovCn.class))
+		.setWebSiteListPrefix("")
+		.setModule(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC)
+		.setDomain("http://www.gov.cn")
+		.setProcessorService(newsProcessorService);	
+		
+	}
+		
+/*	@Override
 	public void process(Page page) {
 		if(page.getUrl().regex(LIST_URL).match()) {
 			List<String> list =  page.getHtml().xpath("//div[@class='news_box']").links().all();
@@ -117,6 +121,6 @@ public class PolicyNewsRegionalDynamicPageProcessor implements PageProcessor{
 		String str = "2019-06-17 09:42  来源： 海南日报";
 		String[] strArray = str.split("来源：");
 		System.out.println(strArray);
-	}
+	}*/
 
 }

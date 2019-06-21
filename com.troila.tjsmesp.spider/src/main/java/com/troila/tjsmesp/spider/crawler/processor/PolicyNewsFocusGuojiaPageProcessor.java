@@ -1,29 +1,14 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import com.troila.tjsmesp.spider.constant.CrawlConst;
-import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
+import com.troila.tjsmesp.spider.crawler.processor.base.AbstractPolicyPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.base.PageSettings;
 import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
-import com.troila.tjsmesp.spider.crawler.site.SpiderProcess;
-import com.troila.tjsmesp.spider.model.primary.NewsSpider;
-import com.troila.tjsmesp.spider.util.MD5Util;
-import com.troila.tjsmesp.spider.util.TimeUtils;
-
-import us.codecraft.webmagic.Page;
-import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectors;
+import com.troila.tjsmesp.spider.crawler.site.SiteProcessorFactory;
+import com.troila.tjsmesp.spider.crawler.site.SmeMiitGovCnProcessor;
 /**
  * 中小企业信息网-》新闻资讯-》焦点新闻相关政策的爬取
  * 网址 	http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml
@@ -32,8 +17,8 @@ import us.codecraft.webmagic.selector.Selectors;
  *
  */
 @Component("policyNewsFocusGuojiaPageProcessor")
-public class PolicyNewsFocusGuojiaPageProcessor implements PageProcessor,SpiderProcess{
-	private static final Logger logger = LoggerFactory.getLogger(PolicyNewsFocusGuojiaPageProcessor.class);
+public class PolicyNewsFocusGuojiaPageProcessor extends AbstractPolicyPageProcessor{
+//	private static final Logger logger = LoggerFactory.getLogger(PolicyNewsFocusGuojiaPageProcessor.class);
 	 /**
      * 要闻焦点-国家详情页的正则表达式   
      */
@@ -48,6 +33,13 @@ public class PolicyNewsFocusGuojiaPageProcessor implements PageProcessor,SpiderP
     private static final String channelid = "http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033_";
     
     @Autowired
+    private NewsProcessorService newsProcessorService;
+    
+//    @Autowired
+//    private SmeMiitGovCnProcessor smeMiitGovCnProcessor;
+    
+    
+    /*@Autowired
     private NewsProcessorService newsProcessorService;
 	@Override
 	public void process(Page page) {
@@ -67,9 +59,8 @@ public class PolicyNewsFocusGuojiaPageProcessor implements PageProcessor,SpiderP
 		return Site.me().setRetryTimes(3).setSleepTime(1000).setDomain("http://www.sme.gov.cn");
 	}
 
-	@Override
 	public void listProcess(Page page) {
-		/*List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
+		List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
 		System.out.println(list);
 		//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 		List<String> articleList = list.stream().filter(p->p.matches(ARTICLE_URL)).collect(Collectors.toList());
@@ -84,7 +75,7 @@ public class PolicyNewsFocusGuojiaPageProcessor implements PageProcessor,SpiderP
 		if(Integer.parseInt(currentPage)<Integer.parseInt(totalStr)) {
 			//将当前页的下一个列表页加入到后续爬取的url地址中
 			page.addTargetRequest("http://www.sme.gov.cn/cms/news/100000/0000000033/0000000033_"+(Integer.parseInt(currentPage)+1)+".shtml");
-		}*/
+		}
 		List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
 		System.out.println(list);
 		//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
@@ -112,7 +103,6 @@ public class PolicyNewsFocusGuojiaPageProcessor implements PageProcessor,SpiderP
 		page.addTargetRequests(urls);	
 	}
 
-	@Override
 	public void detailProcess(Page page) {
 		String title = page.getHtml().xpath("//div[@class='head_1']/a/font/tidyText()").toString();
 		String content = page.getHtml().xpath("//div[@class='news_nav']").toString();
@@ -138,6 +128,16 @@ public class PolicyNewsFocusGuojiaPageProcessor implements PageProcessor,SpiderP
 		spider.setSpiderCode(MD5Util.getMD5(spider.getPublishUrl()));   //根据特定的内容生成MD5，作为该条记录的id
 		spider.setSpiderModule(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA.getIndex());
 		page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);		
-	}
+	}*/
 
+	@Override
+	protected void configure(PageSettings pageSettings) {
+		pageSettings.setArticleUrlRegex(ARTICLE_URL)
+			.setListUrlRegex(LIST_URL)
+			.setDomain("http://sme.miit.gov.cn")
+			.setWebSiteListPrefix(channelid)
+			.setSpiderProcess(SiteProcessorFactory.create(SmeMiitGovCnProcessor.class))
+			.setProcessorService(newsProcessorService)
+			.setModule(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA);
+	}
 }

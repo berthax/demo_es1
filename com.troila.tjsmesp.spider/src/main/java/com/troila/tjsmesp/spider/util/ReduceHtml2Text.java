@@ -1,9 +1,5 @@
 package com.troila.tjsmesp.spider.util;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.regex.Pattern;
 /**
  * 删除所有HTML标签以及特殊的HTML字符
@@ -91,7 +87,7 @@ public class ReduceHtml2Text {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		StringBuffer sb = new StringBuffer();
 		try {
 			FileReader fr = new FileReader("E:/test1.html");
@@ -107,5 +103,5 @@ public class ReduceHtml2Text {
 		}
 		String ssss = ReduceHtml2Text.removeHtmlTag(sb.toString());
 		System.out.println(ssss);
-	}
+	}*/
 }

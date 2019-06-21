@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.troila.tjsmesp.spider.config.SpiderSettings;
@@ -13,7 +14,6 @@ import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.constant.SpiderStartUrlConst;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.BaseRedisPipeline;
-import com.troila.tjsmesp.spider.crawler.pipeline.NewsMysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusBuweiPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusGuojiaPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusTianjinPageProcessor;
@@ -89,6 +89,7 @@ public class NewsCrawlScheduleService implements Runnable{
 				.addPipeline(baseRedisPipeline)
 				.addUrl(SpiderStartUrlConst.NEWS_REGION_DYNAMIC_START_URL)
 				.thread(spiderSettings.getThreadNumber());
+		
 		redisTemplate.delete(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC.getKey());
 		
 		newsFocusTianjin = Spider.create(policyNewsFocusTianjinPageProcessor)
@@ -96,23 +97,24 @@ public class NewsCrawlScheduleService implements Runnable{
 				.setDownloader(seleniumDownloader)
 				.addUrl(SpiderStartUrlConst.NEWS_FOCUS_TIANJIN_START_URL)
 				.thread(spiderSettings.getThreadNumber());		
+	
 		redisTemplate.delete(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN.getKey());
 		
 		newsFocusBuwei = Spider.create(policyNewsFocusBuweiPageProcessor)
 				.addPipeline(baseRedisPipeline)
 				.setDownloader(seleniumDownloader)
 				.addUrl(SpiderStartUrlConst.NEWS_FOCUS_BUWEI_START_URL)
-				.thread(spiderSettings.getThreadNumber());		
+				.thread(spiderSettings.getThreadNumber());	
 		redisTemplate.delete(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI.getKey());
-		lastIsCompleted = false;
+
 		
 		newsFocusGuojia = Spider.create(policyNewsFocusGuojiaPageProcessor)
 				.addPipeline(baseRedisPipeline)
 				.setDownloader(seleniumDownloader)
 				.addUrl(SpiderStartUrlConst.NEWS_FOCUS_GUOJIA_START_URL)
-				.thread(spiderSettings.getThreadNumber());		
-		redisTemplate.delete(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA.getKey());
-		lastIsCompleted = false;
+				.thread(spiderSettings.getThreadNumber());	
+		newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA);
+
 		
 		newsIndustryInfo = Spider.create(policyNewsIndustryInfoPageProcessor)
 				.addPipeline(baseRedisPipeline)
@@ -120,6 +122,7 @@ public class NewsCrawlScheduleService implements Runnable{
 				.addUrl(SpiderStartUrlConst.NEWS_INDUSTRY_INFO_START_URL)
 				.thread(spiderSettings.getThreadNumber());		
 		redisTemplate.delete(SpiderModuleEnum.POLICY_INDUSTRY_INFO.getKey());
+		
 		lastIsCompleted = false;
 	}
 	
@@ -127,6 +130,7 @@ public class NewsCrawlScheduleService implements Runnable{
 	 * 定期执行某项定时任务
 	 * 定时任务的执行频率由数据库Cron表的第一条记录决定
 	 */
+	@Scheduled(cron="0 0/30 * * * ? ")
 	public void crawlNewsDataAll() {
 		if(lastIsCompleted) {
 			logger.info("{}开始执行定时爬取任务，……",new Date());
@@ -136,23 +140,23 @@ public class NewsCrawlScheduleService implements Runnable{
 				
 				newsFocusGuojia.run();
 				logger.info("本次爬取要闻焦点（国家）任务已完成，共爬取记录数：{}",newsFocusGuojia.getPageCount());
-				newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA);
+				
 							
 				newsFocusBuwei.run();
 				logger.info("本次爬取要闻焦点（部委）任务已完成，共爬取记录数：{}",newsFocusBuwei.getPageCount());
-				newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI);
+				
 				
 				newsFocusTianjin.run();
 				logger.info("本次爬取要闻焦点（天津）任务已完成，共爬取记录数：{}",newsFocusTianjin.getPageCount());
-				newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN);
+				
+								
+				newsIndustryInfo.run();
+				logger.info("本次爬取产业资讯任务已完成，共爬取记录数：{}",newsIndustryInfo.getPageCount());
+				
 				
 				newsRegionalDynamic.run();
 				logger.info("本次爬取区域资讯已完成，共爬取记录数：{}",newsRegionalDynamic.getPageCount());
-				newsService.dataUpdate(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC);
 				
-				newsIndustryInfo.run();
-				logger.info("本次爬取产业资讯任务已完成，共爬取记录数：{}",newsIndustryInfo.getPageCount());
-				newsService.dataUpdate(SpiderModuleEnum.POLICY_INDUSTRY_INFO);
 				
 				lastIsCompleted = true;
 			} catch (Exception e) {
@@ -170,4 +174,17 @@ public class NewsCrawlScheduleService implements Runnable{
 		}
 	}
 	
+	@Scheduled(cron="0 0/10 * * * ? ")
+	public void updateNewsDataAll() {
+		logger.info("{}开始执行数据更新任务，从redis更新到数据库中，……", new Date());
+		try {
+			newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA);
+			newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI);
+			newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN);
+			newsService.dataUpdate(SpiderModuleEnum.POLICY_INDUSTRY_INFO);
+			newsService.dataUpdate(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC);		
+		} catch (Exception e) {
+			logger.error("执行数据更新任务时发生异常……", e);
+		}
+	}
 }

@@ -37,7 +37,7 @@ public class PolicyNewsRegionalDynamicPageProcessor_old implements PageProcessor
      */    
     private static final String LIST_URL = "http://www\\.sme\\.gov\\.cn/cms/news/100000/0000000225/0000000225(_\\d+)*\\.shtml";
 	
-    private boolean isFlag = false;  //是否需要停止爬取  默认最近三天的政策记录
+//    private boolean isFlag = false;  //是否需要停止爬取  默认最近三天的政策记录
 	
 	@Override
 	public void process(Page page) {

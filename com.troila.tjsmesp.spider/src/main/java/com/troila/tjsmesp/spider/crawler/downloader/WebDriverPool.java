@@ -1,7 +1,5 @@
 package com.troila.tjsmesp.spider.crawler.downloader;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.config.SpiderDriverConfig;
-import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.util.OSUtil;
 
 @Component
@@ -30,7 +27,7 @@ public class WebDriverPool {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WebDriverPool.class);
 
-	private final static int DEFAULT_CAPACITY = 2;
+	private final static int DEFAULT_CAPACITY = 5;
 
 //	@Autowired
 //	private SpiderSettings spiderSettings;
@@ -110,14 +107,14 @@ public class WebDriverPool {
 	/**
 	 * 
 	 */
-	private boolean isUrl(String urlString) {
+/*	private boolean isUrl(String urlString) {
 		try {
 			new URL(urlString);
 			return true;
 		} catch (MalformedURLException mue) {
 			return false;
 		}
-	}
+	}*/
 
 	/**
 	 * 用于存储WebDriver实例

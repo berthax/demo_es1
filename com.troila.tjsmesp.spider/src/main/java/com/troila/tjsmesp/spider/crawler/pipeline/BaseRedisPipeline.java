@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.model.primary.BaseSpider;
+import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
@@ -21,7 +21,7 @@ public class BaseRedisPipeline implements Pipeline{
 	@Override
 	public void process(ResultItems resultItems, Task task) {
 		
-		 BaseSpider baseSpider = (BaseSpider)resultItems.get(CrawlConst.CRAWL_ITEM_KEY);
+		 NewsSpider baseSpider = (NewsSpider)resultItems.get(CrawlConst.CRAWL_ITEM_KEY);
 		 if(baseSpider == null) {
 			 //如果是列表页，没有此项内容
 			 return;

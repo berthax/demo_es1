@@ -56,7 +56,7 @@ public class TimeUtils {
         c.setTime(new Date());
         c.add(Calendar.MONTH, -1);
         Date lastMonth = c.getTime();
-        String mon = longDateFormat.format(lastMonth);
+//        String mon = longDateFormat.format(lastMonth);
 //        System.out.println("过去一个月："+mon);
         return lastMonth;
     }
@@ -70,7 +70,7 @@ public class TimeUtils {
     	c.setTime(new Date());
         c.add(Calendar.YEAR, -1);
         Date lastYear = c.getTime();
-        String year = longDateFormat.format(lastYear);
+//        String year = longDateFormat.format(lastYear);
 //        System.out.println("过去一年："+year);
         return lastYear;
     }

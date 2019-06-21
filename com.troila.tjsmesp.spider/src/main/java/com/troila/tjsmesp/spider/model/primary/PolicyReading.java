@@ -3,16 +3,12 @@ package com.troila.tjsmesp.spider.model.primary;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.stereotype.Component;
 
 import us.codecraft.webmagic.model.annotation.ExtractBy;
-import us.codecraft.webmagic.model.annotation.HelpUrl;
-import us.codecraft.webmagic.model.annotation.TargetUrl;
 /**
  * 政策解读实体类
  * @author xuanguojing

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.repository.mysql.NewsSpiderRepositoryMysql;
@@ -27,14 +28,18 @@ public class NewsMysqlPipeline implements Pipeline{
 	@Autowired
 	private NewsSpiderRepositoryMysql newsSpiderRepositoryMysql;
 	
+	private ObjectMapper mapper = new ObjectMapper();
+	
 	@Override
 	public void process(ResultItems resultItems, Task task) {
  		 try {
- 			 NewsSpider newsSpider = (NewsSpider)resultItems.get(CrawlConst.CRAWL_ITEM_KEY);
- 			 if(newsSpider == null) {
- 				 //如果是列表页，没有此项内容
+ 			 Object obj = resultItems.get(CrawlConst.CRAWL_ITEM_KEY);
+ 			 if(obj == null) {
+ 				//如果是列表页，没有此项内容
  				 return;
  			 }
+ 			String baseStr = mapper.writeValueAsString(obj);							
+ 			NewsSpider newsSpider = mapper.readValue(baseStr, NewsSpider.class);
  			newsSpiderRepositoryMysql.save(newsSpider);
 		} catch (Exception e) {
 			logger.error("持久化到mysql数据库发生异常，当前参数为resultItems:{},NewsSpider:{},异常信息如下：",e);

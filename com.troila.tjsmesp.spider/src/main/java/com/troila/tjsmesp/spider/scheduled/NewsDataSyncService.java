@@ -5,6 +5,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.troila.tjsmesp.spider.config.DataSyncSettings;
@@ -29,6 +30,7 @@ public class NewsDataSyncService implements Runnable{
 		logger.info("本次数据同步任务结束,用时{}ms",(System.currentTimeMillis()-start));
 	}
 	
+	@Scheduled(cron="0 0/60 * * * ? ")
 	public void syncNewsDataLastNDay() {
 		try {
 			logger.info("{}开始执行数据同步任务，……",new Date());  //数据查重问题

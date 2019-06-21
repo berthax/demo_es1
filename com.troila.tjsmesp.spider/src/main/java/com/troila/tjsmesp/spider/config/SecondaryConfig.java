@@ -49,7 +49,8 @@ public class SecondaryConfig {
         return entityManagerFactorySecondary(builder).getObject().createEntityManager();
     }
     
-    @Bean(name = "entityManagerFactorySecondary")
+    @SuppressWarnings("unchecked")
+	@Bean(name = "entityManagerFactorySecondary")
     public LocalContainerEntityManagerFactoryBean entityManagerFactorySecondary (EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(secondaryDataSource)
@@ -59,7 +60,8 @@ public class SecondaryConfig {
                 .build();
     }
 
-    private Map getVendorProperties(DataSource dataSource) {
+    @SuppressWarnings("rawtypes")
+	private Map getVendorProperties(DataSource dataSource) {
 //        return jpaProperties.getHibernateProperties(dataSource);
     	Map<String,String> map = new HashMap<>();
         map.put("hibernate.dialect",secondaryDialect);

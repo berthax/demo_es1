@@ -5,13 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.constant.FromSiteEnum;
-import com.troila.tjsmesp.spider.crawler.processor.abs.PageSettings;
-import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
-import com.troila.tjsmesp.spider.model.primary.BaseSpider;
+import com.troila.tjsmesp.spider.crawler.processor.base.PageSettings;
+import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 
@@ -25,16 +23,8 @@ import us.codecraft.webmagic.selector.Selectors;
  * @date:   2019年6月19日 下午3:26:06   
  *
  */
-public class TjGovCn implements SpiderProcess{
-	
-	@Autowired
-	private NewsProcessorService newsProcessorService;
-	
-//	private String listUrlRegex;
-//	
-//	private String detailUrlRegex;
-//	
-//	private int spiderModule;
+public class TjGovCnProcessor implements SpiderProcess{
+			
 	/**
 	 * 
 	 * @Description 天津政务网-》处理列表页信息
@@ -48,7 +38,7 @@ public class TjGovCn implements SpiderProcess{
 		List<String> articleList = list.stream().filter(p->p.matches(pageSettings.getArticleUrlRegex())).collect(Collectors.toList());
 		
 		// 过滤掉以前已经爬取过的记录，不再重复爬取
-		List<String> pastCrawledUrls = newsProcessorService.getCrawledUrls(pageSettings.getModule().getIndex());	
+		List<String> pastCrawledUrls = pageSettings.getProcessorService().getCrawledUrls(pageSettings.getModule().getIndex());	
 		if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
 			articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
 		}
@@ -67,7 +57,7 @@ public class TjGovCn implements SpiderProcess{
 	 */
 	@Override
 	public void detailProcess(Page page, PageSettings pageSettings) {
-		BaseSpider spider = new BaseSpider();
+		NewsSpider spider = new NewsSpider();
 		String selectedDiv = page.getHtml().xpath("//div[@class='left leftlist']").toString();
 		spider.setTitle(Selectors.xpath("//div[@class='title']/text()").select(selectedDiv));
 		List<Element> list1 = Selectors.xpath("//div[@class='time xwlc pd']/span").selectElements(selectedDiv);

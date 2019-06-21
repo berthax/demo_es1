@@ -1,7 +1,5 @@
 package com.troila.tjsmesp.spider.util;
 
-import java.io.RandomAccessFile;
-
 class Example{
     String str;
     public Example(){
@@ -14,11 +12,11 @@ class Example{
 class Demo extends Example{
 }
 public class Test{
-    public void f (){
+   /* public void f (){
         Example ex = new Example("Good");
 //        Demo d = new Demo("Good");
         Demo d = new Demo();
-    } 
+    } */
     
     int[] ia = new int[1];
     boolean b;

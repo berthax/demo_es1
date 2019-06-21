@@ -1,13 +1,18 @@
 package com.troila.tjsmesp.spider.crawler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.config.SpiderSettings;
+import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.BaseRedisPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.NewsMysqlPipeline;
@@ -24,7 +29,7 @@ import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.scheduled.CrawlScheduleService;
 import com.troila.tjsmesp.spider.scheduled.NewsCrawlScheduleService;
 import com.troila.tjsmesp.spider.service.PolicyService;
-import com.troila.tjsmesp.spider.service.ProcessorService;
+import com.troila.tjsmesp.spider.service.PolicyProcessorService;
 
 import us.codecraft.webmagic.Spider;
 
@@ -46,7 +51,7 @@ public class SpiderStarter implements CommandLineRunner{
 	@Autowired
 	private PolicyService policyService;
 	@Autowired
-	private ProcessorService processorService;
+	private PolicyProcessorService policyProcessorService;
 	@Autowired
 	private PolicyNewestPageProcessor policyNewestPageProcessor;
 	@Autowired
@@ -70,6 +75,8 @@ public class SpiderStarter implements CommandLineRunner{
 	@Autowired
 	private CrawlScheduleService crawlScheduleService;
 	
+	@Autowired
+	private RedisTemplate<String, Object> redisTemplate;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -96,30 +103,30 @@ public class SpiderStarter implements CommandLineRunner{
 //		spiderReading.runAsync();
 		
 				
-//		Spider spiderNewsFocusTianjin = Spider.create(policyNewsFocusTianjinPageProcessor).addPipeline(newsMysqlPipeline).thread(1)
+//		Spider spiderNewsFocusTianjin = Spider.create(policyNewsFocusTianjinPageProcessor).addPipeline(newsMysqlPipeline).thread(2)
 //				.setDownloader(seleniumDownloader)
 //				.addUrl("http://www.tj.gov.cn/xw/qx1/index.html");
 //		spiderNewsFocusTianjin.runAsync();
 				
 //		http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml
 		
-/*		Spider spiderNewsFocusBuwei = Spider.create(policyNewsFocusBuweiPageProcessor)
-		.addPipeline(newsMysqlPipeline)
-		.thread(2)
-		.setDownloader(seleniumDownloader)
-		.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000224/0000000224.shtml");
-		spiderNewsFocusBuwei.runAsync();*/
-		
-/*		Spider spiderNewsFocusGuojia = Spider.create(policyNewsFocusGuojiaPageProcessor)
-				.addPipeline(newsMysqlPipeline)
-				.thread(2)
-				.setDownloader(seleniumDownloader)
-				.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml");
-		spiderNewsFocusGuojia.runAsync();*/
+//		Spider spiderNewsFocusBuwei = Spider.create(policyNewsFocusBuweiPageProcessor)
+//		.addPipeline(newsMysqlPipeline)
+//		.thread(2)
+//		.setDownloader(seleniumDownloader)
+//		.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000224/0000000224.shtml");
+//		spiderNewsFocusBuwei.runAsync();
+//		
+//		Spider spiderNewsFocusGuojia = Spider.create(policyNewsFocusGuojiaPageProcessor)
+//				.addPipeline(newsMysqlPipeline)
+//				.thread(2)
+//				.setDownloader(seleniumDownloader)
+//				.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml");
+//		spiderNewsFocusGuojia.runAsync();
 		
 //		Spider spiderNewsRegionalDynamic = Spider.create(policyNewsRegionalDynamicPageProcessor)
 //		.addPipeline(newsMysqlPipeline)
-//		.addPipeline(baseRedisPipeline)
+////		.addPipeline(baseRedisPipeline)
 //		.thread(2)
 //		.setDownloader(seleniumDownloader)
 //		.addUrl("http://sousuo.gov.cn/column/30902/0.htm");
@@ -133,8 +140,18 @@ public class SpiderStarter implements CommandLineRunner{
 //		spiderNewsIndustryInfo.runAsync();
 		
 		// 系统启动时，将信息爬取一次
-		newsCrawlScheduleService.crawlNewsDataAll();
-			
+//		newsCrawlScheduleService.crawlNewsDataAll();		
+		
+		
+//		long size = redisTemplate.opsForList().size(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI.getKey());
+//		
+//		//从redis中获取本次爬取的所有记录
+//		List<Object> redisListObj = redisTemplate.opsForList().range(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI.getKey(), 0L, size-1);
+//		//更新成功后，将redis中的这些已经同步的数据删除
+//		for(Object obj : redisListObj) {
+//			redisTemplate.opsForList().remove(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI.getKey(), 0, obj);			
+//		}
+//		System.out.println("删除完成");
 	}
 	
 		

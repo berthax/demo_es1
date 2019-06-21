@@ -1,6 +1,6 @@
 package com.troila.tjsmesp.spider.crawler.site;
 
-import com.troila.tjsmesp.spider.crawler.processor.abs.PageSettings;
+import com.troila.tjsmesp.spider.crawler.processor.base.PageSettings;
 
 import us.codecraft.webmagic.Page;
 /**

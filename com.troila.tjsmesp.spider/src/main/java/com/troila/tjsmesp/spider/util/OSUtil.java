@@ -1,7 +1,5 @@
 package com.troila.tjsmesp.spider.util;
-import java.util.ArrayList;
-import java.util.List;
-import static java.util.Comparator.comparing;   //静态导入 
+
 /**
  * 判断当前操作系统类型工具类
  * @author xuanguojing
@@ -34,7 +32,7 @@ public class OSUtil {
 		return osLinux;
 	}
 		
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		System.out.println("osMac:"+osMac);
 		System.out.println("osWindows:"+osWindows);
 		System.out.println("osLinux:"+osLinux);
@@ -42,5 +40,5 @@ public class OSUtil {
 		List<String> list1 = new ArrayList<>();
 		list1.sort(comparing(String::length));
 		list1.stream().forEach(System.out::println);
-	}
+	}*/
 }
