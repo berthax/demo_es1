@@ -29,7 +29,7 @@ public abstract class AbstractPolicyPageProcessor implements PageProcessor{
 			pageSettings = new PageSettings();
 			configure(pageSettings);
 		}
-		return Site.me().setRetryTimes(3).setSleepTime(1000).setDomain(pageSettings.getDomain());
+		return Site.me().setRetryTimes(3).setSleepTime(1000).setDomain(pageSettings.getDomain()).setCharset("UTF-8");
 	}
 	
 	/**

@@ -30,4 +30,12 @@ public abstract class SpiderStartUrlConst {
 	 * 产业资讯模块的开始地址
 	 */
 	public static final String NEWS_INDUSTRY_INFO_START_URL = "http://sme.miit.gov.cn/cms/news/100000/0000000071/0000000071.shtml";
+	/**
+	 * 静海产业集聚，子牙循环经济网，园区新闻
+	 */
+	public static final String 	JINGHAI_INDUSTRIAL_CLUSTERS_NEWS = "http://ziya.tjjh.gov.cn/zhengwu/yuanquxinwen?page=1";	
+	/**
+	 * 静海产业集聚，子牙循环经济网，园区公告
+	 */
+	public static final String 	JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE = "http://ziya.tjjh.gov.cn/zhengwu/yuanqugonggao?page=1";
 }

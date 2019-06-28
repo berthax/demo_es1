@@ -26,9 +26,10 @@ public class NewsProcessorService implements ProcessorService{
 	@Override
 	public List<String> getCrawledUrls(int spiderMoudleIndex){
 		try {			
-			List<NewsSpider> list = newsSpiderRepositoryMysql.findBySpiderModule(spiderMoudleIndex);
-			List<String> listUrls = list.stream().map(e->{return ((NewsSpider)e).getPublishUrl();}).collect(Collectors.toList());
-			return listUrls;
+//			List<NewsSpider> list = newsSpiderRepositoryMysql.findBySpiderModule(spiderMoudleIndex);
+//			List<String> listUrls = list.stream().map(e->{return ((NewsSpider)e).getPublishUrl();}).collect(Collectors.toList());
+			List<String> list = newsSpiderRepositoryMysql.findCrawledUrlsBySpiderModule(spiderMoudleIndex);
+			return list;
 		} catch (Exception e) {
 			logger.error("从本地数据库中获取已经下载过的所有链接出错，出错信息：",e);
 			return null;

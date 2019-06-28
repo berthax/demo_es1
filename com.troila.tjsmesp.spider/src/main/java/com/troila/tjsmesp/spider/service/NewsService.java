@@ -93,7 +93,7 @@ public class NewsService {
 		bmsPlatformPublishInfo.setCreateStamp(new Date());
 		bmsPlatformPublishInfo.setUpdateStamp(new Date());
 		bmsPlatformPublishInfo.setResponsibilityWindowType("0");
-		bmsPlatformPublishInfo.setIsPublished("1");
+		bmsPlatformPublishInfo.setIsPublished("0");
 		bmsPlatformPublishInfo.setIsTop("0");
 		bmsPlatformPublishInfo.setIsPublishCenterPlatform("1");
 		bmsPlatformPublishInfo.setIsVerify("2");   // 设置为未审核

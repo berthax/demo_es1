@@ -8,7 +8,7 @@ import com.troila.tjsmesp.spider.crawler.processor.base.AbstractPolicyPageProces
 import com.troila.tjsmesp.spider.crawler.processor.base.PageSettings;
 import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
 import com.troila.tjsmesp.spider.crawler.site.SiteProcessorFactory;
-import com.troila.tjsmesp.spider.crawler.site.SouSouGovCn;
+import com.troila.tjsmesp.spider.crawler.site.SouSouGovCnProcessor;
 
 /**
  * 中国政府网-》新闻-》政务联播-》地方	的相关政策爬取
@@ -39,7 +39,7 @@ public class PolicyNewsRegionalDynamicPageProcessor extends AbstractPolicyPagePr
 		pageSettings.setArticleUrlRegex(ARTICLE_URL)
 		.setListUrlRegex(LIST_URL)
 		// 1.需要配置一个SpiderProcess
-		.setSpiderProcess(SiteProcessorFactory.create(SouSouGovCn.class))
+		.setSpiderProcess(SiteProcessorFactory.create(SouSouGovCnProcessor.class))
 		.setWebSiteListPrefix("")
 		.setModule(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC)
 		.setDomain("http://www.gov.cn")

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 
@@ -33,4 +34,7 @@ public interface PolicySpiderRepositoryMysql extends JpaRepository<PolicySpider,
 	
 	
 	public List<PolicySpider> findByTitleContainsAndSpiderModule(String str, int spiderModule);
+	
+	@Query(value="select publish_url from sme_policy_spider where spider_module = :spiderModule",nativeQuery=true)
+	public List<String> findCrawledUrlsBySpiderModule(int spiderModule);
 }

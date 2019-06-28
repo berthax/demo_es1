@@ -31,32 +31,41 @@ import us.codecraft.webmagic.selector.Selectors;
 public class SmeMiitGovCnProcessor implements SpiderProcess{
 	private static final Logger logger = LoggerFactory.getLogger(SmeMiitGovCnProcessor.class);
 
+	private List<String> pastCrawledUrls;
 	@Override
 	public void listProcess(Page page, PageSettings pageSettings) {
 		List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
-		System.out.println(list);
 		//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 		List<String> articleList = list.stream().filter(p->p.matches(pageSettings.getArticleUrlRegex())).collect(Collectors.toList());
-		
-		// 过滤掉以前已经爬取过的记录，不再重复爬取
-		List<String> pastCrawledUrls = pageSettings.getProcessorService().getCrawledUrls(pageSettings.getModule().getIndex());	
-		if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
-			articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
-		}			
-		page.addTargetRequests(articleList);
+		if(null != articleList && articleList.size()>0) {
+			// 过滤掉以前已经爬取过的记录，不再重复爬取
+			pastCrawledUrls = pageSettings.getProcessorService().getCrawledUrls(pageSettings.getModule().getIndex());				
+			if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
+				articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
+			}			
+			page.addTargetRequests(articleList);			
+		}
 		
 		//获取底部分页栏的所有a标签
 		List<Element> urlList = Selectors.xpath("//div[@class='fl_page2']/a").selectElements(page.getHtml().toString());
-		List<String> urls = urlList.stream()
-				//取出a链接的页码
-				.map(e->{return Selectors.xpath("//a/text()").select(e.toString()).replace(".", "");})
-				// 筛除掉1和跳转两个值，此两种拼接后是无效的
-				.filter(p->!(p.equals("1") || p.equals("跳转")))
-				// 将页码拼接成有效的链接地址
-				.map(e->pageSettings.getWebSiteListPrefix() + e +".shtml")  
-				.collect(Collectors.toList());
-		//将其他列表页加入后续地址列表中
-		page.addTargetRequests(urls);
+		if(null != urlList && urlList.size() > 0) {
+			List<String> urls = urlList.stream()
+					//取出a链接的页码
+					.map(e->{return Selectors.xpath("//a/text()").select(e.toString()).replace(".", "");})
+					// 筛除掉1和跳转两个值，此两种拼接后是无效的
+					.filter(p->!(p.equals("1") || p.equals("跳转")))
+					// 将页码拼接成有效的链接地址
+					.map(e->pageSettings.getWebSiteListPrefix() + e +".shtml")  
+					.collect(Collectors.toList());
+			//将其他列表页加入后续地址列表中
+			page.addTargetRequests(urls);			
+		}
+		
+		list = null;
+		articleList = null;
+		pastCrawledUrls = null;		
+		urlList = null;
+		System.gc();
 		
 	}
 
@@ -91,6 +100,4 @@ public class SmeMiitGovCnProcessor implements SpiderProcess{
 		spider.setSpiderModule(pageSettings.getModule().getIndex());
 		page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);			
 	}
-
-
 }

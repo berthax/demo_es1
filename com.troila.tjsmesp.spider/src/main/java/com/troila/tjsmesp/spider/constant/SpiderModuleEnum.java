@@ -34,7 +34,17 @@ public enum SpiderModuleEnum {
 	/**
 	 * 要闻焦点-》天津，天津政务网-》新闻-》各区动态，
 	 */
-	POLICY_NEWS_FOCUS_TIANJIN("要闻焦点天津",7,"spiderNewsFocusTianjin");
+	POLICY_NEWS_FOCUS_TIANJIN("要闻焦点天津",7,"spiderNewsFocusTianjin"),
+	/**
+	 * 静海产业集聚的子牙循环经济网园区新闻
+	 */
+	JINGHAI_INDUSTRIAL_CLUSTERS_NEWS("静海产业集聚园区新闻",8,"spiderJinghaiIndustrialClustersNews"),
+	/**
+	 * 静海产业集聚的子牙循环经济网园区公告	
+	 */
+	JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE("静海产业集聚园区公告",9,"spiderJinghaiIndustrialClustersNotice");
+	
+	
 	
 	private String name;  
     private int index;  

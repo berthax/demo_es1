@@ -19,7 +19,7 @@ public class SiteProcessorFactory {
 		return spiderProcess;
 	}
 	
-	@SuppressWarnings("unchecked")
+/*	@SuppressWarnings("unchecked")
 	public static <T extends SpiderProcess> T create2(Class<T> c) {		
 		T t = null;		
 		try {
@@ -40,17 +40,7 @@ public class SiteProcessorFactory {
 		}		
 		return t;
 	}
-	
 		
-	
-	/*public static SpiderProcess createTjGov() {
-		return new TjGovCnProcessor();
-	}
-	
-	public static SpiderProcess createSmeMiitGov() {
-		return new SmeMiitGovCnProcessor();
-	}*/
-	
 	public static void main(String[] args) {
 		try {
 			TjGovCnProcessor processor = (TjGovCnProcessor) SiteProcessorFactory.create(TjGovCnProcessor.class);
@@ -60,5 +50,5 @@ public class SiteProcessorFactory {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 }

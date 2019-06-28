@@ -22,6 +22,8 @@ public class NewsDataSyncService implements Runnable{
 	@Autowired
 	private DataSyncSettings dataSyncSettings;
 	
+	private static final String SYNC_NEWS_CRON_STR = "0 0/60 * * * ? ";
+	
 	@Override
 	public void run() {
 		long start = System.currentTimeMillis();
@@ -30,24 +32,24 @@ public class NewsDataSyncService implements Runnable{
 		logger.info("本次数据同步任务结束,用时{}ms",(System.currentTimeMillis()-start));
 	}
 	
-	@Scheduled(cron="0 0/60 * * * ? ")
+	@Scheduled(cron = SYNC_NEWS_CRON_STR)
 	public void syncNewsDataLastNDay() {
 		try {
 			logger.info("{}开始执行数据同步任务，……",new Date());  //数据查重问题
 			// 同步要闻焦点(国家)
-			newsService.newsDataSync(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA, dataSyncSettings.getNewsLastDays());
+			//newsService.newsDataSync(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA, dataSyncSettings.getNewsLastDays());
 			// 同步要闻焦点(部委)
-			newsService.newsDataSync(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI, dataSyncSettings.getNewsLastDays());
+			//newsService.newsDataSync(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI, dataSyncSettings.getNewsLastDays());
 			// 同步要闻焦点（天津）
 			newsService.newsDataSync(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN, dataSyncSettings.getNewsLastDays());			
 			// 同步区域资讯
 			newsService.newsDataSync(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC, dataSyncSettings.getNewsLastDays());
 			// 同步产业资讯
-			newsService.newsDataSync(SpiderModuleEnum.POLICY_INDUSTRY_INFO, dataSyncSettings.getNewsLastDays());
+			//newsService.newsDataSync(SpiderModuleEnum.POLICY_INDUSTRY_INFO, dataSyncSettings.getNewsLastDays());
 			
 			logger.info("{}数据同步任务结束，……",new Date());    //数据查重问题
 		} catch (Exception e) {
-			logger.error("数据同步任务出现异常，异常信息如下：",e);
+			logger.error("数据同步任务出现异常，异常信息如下：{}",e);
 		}		
 	}
 }

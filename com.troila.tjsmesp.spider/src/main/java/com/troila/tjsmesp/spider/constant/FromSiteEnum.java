@@ -23,7 +23,11 @@ public enum FromSiteEnum {
 	/**
 	 * 中国政府网
 	 */
-	ZHONGGUOZHENGFUWANG("中国政府网","http://www.gov.cn");
+	ZHONGGUOZHENGFUWANG("中国政府网","http://www.gov.cn"),
+	/**
+	 * 中国子牙循环经济网
+	 */
+	ZHONGGUOZIYAXUNHUANJINGJIWANG("中国子牙循环经济网","http://ziya.tjjh.gov.cn");
 		
 	/**
 	 * 转载网站的名称

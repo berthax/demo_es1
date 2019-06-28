@@ -1,7 +1,6 @@
 package com.troila.tjsmesp.spider.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.constant.UrlRegexConst;
-import com.troila.tjsmesp.spider.model.primary.PolicySpider;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 /**
  * 用于各种爬虫过程中字段的处理等
@@ -30,9 +28,10 @@ public class PolicyProcessorService {
 	 */
 	public List<String> getCrawledUrls(SpiderModuleEnum spiderMoudleEnum){
 		try {			
-			List<PolicySpider> list = policySpiderRepositoryMysql.findBySpiderModule(spiderMoudleEnum.getIndex());
-			List<String> listUrls = list.stream().map(e->{return ((PolicySpider)e).getPublishUrl();}).collect(Collectors.toList());
-			return listUrls;
+//			List<PolicySpider> list = policySpiderRepositoryMysql.findBySpiderModule(spiderMoudleEnum.getIndex());
+//			List<String> listUrls = list.stream().map(e->{return ((PolicySpider)e).getPublishUrl();}).collect(Collectors.toList());
+			List<String> list = policySpiderRepositoryMysql.findCrawledUrlsBySpiderModule(spiderMoudleEnum.getIndex());
+			return list;
 		} catch (Exception e) {
 			logger.error("从本地数据库中获取已经下载过的所有链接出错，出错信息：",e);
 			return null;

@@ -1,8 +1,5 @@
 package com.troila.tjsmesp.spider.crawler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +9,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.config.SpiderSettings;
-import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.BaseRedisPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.NewsMysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.PolicyMysqlPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.RedisPipeline;
+import com.troila.tjsmesp.spider.crawler.processor.JinghaiIndustrialClustersNewsPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.JinghaiIndustrialClustersNoticePageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewestPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusBuweiPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusGuojiaPageProcessor;
@@ -28,8 +26,8 @@ import com.troila.tjsmesp.spider.crawler.processor.PolicyReadingPageProcessor;
 import com.troila.tjsmesp.spider.repository.mysql.PolicySpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.scheduled.CrawlScheduleService;
 import com.troila.tjsmesp.spider.scheduled.NewsCrawlScheduleService;
-import com.troila.tjsmesp.spider.service.PolicyService;
 import com.troila.tjsmesp.spider.service.PolicyProcessorService;
+import com.troila.tjsmesp.spider.service.PolicyService;
 
 import us.codecraft.webmagic.Spider;
 
@@ -74,6 +72,10 @@ public class SpiderStarter implements CommandLineRunner{
 	private NewsCrawlScheduleService newsCrawlScheduleService;
 	@Autowired
 	private CrawlScheduleService crawlScheduleService;
+	@Autowired
+	private JinghaiIndustrialClustersNewsPageProcessor jinghaiIndustrialClustersNewsPageProcessor;
+	@Autowired
+	private JinghaiIndustrialClustersNoticePageProcessor jinghaiIndustrialClustersNoticePageProcessor;
 	
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
@@ -120,7 +122,7 @@ public class SpiderStarter implements CommandLineRunner{
 //		Spider spiderNewsFocusGuojia = Spider.create(policyNewsFocusGuojiaPageProcessor)
 //				.addPipeline(newsMysqlPipeline)
 //				.thread(2)
-//				.setDownloader(seleniumDownloader)
+////				.setDownloader(seleniumDownloader)
 //				.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml");
 //		spiderNewsFocusGuojia.runAsync();
 		
@@ -128,7 +130,7 @@ public class SpiderStarter implements CommandLineRunner{
 //		.addPipeline(newsMysqlPipeline)
 ////		.addPipeline(baseRedisPipeline)
 //		.thread(2)
-//		.setDownloader(seleniumDownloader)
+////		.setDownloader(seleniumDownloader)
 //		.addUrl("http://sousuo.gov.cn/column/30902/0.htm");
 //		spiderNewsRegionalDynamic.runAsync();
 		
@@ -138,6 +140,19 @@ public class SpiderStarter implements CommandLineRunner{
 //				.setDownloader(seleniumDownloader)
 //				.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000071/0000000071.shtml");
 //		spiderNewsIndustryInfo.runAsync();
+		
+//		Spider spiderJinghaiIndustrialClustersNews = Spider.create(jinghaiIndustrialClustersNewsPageProcessor)
+//		.addPipeline(newsMysqlPipeline)
+//		.thread(2)
+//		.addUrl("http://ziya.tjjh.gov.cn/zhengwu/yuanquxinwen?page=1");
+//		spiderJinghaiIndustrialClustersNews.runAsync();
+		
+//		Spider spiderJinghaiIndustrialClustersNotice = Spider.create(jinghaiIndustrialClustersNoticePageProcessor)
+//				.addPipeline(newsMysqlPipeline)
+//				.thread(1)
+//				.addUrl("http://ziya.tjjh.gov.cn/zhengwu/yuanqugonggao/3963-guan-yu-zhuan-fa-shi-shang-wu-ju-shi-cai-zheng-ju-guan");
+//		spiderJinghaiIndustrialClustersNotice.runAsync();
+		
 		
 		// 系统启动时，将信息爬取一次
 //		newsCrawlScheduleService.crawlNewsDataAll();		

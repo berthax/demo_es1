@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.troila.tjsmesp.spider.constant.CrawlConst;
@@ -14,6 +16,7 @@ import com.troila.tjsmesp.spider.util.MD5Util;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 
 import us.codecraft.webmagic.Page;
+	
 /**
  * 
  * @ClassName:  SouSouGovCn   
@@ -22,33 +25,55 @@ import us.codecraft.webmagic.Page;
  * @date:   2019年6月20日 下午3:09:53   
  *
  */
-public class SouSouGovCn implements SpiderProcess{
-
+public class SouSouGovCnProcessor implements SpiderProcess{
+	private static final Logger logger = LoggerFactory.getLogger(SouSouGovCnProcessor.class);
+	
+	private List<String> pastCrawledUrls;
+	
 	@Override
 	public void listProcess(Page page, PageSettings pageSettings) {
 		List<String> list =  page.getHtml().xpath("//div[@class='news_box']").links().all();
-		//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
+		//	将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 		List<String> articleList = list.stream().filter(p->p.matches(pageSettings.getArticleUrlRegex())).collect(Collectors.toList());
+		// 判断一下，避免NPE异常
+		if(null != articleList && articleList.size() > 0) {
+			//	查看已经爬取过的链接记录
+			pastCrawledUrls = pageSettings.getProcessorService().getCrawledUrls(pageSettings.getModule().getIndex());
+			if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
+				articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
+			}			
+			page.addTargetRequests(articleList);			
+		}
 		
-		//查看已经爬取过的链接记录
-		List<String> pastCrawledUrls = pageSettings.getProcessorService().getCrawledUrls(pageSettings.getModule().getIndex());
-		if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
-			articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
-		}			
-		page.addTargetRequests(articleList);
-		//将其他的最新政策列表页加入到后续的url地址，有待继续爬取,该网站列表页的连接是用js函数去做的，不能直接抓取
-
-		//将下一页的列表页链接加入到后续的url地址，有待继续爬取
+		//	将下一页的列表页链接加入到后续的url地址，有待继续爬取
 		List<String> urlList = list.stream().filter(p->p.matches(pageSettings.getListUrlRegex())).collect(Collectors.toList());
-		page.addTargetRequests(urlList); 			
+		// 判断一下，避免NPE异常
+		if(null != urlList && urlList.size() > 0) {
+			page.addTargetRequests(urlList); 			
+		}
+		
+		list = null;
+		articleList = null;
+		pastCrawledUrls = null;		
+		urlList = null;
+		System.gc();
 	}
 
 	@Override
 	public void detailProcess(Page page, PageSettings pageSettings) {
-		//具体页面内容获取，具体字段拆分待完成
 		NewsSpider spider = new NewsSpider();
 		String title = page.getHtml().xpath("//div[@class='article oneColumn pub_border']/h1/tidyText()").toString();
+		String content = page.getHtml().xpath("//div[@class='pages_content']").toString();
+	
+		if(StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {
+			logger.info("文章链接页{}，未找到指定的页面内容，跳过该页面",page.getUrl());
+			page.setSkip(true);
+			return;
+		}
+		
+		//具体页面内容获取，具体字段拆分待完成
 		spider.setTitle(title);
+		spider.setContent(content);		
 		
 		// 处理时间和来源字段
 		String page_date = page.getHtml().xpath("//div[@class='pages-date']/tidyText()").toString();			
@@ -63,9 +88,6 @@ public class SouSouGovCn implements SpiderProcess{
 			spider.setPublishDate(TimeUtils.getFormatDate(new SimpleDateFormat("yyyy-MM-dd HH:mm"), dateStr));
 		}
 					
-//		String content = page.getHtml().xpath("//div[@class='pages_content']").toString();
-		spider.setContent(page.getHtml().xpath("//div[@class='pages_content']").toString());
-		
 		spider.setPublishUrl(page.getUrl().toString());
 		spider.setFromLink(FromSiteEnum.ZHONGGUOZHENGFUWANG.getLink());
 		spider.setFromSite(FromSiteEnum.ZHONGGUOZHENGFUWANG.getName());

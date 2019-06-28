@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import com.troila.tjsmesp.spider.constant.CrawlConst;
 import com.troila.tjsmesp.spider.constant.FromSiteEnum;
@@ -24,7 +27,9 @@ import us.codecraft.webmagic.selector.Selectors;
  *
  */
 public class TjGovCnProcessor implements SpiderProcess{
-			
+	private static final Logger logger = LoggerFactory.getLogger(TjGovCnProcessor.class);
+	
+	private List<String> pastCrawledUrls;		
 	/**
 	 * 
 	 * @Description 天津政务网-》处理列表页信息
@@ -36,17 +41,26 @@ public class TjGovCnProcessor implements SpiderProcess{
 		List<String> list =  page.getHtml().xpath("//div[@class='left leftlist']").links().all();		
 		//	将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 		List<String> articleList = list.stream().filter(p->p.matches(pageSettings.getArticleUrlRegex())).collect(Collectors.toList());
-		
-		// 过滤掉以前已经爬取过的记录，不再重复爬取
-		List<String> pastCrawledUrls = pageSettings.getProcessorService().getCrawledUrls(pageSettings.getModule().getIndex());	
-		if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
-			articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
+		if(null != articleList && articleList.size() > 0) {
+			// 过滤掉以前已经爬取过的记录，不再重复爬取
+			pastCrawledUrls = pageSettings.getProcessorService().getCrawledUrls(pageSettings.getModule().getIndex());	
+			if(pastCrawledUrls != null  && pastCrawledUrls.size()>0) {
+				articleList = articleList.stream().filter(p->!pastCrawledUrls.contains(p)).collect(Collectors.toList());
+			}		
+			page.addTargetRequests(articleList);			
 		}
-		
-		page.addTargetRequests(articleList);
 		//将下一页的列表页链接加入到后续的url地址，有待继续爬取
 		List<String> urlList = list.stream().filter(p->p.matches(pageSettings.getListUrlRegex())).collect(Collectors.toList());
-		page.addTargetRequests(urlList);  		
+		if(null != urlList && urlList.size() > 0){
+			page.addTargetRequests(urlList);  			
+		}
+		
+		// 将不用的集合置空，避免产生大量的内存垃圾
+		list = null;
+		articleList = null;
+		pastCrawledUrls = null;		
+		urlList = null;
+		System.gc();
 	}
 	
 	/**
@@ -58,7 +72,12 @@ public class TjGovCnProcessor implements SpiderProcess{
 	@Override
 	public void detailProcess(Page page, PageSettings pageSettings) {
 		NewsSpider spider = new NewsSpider();
-		String selectedDiv = page.getHtml().xpath("//div[@class='left leftlist']").toString();
+		String selectedDiv = page.getHtml().xpath("//div[@class='left leftlist']").toString();		
+		if(StringUtils.isEmpty(selectedDiv)) {
+			logger.info("文章链接页{}，未找到指定的页面内容，跳过该页面",page.getUrl());
+			page.setSkip(true);
+			return;
+		}
 		spider.setTitle(Selectors.xpath("//div[@class='title']/text()").select(selectedDiv));
 		List<Element> list1 = Selectors.xpath("//div[@class='time xwlc pd']/span").selectElements(selectedDiv);
 		String[] sourceStrArray =  Selectors.xpath("//span/text()").select(list1.get(0).toString()).split("来源：");

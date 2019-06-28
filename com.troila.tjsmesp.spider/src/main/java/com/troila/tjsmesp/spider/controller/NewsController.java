@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.model.secondary.BmsPlatformPublishInfo;
+import com.troila.tjsmesp.spider.repository.mysql.NewsSpiderRepositoryMysql;
 import com.troila.tjsmesp.spider.service.NewsService;
 import com.troila.tjsmesp.spider.util.TimeUtils;
 
@@ -19,7 +20,9 @@ public class NewsController {
 	
 	@Autowired
 	private NewsService newsService; 
-	
+	@Autowired
+	private NewsSpiderRepositoryMysql newsSpiderRepositoryMysql;
+		
 	@GetMapping("/news/getLastNDay")
 	public Date  getLastNDay(@RequestParam int lastNDays) {
 		Date lastDay = TimeUtils.getLastNDay(lastNDays);
@@ -35,6 +38,13 @@ public class NewsController {
 	@GetMapping("/news/dataUpdate")
 	public int newsDataUpdate(@RequestParam int spiderModule) {
 		List<NewsSpider> list = newsService.dataUpdate(SpiderModuleEnum.getSpiderModuleEnum(spiderModule));
+		return list.size();
+	}
+	
+	@GetMapping("/news/crawledUrls")
+	public int CrawledUrls(@RequestParam int spiderModule){
+		List<String> list = newsSpiderRepositoryMysql.findCrawledUrlsBySpiderModule(spiderModule);	
+		System.out.println(list.size());
 		return list.size();
 	}
 

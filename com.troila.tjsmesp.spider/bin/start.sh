@@ -5,7 +5,8 @@ DIRNAME="`dirname $ARG0`"
 export APP_HOME=${DIRNAME}/..
 
 #[ -z "$JAVA_HOME" ] && JAVA_HOME="/usr/java/jdk1.7.0_21"
-JAVA_OPTS="-Xmx512m -Duser.timezone=Asia/Shanghai"
+#JAVA_OPTS="-Xmx512m -Duser.timezone=Asia/Shanghai"
+JAVA_OPTS="-Xms1024m -Xmx1024m -Xss512k -Duser.timezone=Asia/Shanghai"
 
 ##CLASSPATH="$APP_HOME/lib/*.jar;$APP_HOME/plugins/*.jar"
 
