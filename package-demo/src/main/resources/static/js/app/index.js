@@ -1,5 +1,5 @@
 require(["../common"],function(){
-	require(["person","jquery","flatbuffer","ajaxsender"],function(person,$,flatbuffer,ajaxsender){
+	require(["person","jquery","flatbuffer","app/ajaxSender"],function(person,$,flatbuffer,ajaxsender){
 		
 		var builder = new flatbuffers.Builder(0);
 		var zsName = builder.createString("张三");
@@ -46,7 +46,7 @@ require(["../common"],function(){
         	 console.log(entity.code())
          }
          xhr.send(zsbuf)*/
-		var ajax = ajaxsender({
+		var ajax = new ajaxsender({
 			url:"testRead",
 			data:zsbuf,
 			success:function(data){

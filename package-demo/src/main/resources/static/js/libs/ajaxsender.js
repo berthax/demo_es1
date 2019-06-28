@@ -117,8 +117,8 @@ define(["jquery"],function($){
 		 var dataArray = new Uint8Array(data);
  		 var buffer = new flatbuffers.ByteBuffer(dataArray);
  		 var constructorStr =  namespace + "." + objType + "." + "getRootAs" + objType;
- 		 eval( "var _function = " + constructor);
- 		 var result = _function(buf);
+ 		 eval( "var _function = " + constructorStr);
+ 		 var result = _function(buffer);
  		 console.log(result)
  		 console.log(result.name())
  		 console.log(result.age())	
@@ -176,6 +176,7 @@ define(["jquery"],function($){
 		xhr.onreadystatechange = function fetchOnReadyStateChange() {			
 	       	 if (xhr.readyState !== 4){
 	       		options.fail(xhr, xhr.statusText, xhr.status);
+	       		return;
 	         }
 	       	 if((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304){
 	       		 var objType = xhr.getResponseHeader("X-Flatbuffer-Schema");
