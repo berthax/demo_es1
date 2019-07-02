@@ -13,7 +13,8 @@ public abstract class SpiderStartUrlConst {
 	/**
 	 * 区域动态模块的开始地址
 	 */
-	public static final String NEWS_REGION_DYNAMIC_START_URL = "http://sousuo.gov.cn/column/30902/0.htm";
+//	public static final String NEWS_REGION_DYNAMIC_START_URL = "http://sousuo.gov.cn/column/30902/0.htm";
+	public static final String NEWS_REGION_DYNAMIC_START_URL = "http://sme.miit.gov.cn/cms/news/100000/0000000239/0000000239.shtml";
 	/**
 	 * 要闻焦点-》国家模块的开始地址		
 	 */

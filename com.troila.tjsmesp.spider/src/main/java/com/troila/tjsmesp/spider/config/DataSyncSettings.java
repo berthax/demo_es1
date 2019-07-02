@@ -16,8 +16,14 @@ public class DataSyncSettings {
 	 * 当同步到informix数据库时，默认的政策发布者
 	 */
 	private String defaultPublisher = "5d7f07d1d8ca4b66b7da5b8e7f191435";
-	
+	/**
+	 * 同步新闻类信息时，使用的默认发布者的id，默认是使用admin_xinxi的用户发布
+	 */
 	private Integer defaultPublisherId = 140;
+	/**
+	 * 同步时，静海窗口平台用户id
+	 */
+	private Integer adminJhXunhuanId = 324;
 	/**
 	 * 初次同步数据时，同步数据的最大条目数
 	 */
@@ -61,5 +67,10 @@ public class DataSyncSettings {
 	public void setNewsLastDays(int newsLastDays) {
 		this.newsLastDays = newsLastDays;
 	}
-	
+	public Integer getAdminJhXunhuanId() {
+		return adminJhXunhuanId;
+	}
+	public void setAdminJhXunhuanId(Integer adminJhXunhuanId) {
+		this.adminJhXunhuanId = adminJhXunhuanId;
+	}	
 }

@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.troila.tjsmesp.spider.config.DataSyncSettings;
-import com.troila.tjsmesp.spider.constant.SmeNewsTypeConst;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.model.secondary.BmsPlatformPublishInfo;
@@ -29,8 +27,8 @@ public class NewsService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(NewsService.class);
 	
-	@Autowired
-	private DataSyncSettings dataSyncSettings;
+//	@Autowired
+//	private DataSyncSettings dataSyncSettings;
 		
 	@Autowired
 	private BmsPlatformPublishInfoRepositoryInformix bmsPlatformPublishInfoRepositoryInformix;
@@ -43,6 +41,9 @@ public class NewsService {
 	
 	private Map<String,NewsSpider> map = new ConcurrentHashMap<>();
 	
+	@Autowired
+	private GenerateEntityFactory generateEntityFactory;
+	
 //	private ObjectMapper mapper = new ObjectMapper();
 	
 	/**
@@ -51,59 +52,87 @@ public class NewsService {
 	 * @return
 	 */
 	private BmsPlatformPublishInfo convertTo(NewsSpider newsSpider) {
-		if(newsSpider == null) {
-			logger.error("类型转换参数错误：参数newsSpider为null");
-			return null;			
-		}
 		
-		BmsPlatformPublishInfo bmsPlatformPublishInfo = new BmsPlatformPublishInfo();
-		bmsPlatformPublishInfo.setPublishTitle(newsSpider.getTitle());
-		bmsPlatformPublishInfo.setPublishContent(newsSpider.getContent());
-		bmsPlatformPublishInfo.setPublishTime(newsSpider.getPublishDate());
-		bmsPlatformPublishInfo.setPublishFrom(newsSpider.getSource());
-		// 枚举类中要闻焦点国家、部委、天津是5 6 7，informix数据库中是1 2 3，偷懒先这么写了
-		if(newsSpider.getSpiderModule() ==  SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA.getIndex()) {
-			bmsPlatformPublishInfo.setFocusType(String.valueOf(SmeNewsTypeConst.NEWS_FOCUS_GUOJIA));
-			bmsPlatformPublishInfo.setPublishType("1");
-		}else if(newsSpider.getSpiderModule() == SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI.getIndex()) {
-			bmsPlatformPublishInfo.setFocusType(String.valueOf(SmeNewsTypeConst.NEWS_FOCUS_BUWEI));
-			bmsPlatformPublishInfo.setPublishType("1");
-		}else if(newsSpider.getSpiderModule() ==  SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN.getIndex()) {
-			bmsPlatformPublishInfo.setFocusType(String.valueOf(SmeNewsTypeConst.NEWS_FOCUS_TIANJIN));
-			bmsPlatformPublishInfo.setPublishType("1");			
-		}
-				
-		if(newsSpider.getSpiderModule() ==  SpiderModuleEnum.POLICY_INDUSTRY_INFO.getIndex()) {
-			bmsPlatformPublishInfo.setFocusType("0");
-			bmsPlatformPublishInfo.setPublishType(String.valueOf(SmeNewsTypeConst.NEWS_INDUSTRY_INFO));
-		}else if(newsSpider.getSpiderModule() == SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC.getIndex()) {
-			bmsPlatformPublishInfo.setFocusType("0");
-			bmsPlatformPublishInfo.setPublishType(String.valueOf(SmeNewsTypeConst.NEWS_REGIONAL_DYNAMIC));
-		}
-		// 设置转载时间
-		bmsPlatformPublishInfo.setTransTime(new Date());
-		// 设置原文链接地址
-		bmsPlatformPublishInfo.setOrgLink(newsSpider.getPublishUrl());
-		
-		// 设置所属区域为01
-		bmsPlatformPublishInfo.setAreaType("01");
-		// 设置所属平台属于中枢平台
-		bmsPlatformPublishInfo.setPlatformType("120000");
-		bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getDefaultPublisherId());
-		bmsPlatformPublishInfo.setCreateStamp(new Date());
-		bmsPlatformPublishInfo.setUpdateStamp(new Date());
-		bmsPlatformPublishInfo.setResponsibilityWindowType("0");
-		bmsPlatformPublishInfo.setIsPublished("0");
-		bmsPlatformPublishInfo.setIsTop("0");
-		bmsPlatformPublishInfo.setIsPublishCenterPlatform("1");
-		bmsPlatformPublishInfo.setIsVerify("2");   // 设置为未审核
-		bmsPlatformPublishInfo.setDistrictCharacteristicType("0");
-		bmsPlatformPublishInfo.setServiceType("100000");  //设置服务类型为信息服务
-		bmsPlatformPublishInfo.setPublisherType("1");
+//		if (newsSpider == null) {
+//			logger.error("类型转换参数错误：参数newsSpider为null");
+//			return null;
+//		}
+//
+//		BmsPlatformPublishInfo bmsPlatformPublishInfo = new BmsPlatformPublishInfo();
+//		bmsPlatformPublishInfo.setPublishTitle(newsSpider.getTitle());
+//		bmsPlatformPublishInfo.setPublishContent(newsSpider.getContent());
+//		bmsPlatformPublishInfo.setPublishTime(newsSpider.getPublishDate());
+//		bmsPlatformPublishInfo.setPublishFrom(newsSpider.getSource()); //
+//		// 设置所属平台属于中枢平台 bmsPlatformPublishInfo.setPlatformType("120000");
+//		bmsPlatformPublishInfo.setCreateStamp(new Date());
+//		bmsPlatformPublishInfo.setUpdateStamp(new Date());
+//		bmsPlatformPublishInfo.setResponsibilityWindowType("0");
+//		bmsPlatformPublishInfo.setIsPublished("0");
+//		bmsPlatformPublishInfo.setIsTop("0");
+//		bmsPlatformPublishInfo.setIsPublishCenterPlatform("1");
+//		bmsPlatformPublishInfo.setIsVerify("2"); // 设置为未审核
+//		bmsPlatformPublishInfo.setDistrictCharacteristicType("0");
+//		bmsPlatformPublishInfo.setServiceType("100000"); // 设置服务类型为信息服务
+//		bmsPlatformPublishInfo.setPublisherType("1"); //
 //		bmsPlatformPublishInfo.setPublishOrder("1000");
-		bmsPlatformPublishInfo.setIsSubmit("1");
-		bmsPlatformPublishInfo.setIsOut("0");
-		return bmsPlatformPublishInfo;
+//		bmsPlatformPublishInfo.setIsSubmit("1");
+//		bmsPlatformPublishInfo.setIsOut("0");
+//
+//		// 枚举类中要闻焦点国家、部委、天津是5 6 7，informix数据库中是1 2 3，偷懒先这么写了
+//		if (newsSpider.getSpiderModule() == SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA.getIndex()) {
+//			bmsPlatformPublishInfo.setFocusType(String.valueOf(SmeNewsTypeConst.NEWS_FOCUS_GUOJIA));
+//			bmsPlatformPublishInfo.setPublishType("1"); // 设置所属区域为01
+//			bmsPlatformPublishInfo.setAreaType("01");
+//			bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getDefaultPublisherId());
+//		} else if (newsSpider.getSpiderModule() == SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI.getIndex()) {
+//			bmsPlatformPublishInfo.setFocusType(String.valueOf(SmeNewsTypeConst.NEWS_FOCUS_BUWEI));
+//			bmsPlatformPublishInfo.setPublishType("1"); // 设置所属区域为01
+//			bmsPlatformPublishInfo.setAreaType("01");
+//			bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getDefaultPublisherId());
+//
+//		} else if (newsSpider.getSpiderModule() == SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN.getIndex()) {
+//			bmsPlatformPublishInfo.setFocusType(String.valueOf(SmeNewsTypeConst.NEWS_FOCUS_TIANJIN));
+//			bmsPlatformPublishInfo.setPublishType("1"); //
+//			// 设置所属区域为01 bmsPlatformPublishInfo.setAreaType("01");
+//			bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getDefaultPublisherId());
+//		} else if (newsSpider.getSpiderModule() == SpiderModuleEnum.POLICY_INDUSTRY_INFO.getIndex()) {
+//			bmsPlatformPublishInfo.setFocusType("0");
+//			bmsPlatformPublishInfo.setPublishType(String.valueOf(SmeNewsTypeConst.NEWS_INDUSTRY_INFO)); // 设置所属区域为01
+//		 // bmsPlatformPublishInfo.setAreaType("01");
+//			bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getDefaultPublisherId());
+//		} else if (newsSpider.getSpiderModule() == SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC.getIndex()) {
+//			bmsPlatformPublishInfo.setFocusType("0"); // 设置所属区域为01
+//			bmsPlatformPublishInfo.setAreaType("01");
+//			bmsPlatformPublishInfo.setPublishType(String.valueOf(SmeNewsTypeConst.NEWS_REGIONAL_DYNAMIC));
+//			bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getDefaultPublisherId());
+//		} else if (newsSpider.getSpiderModule() == SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NEWS.getIndex()) {
+//			bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getAdminJhXunhuanId());
+//			bmsPlatformPublishInfo.setAreaType("03"); // 要闻焦点
+//			bmsPlatformPublishInfo.setPublishType("3");
+//			bmsPlatformPublishInfo.setIndustrialClustersType("11"); //
+//			bmsPlatformPublishInfo.setIsSubmit("0");
+//			bmsPlatformPublishInfo.setIsPublishCenterPlatform("0");
+//			bmsPlatformPublishInfo.setIsPublishCountyPlatform("1");
+//			bmsPlatformPublishInfo.setIsPublishIndustrial("1");
+//			bmsPlatformPublishInfo.setIsTopCy("0");
+//			bmsPlatformPublishInfo.setIsTopQx("0");
+//		} else if (newsSpider.getSpiderModule() == SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE.getIndex()) {
+//			bmsPlatformPublishInfo.setPublisherId(dataSyncSettings.getAdminJhXunhuanId());
+//			bmsPlatformPublishInfo.setAreaType("03"); // 通知公告
+//			bmsPlatformPublishInfo.setPublishType("5");
+//			bmsPlatformPublishInfo.setIndustrialClustersType("11");
+//			bmsPlatformPublishInfo.setIsPublishIndustrial("1"); //
+//			bmsPlatformPublishInfo.setIsSubmit("0");
+//			bmsPlatformPublishInfo.setIsPublishCenterPlatform("0");
+//			bmsPlatformPublishInfo.setIsPublishCountyPlatform("1");
+//			bmsPlatformPublishInfo.setIsPublishIndustrial("1");
+//			bmsPlatformPublishInfo.setIsTopCy("0");
+//			bmsPlatformPublishInfo.setIsTopQx("0");
+//		} // 设置转载时间
+//		bmsPlatformPublishInfo.setTransTime(new Date()); // 设置原文链接地址
+//		bmsPlatformPublishInfo.setOrgLink(newsSpider.getPublishUrl());
+		 
+		return generateEntityFactory.createEntity(newsSpider);
 	}
 	
 	public List<NewsSpider> dataUpdate(SpiderModuleEnum spiderMoudleEnum){
@@ -152,8 +181,9 @@ public class NewsService {
 	/**
 	 * 
 	 * @Description 同步最近N天的数据
-	 * @param spiderMoudleEnum
-	 * @param lastDays
+	 * @param spiderMoudleEnum同步的模块
+	 * @param lastDays 同步最近多少天的数据 
+	 * @param sysNumber 同步的数据条数
 	 * @return
 	 */
 	@Transactional
@@ -165,7 +195,7 @@ public class NewsService {
 			return null;
 		}
 		
-		// 完成实体转换，并过滤掉已经通不过的记录，避免重复同步的问题
+		// 完成实体转换，并过滤掉已经同步过的记录，避免重复同步的问题
 		List<BmsPlatformPublishInfo> listToSync = list.stream()
 				.filter(p->{
 					if(convertTo(p)==null) {
@@ -186,19 +216,10 @@ public class NewsService {
 		return resultListSave;
 	}
 	
-/*	public static void main(String[] args) {
-		Map<String, List<String>> map = list.stream().collect(Collectors.toMap(Student :: getClassName, 
-				    // 此时的value 为集合，方便重复时操作
-				    s ->  {
-					List<String> studentNameList = new ArrayList<>();
-					studentNameList.add(s.getStudentName());
-					return studentNameList;
-				    }, 
-				    // 重复时将现在的值全部加入到之前的值内
-				    (List<String> value1, List<String> value2) -> {
-					value1.addAll(value2);
-					return value1;
-				    }
-				));
-	}*/
+	/*
+	 * public static void main(String[] args) { System.out.println(
+	 * "http://ziya.tjjh.gov.cn/zhengwu/yuanquxinwen/3965-chi-feng-shi-hong-shan-qu-kao-cha-tuan-dao-zi-ya-jing"
+	 * .length()); }
+	 */
+	
 }

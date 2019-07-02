@@ -35,6 +35,9 @@ public class SmeMiitGovCnProcessor implements SpiderProcess{
 	@Override
 	public void listProcess(Page page, PageSettings pageSettings) {
 		List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
+		if(null == list || list.size() == 0) {
+			logger.info("当前页面获取结果有问题，获取地址为【{}】,获取到的内容为【{}】",page.getUrl(),page.getRawText());
+		}
 		//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 		List<String> articleList = list.stream().filter(p->p.matches(pageSettings.getArticleUrlRegex())).collect(Collectors.toList());
 		if(null != articleList && articleList.size()>0) {

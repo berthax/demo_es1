@@ -49,8 +49,7 @@ public enum SpiderModuleEnum {
 	private String name;  
     private int index;  
     private String key;
-    
-
+   
     private SpiderModuleEnum(String name, int index) {  
         this.name = name;  
         this.index = index;  

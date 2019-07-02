@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import com.troila.tjsmesp.spider.config.SpiderSettings;
+import com.troila.tjsmesp.spider.constant.SpiderStartUrlConst;
+import com.troila.tjsmesp.spider.crawler.downloader.CustomHttpClientDownloader;
 import com.troila.tjsmesp.spider.crawler.downloader.SeleniumDownloader;
 import com.troila.tjsmesp.spider.crawler.pipeline.BaseRedisPipeline;
 import com.troila.tjsmesp.spider.crawler.pipeline.NewsMysqlPipeline;
@@ -125,15 +127,16 @@ public class SpiderStarter implements CommandLineRunner{
 ////				.setDownloader(seleniumDownloader)
 //				.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000033/0000000033.shtml");
 //		spiderNewsFocusGuojia.runAsync();
-		
+//		
 //		Spider spiderNewsRegionalDynamic = Spider.create(policyNewsRegionalDynamicPageProcessor)
 //		.addPipeline(newsMysqlPipeline)
-////		.addPipeline(baseRedisPipeline)
-//		.thread(2)
-////		.setDownloader(seleniumDownloader)
-//		.addUrl("http://sousuo.gov.cn/column/30902/0.htm");
+//		.thread(1)
+//		.setDownloader(seleniumDownloader)
+////		.setDownloader(new CustomHttpClientDownloader())
+//		.addUrl(SpiderStartUrlConst.NEWS_REGION_DYNAMIC_START_URL);
+////		.addUrl("http://sme.miit.gov.cn/cms/news/100000/0000000239/0000000239_10.shtml");
 //		spiderNewsRegionalDynamic.runAsync();
-		
+//		
 //		Spider spiderNewsIndustryInfo = Spider.create(policyNewsIndustryInfoPageProcessor)
 //				.addPipeline(newsMysqlPipeline)
 //				.thread(2)
@@ -146,10 +149,10 @@ public class SpiderStarter implements CommandLineRunner{
 //		.thread(2)
 //		.addUrl("http://ziya.tjjh.gov.cn/zhengwu/yuanquxinwen?page=1");
 //		spiderJinghaiIndustrialClustersNews.runAsync();
-		
+//		
 //		Spider spiderJinghaiIndustrialClustersNotice = Spider.create(jinghaiIndustrialClustersNoticePageProcessor)
 //				.addPipeline(newsMysqlPipeline)
-//				.thread(1)
+//				.thread(2)
 //				.addUrl("http://ziya.tjjh.gov.cn/zhengwu/yuanqugonggao/3963-guan-yu-zhuan-fa-shi-shang-wu-ju-shi-cai-zheng-ju-guan");
 //		spiderJinghaiIndustrialClustersNotice.runAsync();
 		

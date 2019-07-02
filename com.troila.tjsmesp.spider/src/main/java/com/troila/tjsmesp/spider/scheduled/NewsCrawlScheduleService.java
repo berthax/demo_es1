@@ -13,6 +13,8 @@ import com.troila.tjsmesp.spider.config.SpiderSettings;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.constant.SpiderStartUrlConst;
 import com.troila.tjsmesp.spider.crawler.pipeline.BaseRedisPipeline;
+import com.troila.tjsmesp.spider.crawler.processor.JinghaiIndustrialClustersNewsPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.JinghaiIndustrialClustersNoticePageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusBuweiPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusGuojiaPageProcessor;
 import com.troila.tjsmesp.spider.crawler.processor.PolicyNewsFocusTianjinPageProcessor;
@@ -55,6 +57,10 @@ public class NewsCrawlScheduleService implements Runnable{
 	private PolicyNewsFocusBuweiPageProcessor policyNewsFocusBuweiPageProcessor;
 	@Autowired
 	private PolicyNewsIndustryInfoPageProcessor policyNewsIndustryInfoPageProcessor;
+	@Autowired
+	private JinghaiIndustrialClustersNewsPageProcessor jinghaiIndustrialClustersNewsPageProcessor;
+	@Autowired
+	private JinghaiIndustrialClustersNoticePageProcessor jinghaiIndustrialClustersNoticePageProcessor;
 	
 	@Autowired
 	private NewsService newsService;
@@ -71,6 +77,10 @@ public class NewsCrawlScheduleService implements Runnable{
 	private Spider newsIndustryInfo = null;
 	
 	private Spider newsRegionalDynamic = null;
+	
+	private Spider jinghaiIndustrialClustersNews = null;
+	
+	private Spider jinghaiIndustrialClustersNotice = null;
 	
 	//标记上次的定时任务是否已经完成
 	//private boolean lastIsCompleted = true;
@@ -242,8 +252,38 @@ public class NewsCrawlScheduleService implements Runnable{
 			newsRegionalDynamic = null;
 		}
 	}
+		
+	@Scheduled(cron = CRAWL_NEWS_CRON_STR)
+	public void crawlJinghaiIndustrialClustersNews() {
+		try {
+			jinghaiIndustrialClustersNews = createSpider(jinghaiIndustrialClustersNewsPageProcessor,baseRedisPipeline,
+					SpiderStartUrlConst.JINGHAI_INDUSTRIAL_CLUSTERS_NEWS,spiderSettings.getThreadNumber()*2,SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NEWS);
+			
+			long start = System.currentTimeMillis();
+			jinghaiIndustrialClustersNews.run();
+			logger.info("本次爬取静海园区新闻已完成，共爬取记录数：{},耗时{}ms",jinghaiIndustrialClustersNews.getPageCount(),(System.currentTimeMillis()-start));	
+		} catch (Exception e) {
+			logger.error("执行定时爬取静海园区新闻任务时发生异常，异常信息如下:{}",e);
+		} finally {
+			jinghaiIndustrialClustersNews = null;
+		}
+	}
 	
-	
+	@Scheduled(cron = CRAWL_NEWS_CRON_STR)
+	public void crawlJinghaiIndustrialClustersNotice() {
+		try {
+			jinghaiIndustrialClustersNotice = createSpider(jinghaiIndustrialClustersNoticePageProcessor,baseRedisPipeline,
+					SpiderStartUrlConst.JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE,spiderSettings.getThreadNumber()*2,SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE);			
+			long start = System.currentTimeMillis();
+			jinghaiIndustrialClustersNotice.run();
+			logger.info("本次爬取静海园区新闻已完成，共爬取记录数：{},耗时{}ms",jinghaiIndustrialClustersNotice.getPageCount(),(System.currentTimeMillis()-start));	
+		} catch (Exception e) {
+			logger.error("执行定时爬取静海园区新闻任务时发生异常，异常信息如下:{}",e);
+		} finally {
+			jinghaiIndustrialClustersNotice = null;
+		}
+	}
+		
 	@Scheduled(cron = UPDATE_NEWS_CRON_STR)
 	public void updateNewsDataAll() {
 		logger.info("{}开始执行数据更新任务，从redis更新到数据库中，……", new Date());
@@ -252,7 +292,11 @@ public class NewsCrawlScheduleService implements Runnable{
 			newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI);
 			newsService.dataUpdate(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN);
 			newsService.dataUpdate(SpiderModuleEnum.POLICY_INDUSTRY_INFO);
-			newsService.dataUpdate(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC);		
+			newsService.dataUpdate(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC);	
+			// 静海窗口平台要闻焦点
+			newsService.dataUpdate(SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NEWS);
+			// 静海窗口平台通知公告
+			newsService.dataUpdate(SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE);
 		} catch (Exception e) {
 			logger.error("执行数据更新任务时发生异常……", e);
 		}

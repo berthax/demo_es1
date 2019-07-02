@@ -30,6 +30,14 @@ public class PageSettings {
 	 */
 	private String articleUrlRegex;
 	/**
+	 * 矫正获取的页面内容中的附件链接地址正则表达式
+	 */
+	private String attachmentsUrlAdjustRegex;
+	/**
+	 * 矫正获取的页面内容中的图片链接地址正则表达式
+	 */
+	private String imageUrlAdjustRegex;
+	/**
 	 * 某些网站可能用到列表页链接的前缀，有些网站无法直接获取下一页的链接，需要拼接时，会用到，
 	 * 如果能直接获取到其他列表页的链接，此字段没什么用
 	 */
@@ -90,6 +98,20 @@ public class PageSettings {
 	}
 	public PageSettings setWebSiteListPrefix(String webSiteListPrefix) {
 		this.webSiteListPrefix = webSiteListPrefix;
+		return this;
+	}
+	public String getAttachmentsUrlAdjustRegex() {
+		return attachmentsUrlAdjustRegex;
+	}
+	public String getImageUrlAdjustRegex() {
+		return imageUrlAdjustRegex;
+	}
+	public PageSettings setAttachmentsUrlAdjustRegex(String attachmentsUrlAdjustRegex) {
+		this.attachmentsUrlAdjustRegex = attachmentsUrlAdjustRegex;
+		return this;
+	}
+	public PageSettings setImageUrlAdjustRegex(String imageUrlAdjustRegex) {
+		this.imageUrlAdjustRegex = imageUrlAdjustRegex;
 		return this;
 	}	
 }

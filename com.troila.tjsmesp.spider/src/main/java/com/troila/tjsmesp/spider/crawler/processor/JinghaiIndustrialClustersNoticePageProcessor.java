@@ -1,30 +1,16 @@
 package com.troila.tjsmesp.spider.crawler.processor;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import com.troila.tjsmesp.spider.constant.CrawlConst;
-import com.troila.tjsmesp.spider.constant.FromSiteEnum;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
-import com.troila.tjsmesp.spider.constant.UrlRegexConst;
+import com.troila.tjsmesp.spider.crawler.processor.base.AbstractPolicyPageProcessor;
+import com.troila.tjsmesp.spider.crawler.processor.base.PageSettings;
 import com.troila.tjsmesp.spider.crawler.service.NewsProcessorService;
-import com.troila.tjsmesp.spider.model.primary.NewsSpider;
-import com.troila.tjsmesp.spider.util.MD5Util;
-import com.troila.tjsmesp.spider.util.TimeUtils;
-
-import us.codecraft.webmagic.Page;
-import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectors;
+import com.troila.tjsmesp.spider.crawler.site.SiteProcessorFactory;
+import com.troila.tjsmesp.spider.crawler.site.ZiyaTjjhGovCnProcessor;
 @Component
-public class JinghaiIndustrialClustersNoticePageProcessor implements PageProcessor{
-//	http://ziya.tjjh.gov.cn/zhengwu/yuanquxinwen/3795-tian-jin-zi-ya-jing-ji-ji-zhu-kai-fa-qu-guan-che
+public class JinghaiIndustrialClustersNoticePageProcessor extends AbstractPolicyPageProcessor{
 	/**
      * 静海产业集聚，子牙循环经济网园区公告详情页的正则表达式   
      */
@@ -35,20 +21,32 @@ public class JinghaiIndustrialClustersNoticePageProcessor implements PageProcess
      */    
     private static final String LIST_URL = "http://ziya.tjjh.gov.cn/zhengwu/yuanqugonggao\\?page=(\\d+)";
 	   
-    private static final String channelid = "http://ziya.tjjh.gov.cn";
-    //http://ziya.tjjh.gov.cn/attachments/807/download?locale=cn
-    private String ATTACHMENTS_URL_ADJUST_REX = "http://ziya.tjjh.gov.cn/attachments/(\\d+)/download\\?locale=cn";
-    //http://ziya.tjjh.gov.cn/system/attached_images/images/846/001_original.jpg?1560827790
-    private String IMAGE_URL_ADJUST_REX = "http://ziya.tjjh.gov.cn/system/attached_images/images/846/001_original.jpg?1560827790";
-    
-//    /system/attached_images/images/847/%E6%9C%AA%E6%A0%87%E9%A2%98-2_original.jpg?1561431525
-    
+    private static final String CHANNELID = "http://ziya.tjjh.gov.cn";
+
+    private static final String ATTACHMENTS_URL_ADJUST_REX = "http://ziya.tjjh.gov.cn/attachments/(\\d+)/download\\?locale=cn";
+
+    private static final String IMAGE_URL_ADJUST_REX = "/system/attached_images/images/(\\d+)/([\\w,%,-])+_original.jpg\\?(\\d+)";										
+       
     @Autowired
     private NewsProcessorService newsProcessorService;
 	
-    private  List<String> pastCrawledUrls;
-	
+//    private  List<String> pastCrawledUrls;
+
 	@Override
+	protected void configure(PageSettings pageSettings) {
+		pageSettings.setSpiderProcess(SiteProcessorFactory.create(ZiyaTjjhGovCnProcessor.class))
+		.setArticleUrlRegex(ARTICLE_URL)
+		.setListUrlRegex(LIST_URL)
+		.setProcessorService(newsProcessorService)
+		.setAttachmentsUrlAdjustRegex(ATTACHMENTS_URL_ADJUST_REX)
+		.setImageUrlAdjustRegex(IMAGE_URL_ADJUST_REX)
+		.setModule(SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE)
+		.setWebSiteListPrefix(CHANNELID)
+		.setDomain("http://ziya.tjjh.gov.cn");
+		
+	}
+	
+	/*@Override
 	public void process(Page page) {
 		if(page.getUrl().regex(LIST_URL).match()) {
 			List<String> list =  page.getHtml().xpath("//div[@class='span8 main']").links().all();
@@ -110,18 +108,18 @@ public class JinghaiIndustrialClustersNoticePageProcessor implements PageProcess
 			
 			List<String> attachmentList = urls.stream().filter(p->p.matches(ATTACHMENTS_URL_ADJUST_REX)).collect(Collectors.toList());
 			if(attachmentList !=null && attachmentList.size()>0) {	
-				content = adjustAttachmentsUrls(content, attachmentList);
+				content = adjustRelativeAttachUrls(content, attachmentList);
 			}
 			
 			//将一些图片链接也需要矫正(此处的list得到的是img标签)
-//			List<Element> imageUrlList = Selectors.xpath("//img/@src").selectElements(content);
-//			if(imageUrlList != null && imageUrlList.size() > 0) {
-//				List<String> srcList = imageUrlList.stream()
-//						.map(e->{return Selectors.xpath("img/@src").select(e);})
-//						.collect(Collectors.toList());
-//				removeScriptTagContent = policyProcessorService.replaceImageUrlForContent(removeScriptTagContent, srcList, page.getUrl().toString());    					
-//			}
-			
+			List<Element> imageUrlList = Selectors.xpath("//img/@src").selectElements(content);
+			if(imageUrlList != null && imageUrlList.size() > 0) {
+				List<String> imageSrcList = imageUrlList.stream()
+						.map(e->{return Selectors.xpath("img/@src").select(e);})
+						.collect(Collectors.toList());
+				content = adjustRelativeImageUrls(content,imageSrcList);
+				System.out.println(content);   					
+			}			
 			spider.setContent(content);
 			page.putField(CrawlConst.CRAWL_ITEM_KEY, spider);
 		}else {
@@ -133,7 +131,7 @@ public class JinghaiIndustrialClustersNoticePageProcessor implements PageProcess
 	@Override
 	public Site getSite() {
 		return Site.me().setRetryTimes(3).setSleepTime(1000).setDomain("http://ziya.tjjh.gov.cn").setCharset("UTF-8");
-	}
+	}*/
 	
 	
 	/**
@@ -142,32 +140,47 @@ public class JinghaiIndustrialClustersNoticePageProcessor implements PageProcess
 	 * @param attachmentList
 	 * 内容中获取到的/attachments/806/download?locale=cn
 	 * 要替换成的完整的http://ziya.tjjh.gov.cn/attachments/806/download?locale=cn
+	 * 
+	 * 内容中获取到的/system/attached_images/images/846/001_original.jpg?1560827790
+	 * 要替换成完整的http://ziya.tjjh.gov.cn/system/attached_images/images/846/001_original.jpg?1560827790
 	 */
-	public String adjustAttachmentsUrls(String content,List<String> attachmentList) {
-		if(content==null || "".equals(content) || attachmentList== null) {
+	/*public String adjustRelativeAttachUrls(String content,List<String> urlList) {
+		if(content==null || "".equals(content) || urlList == null) {
 			return "";
 		}
 		String returnStr = content;	
 		try {
 			//处理将content中的相对链接下载地址换成绝对地址
-			for(String attachment : attachmentList) {
-				if(attachment.matches(ATTACHMENTS_URL_ADJUST_REX)) {
-					String[] attachIn =  attachment.split(channelid);
+			for(String urlTemp : urlList) {
+				if(urlTemp.matches(ATTACHMENTS_URL_ADJUST_REX)) {
+					String[] attachIn =  urlTemp.split(channelid);
 					String oldReplaceStr = attachIn[attachIn.length-1];
 					// 处理问号的正则匹配，否则无法替换，因为正则不认识
 					oldReplaceStr = oldReplaceStr.replaceFirst("\\?", "\\\\?"); 
-					returnStr = returnStr.replaceAll(oldReplaceStr, attachment);
-				}
+					returnStr = returnStr.replaceAll(oldReplaceStr, urlTemp);
+				}				
 			}			
 		}catch(Exception e) {
 //			logger.error("替换附件下载链接地址时出错：信息为:",e);
 		}
 		return returnStr;
 	}
-
 	
-	private String adjustImageUrls(String content) {
-		return null;
+	public String adjustRelativeImageUrls(String content,List<String> imageSrcList) {
+		if(content==null || "".equals(content) || imageSrcList == null || imageSrcList.size() == 0) {
+			return "";
+		}
+		//完整地址类似如下的 http://zcydt.fzgg.tj.gov.cn/zcbjd/sjbmjd/ssww_199/201804/W020180402379608413246.jpg
+		String returnStr = content;	
+		for(String imageUrl : imageSrcList) {
+			if(imageUrl.matches(IMAGE_URL_ADJUST_REX1)) {				
+				String newReplaceImageUrl = imageUrl;
+				String newReplaceImageUrlAfter = newReplaceImageUrl.replaceFirst("/", channelid+"/");	
+				imageUrl = imageUrl.replaceFirst("\\?", "\\\\?"); 
+				returnStr = returnStr.replaceAll(imageUrl, newReplaceImageUrlAfter);
+			}
+		}
+		return returnStr;
 	}
 
 	public static void main(String[] args) {
@@ -184,5 +197,14 @@ public class JinghaiIndustrialClustersNoticePageProcessor implements PageProcess
 		String replace = "http://ziya.tjjh.gov.cn/attachments/807/download?locale=cn";
 		String strr = str.replaceAll(oldReplaceStr, replace);
 		System.out.println(strr);
-	}
+		
+		String str6 = "/system/attached_images/images/846/001_original.jpg?1560827790";
+		String str7 = "/system/attached_images/images/846/001_original.jpg?1560827790";
+		String str8 = "/system/attached_images/images/847/%E6%9C%AA%E6%A0%87%E9%A2%98-2_original.jpg?1561431525";
+		String newReplaceImageUrlAfter = str7.replaceFirst("/", channelid+"/");	
+		System.out.println(str6.matches(IMAGE_URL_ADJUST_REX1));
+		System.out.println(newReplaceImageUrlAfter);
+		
+		System.out.println(str8.matches(IMAGE_URL_ADJUST_REX1));
+	}*/
 }
