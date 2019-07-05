@@ -39,8 +39,7 @@ public class SpiderSettings {
 //	
 //	private String newsIndustryInfoStartUrl = "http://sme.miit.gov.cn/cms/news/100000/0000000071/0000000071.shtml";
 	
-	public SpiderSettings() {
-		System.out.println("正在初始化该实例……");
+	public SpiderSettings() {		
 	}
 	public int getWebPoolMaxNum() {
 		return webPoolMaxNum;

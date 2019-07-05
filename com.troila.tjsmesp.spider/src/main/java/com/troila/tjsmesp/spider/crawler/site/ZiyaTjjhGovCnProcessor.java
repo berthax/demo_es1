@@ -64,6 +64,11 @@ public class ZiyaTjjhGovCnProcessor implements SpiderProcess{
 	@Override
 	public void detailProcess(Page page, PageSettings pageSettings) {
 		NewsSpider spider = new NewsSpider();
+		if(StringUtils.isEmpty(page.getRawText())){
+			logger.info("文章链接页{}，未找到指定的页面内容，跳过该页面",page.getUrl());
+			page.setSkip(true);
+			return;
+		}
 		String title = page.getHtml().xpath("//div[@class='infos detail']/div[@class='title']/h4/tidyText()").toString();
 		String content = page.getHtml().xpath("//div[@class='infos detail']/div[@class='content']").toString();
 	

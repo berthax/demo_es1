@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.troila.tjsmesp.spider.config.DataSyncSettings;
 import com.troila.tjsmesp.spider.constant.SpiderModuleEnum;
 import com.troila.tjsmesp.spider.model.primary.NewsSpider;
 import com.troila.tjsmesp.spider.model.secondary.BmsPlatformPublishInfo;
@@ -27,8 +28,8 @@ public class NewsService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(NewsService.class);
 	
-//	@Autowired
-//	private DataSyncSettings dataSyncSettings;
+	@Autowired
+	private DataSyncSettings dataSyncSettings;
 		
 	@Autowired
 	private BmsPlatformPublishInfoRepositoryInformix bmsPlatformPublishInfoRepositoryInformix;
@@ -147,7 +148,7 @@ public class NewsService {
 			//获取redis中爬取记录的总数
 			long size = redisTemplate.opsForList().size(spiderMoudleEnum.getKey());
 			if(size == 0) {
-				logger.info("模块【{}】，当前Reids中未查询到任何爬取的数据，本次爬取没有更新的内容",spiderMoudleEnum.getName());
+				logger.info("模块【{}】，当前Redis中未查询到任何爬取的数据，本次爬取没有更新的内容",spiderMoudleEnum.getName());
 				return new ArrayList<>();
 			}
 			//从redis中获取本次爬取的所有记录
@@ -189,7 +190,11 @@ public class NewsService {
 	@Transactional
 	public List<BmsPlatformPublishInfo> newsDataSync(SpiderModuleEnum spiderMoudleEnum, int lastDays){
 		// 获取最近N天的数据
-		List<NewsSpider> list = newsSpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastNDay(lastDays), spiderMoudleEnum.getIndex());
+//		List<NewsSpider> list = newsSpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModule(TimeUtils.getLastNDay(lastDays), spiderMoudleEnum.getIndex());
+		Date lastNDay = TimeUtils.getLastNDay(lastDays);
+		// 获取要同步的最近N天之内的最多10条数据，一般要指定同步一周之内的最新的10条数据
+		List<NewsSpider> list = newsSpiderRepositoryMysql
+				.findByPublishDateGreaterThanEqualAndSpiderModuleOrderByPublishDateDesc(lastNDay, spiderMoudleEnum.getIndex(), dataSyncSettings.getNewsDefaultNumber());
 		if(list == null) {
 			logger.error("数据库中没有相关记录，本次同步完成，本次同步模块：【{}】,增加条目数为：0条",spiderMoudleEnum.getName());
 			return null;

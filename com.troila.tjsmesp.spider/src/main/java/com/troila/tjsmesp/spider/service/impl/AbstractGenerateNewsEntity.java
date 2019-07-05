@@ -40,7 +40,8 @@ public abstract class AbstractGenerateNewsEntity implements IGenerateNewsEntity{
 		bmsPlatformPublishInfo.setPublisherType("1");
 		bmsPlatformPublishInfo.setIsSubmit("1");
 		bmsPlatformPublishInfo.setIsOut("0");
-		
+		bmsPlatformPublishInfo.setTransTime(new Date()); // 设置原文链接地址
+		bmsPlatformPublishInfo.setOrgLink(newsSpider.getPublishUrl());
 		return bmsPlatformPublishInfo;
 	}
 	

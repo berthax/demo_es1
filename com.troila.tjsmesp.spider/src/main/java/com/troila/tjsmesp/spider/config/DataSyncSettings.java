@@ -36,6 +36,14 @@ public class DataSyncSettings {
 	 * 新闻部分同步多少天之内的数据
 	 */
 	private int newsLastDays = 7;
+	/**
+	 * 新闻部分每次默认同步多少条数据
+	 */
+	private int newsDefaultNumber = 10;
+	/**
+	 * 新闻部分同步是否启用
+	 */
+	private boolean newsIsEnabled=true;
 	
 	public String getDefaultPublisher() {
 		return defaultPublisher;
@@ -72,5 +80,17 @@ public class DataSyncSettings {
 	}
 	public void setAdminJhXunhuanId(Integer adminJhXunhuanId) {
 		this.adminJhXunhuanId = adminJhXunhuanId;
-	}	
+	}
+	public int getNewsDefaultNumber() {
+		return newsDefaultNumber;
+	}
+	public void setNewsDefaultNumber(int newsDefaultNumber) {
+		this.newsDefaultNumber = newsDefaultNumber;
+	}
+	public boolean isNewsIsEnabled() {
+		return newsIsEnabled;
+	}
+	public void setNewsIsEnabled(boolean newsIsEnabled) {
+		this.newsIsEnabled = newsIsEnabled;
+	}
 }

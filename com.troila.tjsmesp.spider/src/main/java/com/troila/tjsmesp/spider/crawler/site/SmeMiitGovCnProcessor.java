@@ -34,10 +34,15 @@ public class SmeMiitGovCnProcessor implements SpiderProcess{
 	private List<String> pastCrawledUrls;
 	@Override
 	public void listProcess(Page page, PageSettings pageSettings) {
-		List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
-		if(null == list || list.size() == 0) {
-			logger.info("当前页面获取结果有问题，获取地址为【{}】,获取到的内容为【{}】",page.getUrl(),page.getRawText());
+		if(StringUtils.isEmpty(page.getRawText())) {
+			logger.info("文章链接页{}，页面获取结果有问题，跳过该页面",page.getUrl());
+			page.setSkip(true);
+			return;
 		}
+		List<String> list =  page.getHtml().xpath("//div[@class='new_title']").links().all();
+//		if(null == list || list.size() == 0) {
+//			logger.info("当前页面获取结果有问题，获取地址为【{}】,获取到的内容为【{}】",page.getUrl(),page.getRawText());
+//		}
 		//将当前列表页所有的最新政策文章详情页加入到后续的url地址，有待继续爬取
 		List<String> articleList = list.stream().filter(p->p.matches(pageSettings.getArticleUrlRegex())).collect(Collectors.toList());
 		if(null != articleList && articleList.size()>0) {
@@ -74,6 +79,11 @@ public class SmeMiitGovCnProcessor implements SpiderProcess{
 
 	@Override
 	public void detailProcess(Page page, PageSettings pageSettings) {
+		if(StringUtils.isEmpty(page.getRawText())) {
+			logger.info("文章链接页{}，未找到指定的页面内容，跳过该页面",page.getUrl());
+			page.setSkip(true);
+			return;
+		}
 		String title = page.getHtml().xpath("//div[@class='head_1']/a/font/tidyText()").toString();
 		String content = page.getHtml().xpath("//div[@class='news_nav']").toString();
 		if(StringUtils.isEmpty(title) && StringUtils.isEmpty(content)) {

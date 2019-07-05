@@ -21,7 +21,7 @@ public enum SpiderModuleEnum {
 	POLICY_INDUSTRY_INFO("产业资讯",3,"spiderIndustryInfo"),	
 	/**
 	 * 区域动态	中小企业信息网-》政务频道-》地方政府
-	 */
+	 */ 
 	POLICY_REGIONAL_DYNAMIC("区域动态",4,"spiderRegionalDynamic"),
 	/**
 	 * 要闻焦点-》国家  中小企业信息网-》新闻资讯-》焦点新闻

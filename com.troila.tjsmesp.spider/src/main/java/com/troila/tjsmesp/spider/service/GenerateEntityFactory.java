@@ -36,19 +36,7 @@ public class GenerateEntityFactory implements ApplicationListener<ContextRefresh
         }
     	return result.generate(newsSpider, dataSyncSettings);
     }
-    
-//    @PostConstruct
-//    private void init() {
-////    	generateMap.put(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA.getIndex(), new NewsFocusGuojiaGenerateNewsEntity());
-//    	generateMap.put(SpiderModuleEnum.POLICY_NEWS_FOCUS_GUOJIA.getIndex(), newsFocusGuojiaGenerateNewsEntity);
-//    	generateMap.put(SpiderModuleEnum.POLICY_NEWS_FOCUS_BUWEI.getIndex(),new NewsFocusBuweiGenerateNewsEntity());
-//    	generateMap.put(SpiderModuleEnum.POLICY_NEWS_FOCUS_TIANJIN.getIndex(), new NewsFocusTianjinGenerateNewsEntity());
-//    	generateMap.put(SpiderModuleEnum.POLICY_REGIONAL_DYNAMIC.getIndex(), new NewsRegionalDynamicGenerateNewsEntity());
-//    	generateMap.put(SpiderModuleEnum.POLICY_INDUSTRY_INFO.getIndex(),new NewsIndustryInfoGenerateNewsEntity());
-//    	generateMap.put(SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NEWS.getIndex(), new JinghaiIndustrialClustersNewsGenerateNewsEntity());
-//    	generateMap.put(SpiderModuleEnum.JINGHAI_INDUSTRIAL_CLUSTERS_NOTICE.getIndex(),new JinghaiIndustrialClustersNoticeGenerateNewsEntity());
-//    }
-    
+        
     /**
      * 实体转换类加自定义注解后，注册到工厂类中
      */
@@ -69,9 +57,9 @@ public class GenerateEntityFactory implements ApplicationListener<ContextRefresh
 					logger.error("注册实体转换类异常，信息如下：value:{},Class:{}",value,clazz,e);
 				} catch (IllegalAccessException e) {
 					logger.error("注册实体转换类异常，信息如下：value:{},Class:{}",value,clazz,e);
+//					logger.error("=====onApplicationEvent====="+event.getSource().getClass().getName());
 				}
             }            
-           logger.error("=====onApplicationEvent====="+event.getSource().getClass().getName());
         }	
 	}
 }

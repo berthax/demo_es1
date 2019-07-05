@@ -25,8 +25,8 @@ public class JinghaiIndustrialClustersNoticePageProcessor extends AbstractPolicy
 
     private static final String ATTACHMENTS_URL_ADJUST_REX = "http://ziya.tjjh.gov.cn/attachments/(\\d+)/download\\?locale=cn";
 
-    private static final String IMAGE_URL_ADJUST_REX = "/system/attached_images/images/(\\d+)/([\\w,%,-])+_original.jpg\\?(\\d+)";										
-       
+    private static final String IMAGE_URL_ADJUST_REX = "/system/attached_images/images/(\\d+)/([\\w,%,-])+_original.jpg\\?(\\d+)";	
+           
     @Autowired
     private NewsProcessorService newsProcessorService;
 	

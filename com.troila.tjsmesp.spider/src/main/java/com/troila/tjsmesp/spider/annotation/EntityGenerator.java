@@ -13,5 +13,5 @@ import org.springframework.stereotype.Component;
 @Documented
 @Component
 public @interface EntityGenerator {
-	int value();  //要转换成的字段名称
+	int value(); // 指定该实体转换类是对应哪个模块，对应SpiderModuleEnum的index
 }

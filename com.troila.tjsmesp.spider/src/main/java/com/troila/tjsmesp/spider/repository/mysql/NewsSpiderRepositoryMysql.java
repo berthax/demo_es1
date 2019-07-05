@@ -20,6 +20,12 @@ public interface NewsSpiderRepositoryMysql extends JpaRepository<NewsSpider, Int
 		
 	public List<NewsSpider> findByTitleContainsAndSpiderModule(String str, int spiderModule);
 	
-	@Query(value="select publish_url from sme_news_spider where spider_module = :spiderModule",nativeQuery=true)
+	@Query(value="select publish_url from sme_news_spider where spider_module = :spiderModule",nativeQuery = true)
 	public List<String> findCrawledUrlsBySpiderModule(int spiderModule);
+	
+	@Query(value="select * from sme_news_spider "
+			+ "where spider_module = :spiderModule and publish_date >= :lastNDay "
+			+ "order by publish_date desc "
+			+ "limit :number",nativeQuery =  true)
+	public List<NewsSpider> findByPublishDateGreaterThanEqualAndSpiderModuleOrderByPublishDateDesc(Date lastNDay, int spiderModule, int number);
 }

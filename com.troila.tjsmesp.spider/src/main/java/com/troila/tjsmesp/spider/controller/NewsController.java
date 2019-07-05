@@ -22,7 +22,7 @@ public class NewsController {
 	private NewsService newsService; 
 	@Autowired
 	private NewsSpiderRepositoryMysql newsSpiderRepositoryMysql;
-		
+			
 	@GetMapping("/news/getLastNDay")
 	public Date  getLastNDay(@RequestParam int lastNDays) {
 		Date lastDay = TimeUtils.getLastNDay(lastNDays);
@@ -46,6 +46,13 @@ public class NewsController {
 		List<String> list = newsSpiderRepositoryMysql.findCrawledUrlsBySpiderModule(spiderModule);	
 		System.out.println(list.size());
 		return list.size();
+	}
+	
+	@GetMapping("/news/assign")
+	public List<NewsSpider> getAssignDay(@RequestParam int spiderModule, int lastNDays,int number) {
+		Date lastDay = TimeUtils.getLastNDay(lastNDays);
+		List<NewsSpider> list = newsSpiderRepositoryMysql.findByPublishDateGreaterThanEqualAndSpiderModuleOrderByPublishDateDesc(lastDay, spiderModule, number);
+		return list;
 	}
 
 }
